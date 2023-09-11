@@ -1,2 +1,4 @@
-package edu.carroll.RanksList.jpa.repo;public interface GoalRepository {
+package edu.carroll.RanksList.jpa.repo;
+
+public interface GoalRepository {
 }
