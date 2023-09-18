@@ -1,4 +1,4 @@
-package edu.carroll.RanksList.service;
+package edu.carroll.ranks_list.service;
 
 public interface UserService {
     /**

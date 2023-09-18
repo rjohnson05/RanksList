@@ -1,7 +1,7 @@
-package edu.carroll.RanksList.service;
+package edu.carroll.ranks_list.service;
 
-import edu.carroll.RanksList.jpa.model.User;
-import edu.carroll.RanksList.jpa.repo.UserRepository;
+import edu.carroll.ranks_list.model.User;
+import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

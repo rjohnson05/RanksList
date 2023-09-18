@@ -1,5 +1,6 @@
-package edu.carroll.RanksList.web.controller;
+package edu.carroll.ranks_list.controller;
 
+import edu.carroll.ranks_list.controller.IndexController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

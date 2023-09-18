@@ -1,7 +1,7 @@
-package edu.carroll.RanksList.web.controller;
+package edu.carroll.ranks_list.controller;
 
-import edu.carroll.RanksList.service.UserService;
-import edu.carroll.RanksList.web.form.UserForm;
+import edu.carroll.ranks_list.service.UserService;
+import edu.carroll.ranks_list.form.UserForm;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

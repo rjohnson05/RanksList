@@ -1,7 +1,8 @@
-package edu.carroll.RanksList.service;
+package edu.carroll.ranks_list.service;
 
-import edu.carroll.RanksList.jpa.model.User;
-import edu.carroll.RanksList.jpa.repo.UserRepository;
+import edu.carroll.ranks_list.model.User;
+import edu.carroll.ranks_list.repository.UserRepository;
+import edu.carroll.ranks_list.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

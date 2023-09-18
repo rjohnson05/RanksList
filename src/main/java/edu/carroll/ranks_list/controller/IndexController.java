@@ -1,4 +1,4 @@
-package edu.carroll.RanksList.web.controller;
+package edu.carroll.ranks_list.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,4 +9,6 @@ public class IndexController {
     public String index() {
         return "index";
     }
+
+
 }

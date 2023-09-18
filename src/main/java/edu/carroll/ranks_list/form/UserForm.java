@@ -1,4 +1,4 @@
-package edu.carroll.RanksList.web.form;
+package edu.carroll.ranks_list.form;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

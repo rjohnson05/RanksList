@@ -1,7 +1,9 @@
-package edu.carroll.RanksList.jpa.model;
+package edu.carroll.ranks_list.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +16,7 @@ public class User {
     }
 
     private static final long serialVersionUID = 1L;
+
 
     @Id
     @GeneratedValue
