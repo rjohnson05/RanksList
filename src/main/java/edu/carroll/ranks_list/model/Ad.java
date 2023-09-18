@@ -3,62 +3,58 @@ package edu.carroll.ranks_list.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
+
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 
 @Entity
+@Table(name = "ads")
 public class Ad {
     @Id
     @GeneratedValue
     private Integer id;
-    private String first_name;
-    private String last_name;
+    @NonNull private String name;
     private Float price;
     private String description;
     private byte[] image;
+
 
     public Ad() {
     }
 
 
     public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
+        return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    @NonNull
+    public String getName() {
+        return name;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 
-    public String getLast_name() {
-        return last_name;
-    }
-
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
-
-    public void setPrice(Float price) {
-        this.price = price;
-    }
-
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Float price) {
         this.price = price;
     }
 
@@ -68,5 +64,13 @@ public class Ad {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
