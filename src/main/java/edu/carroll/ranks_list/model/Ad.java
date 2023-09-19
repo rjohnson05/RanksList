@@ -17,7 +17,7 @@ import org.springframework.lang.NonNull;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "ads")
+@Table(name = "ad")
 public class Ad {
     @Id
     @GeneratedValue

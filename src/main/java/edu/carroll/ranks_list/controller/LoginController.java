@@ -1,7 +1,7 @@
 package edu.carroll.ranks_list.controller;
 
 import edu.carroll.ranks_list.service.UserService;
-import edu.carroll.ranks_list.form.UserForm;
+import edu.carroll.ranks_list.form.LoginForm;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,21 +14,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-public class UserController {
+public class LoginController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public LoginController(UserService userService) {
         this.userService = userService;
     }
     @GetMapping("/login")
     public String loginGet(Model model) {
-        model.addAttribute("userForm", new UserForm());
+        model.addAttribute("loginForm", new LoginForm());
         return "login";
     }
 
     @PostMapping("/login")
-    public String loginPost(@Valid @ModelAttribute UserForm userForm, BindingResult result, RedirectAttributes attrs) {
+    public String loginPost(@Valid @ModelAttribute LoginForm userForm, BindingResult result, RedirectAttributes attrs) {
         if (result.hasErrors()) {
             return "login";
         }

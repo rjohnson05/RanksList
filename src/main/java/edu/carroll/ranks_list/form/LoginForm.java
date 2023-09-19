@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-public class UserForm {
+public class LoginForm {
     @NotNull
     @Size(min = 6, message = "Username must be at least 6 characters long")
     private String username;
@@ -33,8 +33,8 @@ public class UserForm {
     }
 
     @PostMapping("/login")
-    public String loginPost(@Valid @ModelAttribute UserForm userForm, BindingResult result) {
-        System.out.println("User '" + userForm.getUsername() + "' attempted login");
+    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result) {
+        System.out.println("User '" + loginForm.getUsername() + "' attempted login");
         if (result.hasErrors()) {
             return "login";
         }
