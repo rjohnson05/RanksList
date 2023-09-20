@@ -29,11 +29,11 @@ public class Goal {
         return description;
     }
 
-    @Override
+
     public boolean equals(){
         return true;
     }
-    @Override
+
     public int hashcode(){
         return Objects.hash(description);
     }

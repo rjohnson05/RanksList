@@ -4,19 +4,32 @@ import IconButton from 'rsuite/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import CreateAdForm from '.././CreateAdPage/CreateAdForm'
+import CreateGoalForm from '../CreatedGoalPage/CreateGoalForm'
+
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
     const adId = useState();
 
+    const [allGoalsData, setGoals] = useState([]);
+    const goalId = useState();
+
+
     useEffect(() => {
-        loadAds();
+        loadGoals();
+        //loadAds();
     }, []);
 
     const loadAds = async () => {
         const ads_data = await axios.get("http://localhost:8080/ads");
         setAds(ads_data.data);
     }
+
+    const loadGoals = async () => {
+        const goals_data = await axios.get("http://localhost:8080/goals");
+        setGoals(goals_data.data);
+    }
+
 
     const deleteAd = (adId) => {
         console.log(adId);
@@ -113,19 +126,34 @@ export default function Home() {
         {/* End of copied sidebar code */}
                 <div class="col py-3">
                 
+                    {/*<Row xs={3}>*/}
+                    {/*    {allAdsData.map((ad, id) => (*/}
+                    {/*        <div class="col border border-5" key={id}>*/}
+                    {/*            <p>Name: {ad.name}</p>*/}
+                    {/*            <p>Price: {ad.price}</p>*/}
+                    {/*            <p>Description: {ad.description}</p>*/}
+                    {/*            <IconButton aria-label="delete" value={id} onClick={() => deleteAd(ad.id)}>*/}
+                    {/*                <DeleteIcon />*/}
+                    {/*            </IconButton>*/}
+                    {/*        </div>*/}
+                    {/*    ))}*/}
+                    {/*</Row>*/}
+                    {/*<CreateAdForm />*/}
+
+
                     <Row xs={3}>
-                        {allAdsData.map((ad, id) => (
+                        {allGoalsData.map((goal, id) => (
                             <div class="col border border-5" key={id}>
-                                <p>Name: {ad.name}</p>
-                                <p>Price: {ad.price}</p>
-                                <p>Description: {ad.description}</p>
-                                <IconButton aria-label="delete" value={id} onClick={() => deleteAd(ad.id)}>
-                                    <DeleteIcon />
-                                </IconButton>
+                                <p>Name: {goal.name}</p>
+                                <p>Description: {goal.description}</p>
+                                <p>Completed: {goal.completed}</p>
+                                {/*<IconButton aria-label="delete" value={id} onClick={() => deleteAd(ad.id)}>*/}
+                                {/*    <DeleteIcon />*/}
+                                {/*</IconButton>*/}
                             </div>
                         ))}
                     </Row>
-                    <CreateAdForm />
+                    <CreateGoalForm />
                 </div>
             </div>
         </div>
