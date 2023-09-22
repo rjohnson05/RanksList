@@ -4,26 +4,28 @@ import IconButton from 'rsuite/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import CreateAdForm from '.././CreateAdPage/CreateAdForm'
+import * as allGoalsData from "react-bootstrap/ElementChildren";
+import CreateGoalForm from "../CreateGoalPage/CreateGoalForm";
 import {Link} from "react-router-dom";
 
 export default function Home() {
-    const [allAdsData, setAds] = useState([]);
-    const adId = useState();
+    const [allGoalsData, setGoals] = useState([]);
+    const goalId = useState();
 
     useEffect(() => {
-        loadAds();
+        loadGoals();
     }, []);
 
-    const loadAds = async () => {
-        const ads_data = await axios.get("http://localhost:8080/ads");
-        setAds(ads_data.data);
+    const loadGoals = async () => {
+        const goals_data = await axios.get("http://localhost:8080/goals");
+        setGoals(goals_data.data);
     }
 
-    const deleteAd = (adId) => {
-        console.log(adId);
+    const deleteGoal = (goalId) => {
+        console.log(goalId);
 
-        axios.delete("http://localhost:8080/ads/" + adId)
-            .then(response => {console.log("Deleted ad with ID " + adId)})
+        axios.delete("http://localhost:8080/goals/" + goalId)
+            .then(response => {console.log("Deleted goal with ID " + goalId)})
             .catch(error => {console.error(error)});
     }
 
@@ -39,7 +41,7 @@ export default function Home() {
                         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                             <li class="nav-item">
                                 <a href="#" class="nav-link align-middle px-0">
-                                    <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline"><Link to="/Goals"> Goals </Link></span>
+                                    <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline"><Link to="/Home"> Home </Link></span>
                                 </a>
                             </li>
                             <li>
@@ -115,18 +117,19 @@ export default function Home() {
                 <div class="col py-3">
 
                     <Row xs={3}>
-                        {allAdsData.map((ad, id) => (
+                        {allGoalsData.map((goal, id) => (
                             <div class="col border border-5" key={id}>
-                                <p>Name: {ad.name}</p>
-                                <p>Price: {ad.price}</p>
-                                <p>Description: {ad.description}</p>
-                                <IconButton aria-label="delete" value={id} onClick={() => deleteAd(ad.id)}>
+                                <p>Name: {goal.name}</p>
+                                <p>Description: {goal.description}</p>
+                                <p>Completed: {goal.completed}</p>
+                                <IconButton aria-label="delete" value={id} onClick={() => deleteGoal(goal.id)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </div>
                         ))}
                     </Row>
-                    <CreateAdForm />
+                    <CreateGoalForm />
+
                 </div>
             </div>
         </div>
