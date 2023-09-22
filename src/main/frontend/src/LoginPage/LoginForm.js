@@ -38,7 +38,7 @@ export default function RegisterForm() {
                 <input type="text" onChange={(e) => setFormData((prev) => ({...prev, username: e.target.value}))} />
             </label><br />
             <label>Password
-                <input type="text" onChange={(e) => setFormData((prev) => ({...prev, password: e.target.value}))} />
+                <input type="password" onChange={(e) => setFormData((prev) => ({...prev, password: e.target.value}))} />
             </label><br />
             <input type="submit" />
             <input type="button"  value="Register" onClick={handleRegister} />
