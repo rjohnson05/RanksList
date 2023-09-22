@@ -26,7 +26,6 @@ public class UserServiceImpl implements UserService {
     public boolean validateUser(String username, String password) {
         log.debug("validateUser: user '{}' attempted login", username);
 
-
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = userRepo.findByUsernameIgnoreCase(username);
 
@@ -39,16 +38,14 @@ public class UserServiceImpl implements UserService {
         // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
         // NEVER EVER do this in production code!
         final String userProvidedHash = Integer.toString(password.hashCode());
-        if (!u.getHashedPassword().equals(userProvidedHash)){
+        log.info("Hash: {}", userProvidedHash);
+        if (!u.getPassword().equals(userProvidedHash)){
             log.debug("validateUser: password !match");
             return false;
-
         }
 
         // User exists, and the provided password matches the hashed password in the database.
         log.info("validateUser: successful login for {}", username);
         return true;
     }
-
-
 }

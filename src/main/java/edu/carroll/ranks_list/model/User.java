@@ -1,64 +1,71 @@
 package edu.carroll.ranks_list.model;
 
+import edu.carroll.ranks_list.service.UserServiceImpl;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "login")
+@Table(name = "user")
 public class User {
-
-    public void setRawPassword(String rawPassword) {
-        // XXX - This should *NEVER* be done in a real project
-        this.hashedPassword = Integer.toString(rawPassword.hashCode());
-    }
+    private static final Logger log = LoggerFactory.getLogger(User.class);
 
     private static final long serialVersionUID = 1L;
-
 
     @Id
     @GeneratedValue
     private Integer id;
 
-    @Column(name = "username", nullable = false, unique = true)
-    private String username;
+    @Column(name = "username", nullable = false)
+    String username;
 
     @Column(name = "password", nullable = false)
-    private String hashedPassword;
+    String password;
 
     public User() {
     }
 
     public User(String username, String rawPassword) {
         this.username = username;
-        setRawPassword(rawPassword);
+        setHashedPassword(rawPassword);
     }
 
     public Integer getId() {
         return id;
     }
 
-
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @NonNull
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public void setUsername(@NonNull String username) {
         this.username = username;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
+    @NonNull
+    public String getPassword() {
+        return password;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setPassword(@NonNull String password) {
+        this.password = password;
+    }
+
+    public void setHashedPassword(String rawPassword) {
+        // XXX - This should *NEVER* be done in a real project
+        this.password = Integer.toString(rawPassword.hashCode());
     }
 
     private static final String EOL = System.lineSeparator();
@@ -69,7 +76,7 @@ public class User {
         StringBuilder builder = new StringBuilder();
         builder.append("Login @ ").append(super.toString()).append("[").append(EOL);
         builder.append(TAB).append("username=").append(username).append(EOL);
-        builder.append(TAB).append("hashedPassword=").append("****").append(EOL);
+        builder.append(TAB).append("password=").append("****").append(EOL);
         builder.append("]").append(EOL);
         return builder.toString();
     }
@@ -82,11 +89,11 @@ public class User {
             return false;
 
         final User user = (User)o;
-        return username.equals(user.username) && hashedPassword.equals(user.hashedPassword);
+        return username.equals(user.username) && password.equals(user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, hashedPassword);
+        return Objects.hash(username, password);
     }
 }

@@ -31,9 +31,7 @@ public class Ad {
     public Ad() {
     }
 
-
     public int getId() {
-
         return id;
     }
 

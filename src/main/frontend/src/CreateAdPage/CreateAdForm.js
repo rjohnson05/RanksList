@@ -14,11 +14,9 @@ export default function CreateAdForm() {
 
     // Posts the entered data onto the main page when the "Submit" button is clicked
     const handleSubmit = (e) => {
-        e.preventDefault()
-        
         axios.post('http://localhost:8080/ads', formData)
             .then((response) => {console.log(response.data)})
-            .catch((error) => {console.log(error)});      
+            .catch((error) => {console.log(error)});
     }
 
     // Contains the form elements that will be rendered to the screen
