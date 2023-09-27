@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import NavBar from "../MainPage/NavBar";
 
 // Form for creating a new advertisement that will be added to the public stack of cards on the home page
 export default function CreateAdForm() {
@@ -21,22 +22,26 @@ export default function CreateAdForm() {
 
     // Contains the form elements that will be rendered to the screen
     return (
-        <form onSubmit={handleSubmit}>
-            <h1>Create New Advertisement</h1>
+        <div>
+            <NavBar />
 
-            <label>Advertisement Name:
-                <input type="text" name="name" value = {formData.name}
-                    onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
-            </label>
-            <label>Price:
-                <input type="text" name="price" value = {formData.price} 
-                    onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))} />
-            </label>
-            <label>Description:
-                <input type="text" name="description" value = {formData.description} 
-                    onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))} />
-            </label>
-            <input type="submit" value="Submit" />
-        </form>
+            <form onSubmit={handleSubmit}>
+                <h1>Create New Advertisement</h1>
+
+                <label>Advertisement Name:
+                    <input type="text" name="name" value = {formData.name}
+                           onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
+                </label>
+                <label>Price:
+                    <input type="text" name="price" value = {formData.price}
+                           onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))} />
+                </label>
+                <label>Description:
+                    <input type="text" name="description" value = {formData.description}
+                           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))} />
+                </label>
+                <input type="submit" value="Submit" />
+            </form>
+        </div>
     );
 }

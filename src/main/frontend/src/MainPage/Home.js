@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Row } from 'react-bootstrap';
-import IconButton from 'rsuite/IconButton';
+import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
+import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import axios from 'axios';
-import CreateAdForm from '.././CreateAdPage/CreateAdForm'
 import {Link} from "react-router-dom";
+import NavBar from "./NavBar";
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
-    const adId = useState();
+    const [isSelected, setSelected] = useState(false);
 
     useEffect(() => {
         loadAds();
@@ -17,6 +19,20 @@ export default function Home() {
     const loadAds = async () => {
         const ads_data = await axios.get("http://localhost:8080/ads");
         setAds(ads_data.data);
+    }
+
+    const saveAd = (adId, selected) => {
+        if (!isSelected) {
+            axios.put("http://localhost:8080/saved_ads/" + adId)
+                .then(response => {console.log("Saved Ad #" + adId)})
+                .catch(error => {console.log(error.response.data)})
+        } else {
+            axios.delete("http://localhost:8080/saved_ads/" + adId)
+                .then(response => {console.log("Unsaved Ad #" + adId)})
+                .catch(error => {console.log(error.response.data)})
+        }
+
+        setSelected(!isSelected);
     }
 
     const deleteAd = (adId) => {
@@ -30,35 +46,7 @@ export default function Home() {
     return (
         <div>
             {/*Navbar code came from https://getbootstrap.com/docs/5.0/components/navbar/*/}
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <div className="container-fluid">
-                    <a className="navbar-brand" href="#">Navbar</a>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNavDropdown">
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="#">Home</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Features</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Pricing</a>
-                            </li>
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Profile
-                                </a>
-                                <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><a className="dropdown-item" href="/login">Sign Out</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <NavBar />
 
             {/*Sidebar code came from https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb*/}
             <div className="container-fluid">
@@ -104,7 +92,7 @@ export default function Home() {
                                 </li>
                                 <li>
                                     <a href="#submenu3" data-bs-toggle="collapse" className="nav-link px-0 align-middle">
-                                        <i class="fs-4 bi-grid"></i> <span className="ms-1 d-none d-sm-inline">Products</span> </a>
+                                        <i className="fs-4 bi-grid"></i> <span className="ms-1 d-none d-sm-inline">Products</span> </a>
                                     <ul className="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                                         <li className="w-100">
                                             <a href="#" className="nav-link px-0"> <span className="d-none d-sm-inline">Product</span> 1</a>
@@ -152,13 +140,15 @@ export default function Home() {
                                     <p>Name: {ad.name}</p>
                                     <p>Price: {ad.price}</p>
                                     <p>Description: {ad.description}</p>
-                                    <IconButton aria-label="delete" value={id} onClick={() => deleteAd(ad.id)}>
+                                    <IconButton value={id} onClick={() => {saveAd(ad.id)}}>
+                                        {isSelected ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
+                                    </IconButton>
+                                    <IconButton value={id} onClick={() => deleteAd(ad.id)}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </div>
                             ))}
                         </Row>
-                        <CreateAdForm />
                     </div>
                 </div>
             </div>
