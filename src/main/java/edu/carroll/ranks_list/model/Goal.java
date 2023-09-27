@@ -29,8 +29,8 @@ public class Goal {
         return description;
     }
 
-    public boolean equals(){
-        return true;
+    public boolean equals(Goal goal){
+        return goal.getDescription() == goal.getDescription();
     }
 
     public int hashcode(){

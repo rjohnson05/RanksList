@@ -1,30 +1,28 @@
 package edu.carroll.ranks_list.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
 
-@Data
-@NoArgsConstructor
-@RequiredArgsConstructor
-@AllArgsConstructor
 
 @Entity
 @Table(name = "ad")
 public class Ad {
+
     @Id
     @GeneratedValue
     private Integer id;
-    @NonNull private String name;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "price", nullable = false)
     private Float price;
+
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "image")
     private byte[] image;
 
 

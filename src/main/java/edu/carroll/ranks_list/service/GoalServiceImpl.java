@@ -1,45 +1,42 @@
 package edu.carroll.ranks_list.service;
 
-import edu.carroll.ranks_list.model.Ad;
+import edu.carroll.ranks_list.model.Goal;
+import edu.carroll.ranks_list.repository.GoalRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
 public class GoalServiceImpl implements GoalService {
 
-    /**
-     * List of all goals that have been entered in the system
-     */
-    private List<GoalServiceImpl> allGoals = new ArrayList<GoalServiceImpl>();
-
-    /**
-     * True if goal is completed, false otherwise
-     */
-    private boolean completed;
-
+    private GoalRepository goalRepo;
 
     /**
      * Constructor for each goal
-     * @param ad
      */
-    public GoalServiceImpl(AdServiceImpl ad){
-
+    public GoalServiceImpl(GoalRepository goalRepo) {
+        this.goalRepo = goalRepo;
     }
 
-    public void addGoal(GoalServiceImpl goal){
-        allGoals.add(goal);
+    @Override
+    public Goal newGoal(Goal goal){
+        goalRepo.save(goal);
+        return goal;
     }
 
-    public void setGoal(AdServiceImpl ad){
-        //ad.addGoal(this.goalDescription);
-        this.completed = false;
+    @Override
+    public List<Goal> getAllGoals() {
+        return goalRepo.findAll();
     }
 
-    private void completedGoal(Ad ad){
-        this.completed = true;
+    @Override
+    public Goal deleteGoal(Integer id){
+        Goal deletedGoal = goalRepo.getReferenceById(id);
+        goalRepo.deleteById(id);
+        return deletedGoal;
     }
 
 }
+
+

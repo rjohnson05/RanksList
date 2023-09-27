@@ -1,14 +1,16 @@
 package edu.carroll.ranks_list.service;
 
-import edu.carroll.ranks_list.model.Ad;
+import edu.carroll.ranks_list.model.Goal;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface GoalService {
 
-    public void addGoal(GoalServiceImpl goal);
+    public Goal newGoal(Goal goal);
 
-    public void setGoal(AdServiceImpl ad);
+    public List<Goal> getAllGoals();
+
+    public Goal deleteGoal(Integer id);
 
 
 }

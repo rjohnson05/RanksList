@@ -48,4 +48,17 @@ public class UserServiceImpl implements UserService {
         log.info("validateUser: successful login for {}", username);
         return true;
     }
+
+    public boolean createUser(User newUser){
+        if (userRepo.findByUsernameIgnoreCase(newUser.getUsername()).isEmpty()) {
+            User user = new User(newUser.getUsername(),newUser.getPassword());
+            userRepo.save(user);
+            newUser.setHashedPassword(newUser.getPassword());
+            log.info("New Password: {}", newUser.getPassword());
+            log.info("Registered New User: " + newUser.getUsername());
+            return true;
+        }
+        log.debug("Attempted registration for already existing user");
+        return false;
+    }
 }

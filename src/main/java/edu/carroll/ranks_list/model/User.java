@@ -1,11 +1,6 @@
 package edu.carroll.ranks_list.model;
 
-import edu.carroll.ranks_list.service.UserServiceImpl;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -41,9 +36,6 @@ public class User {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @NonNull
     public String getUsername() {
