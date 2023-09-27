@@ -28,7 +28,6 @@ public class AdServiceImpl implements AdService {
     }
 
     public List<Ad> loadSavedAds() {
-        log.info("Entering loadSavedAds");
         List<Ad> savedAds = adRepo.findBySaved(true);
         return savedAds;
     }

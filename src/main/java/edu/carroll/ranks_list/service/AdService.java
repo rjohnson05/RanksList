@@ -1,7 +1,6 @@
 package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
-import edu.carroll.ranks_list.model.User;
 
 import java.util.List;
 
