@@ -6,9 +6,19 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository for users.
+ *
+ * @author Hank Rugg, Ryan Johnson
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    // JPA throws an exception if we attempt to return a single object that doesn't exist, so return a list
-    // even though we only expect either an empty list of a single element.
+    /**
+     * Returns a list of all users with the designated username. This list will have a length of either 0 if there is no user
+     * with the designated username or 1 if there is a user with the designated username.
+     *
+     * @param username String object containing the username
+     * @return List of User objects that have the designated username
+     */
     public List<User> findByUsernameIgnoreCase(String username);
 }

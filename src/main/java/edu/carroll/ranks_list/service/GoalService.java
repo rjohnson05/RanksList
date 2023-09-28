@@ -9,6 +9,4 @@ public interface GoalService {
     public void addGoal(GoalServiceImpl goal);
 
     public void setGoal(AdServiceImpl ad);
-
-
 }
