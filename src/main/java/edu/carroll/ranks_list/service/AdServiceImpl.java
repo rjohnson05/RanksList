@@ -41,6 +41,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public boolean createAd(String name, String description, Float price) {
         Ad newAd = new Ad(name, price, description);
+        log.info("New Ad: " + newAd);
         adRepo.save(newAd);
         return true;
     }
