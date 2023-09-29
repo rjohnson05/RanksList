@@ -1,5 +1,7 @@
 package edu.carroll.ranks_list.controller;
 
+
+import edu.carroll.ranks_list.form.AdForm;
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.service.AdService;
 import org.slf4j.Logger;
@@ -21,8 +23,9 @@ public class AdController {
     }
 
     @PostMapping("/ads")
-    Ad newAd(@RequestBody Ad newAd) {
-        return adService.newAd(newAd);
+    boolean newAd(@RequestBody AdForm adForm) {
+        boolean newAd = adService.newAd(adForm.getName(), adForm.getDescription(), adForm.getPrice());
+        return newAd;
     }
 
     @GetMapping("/ads")

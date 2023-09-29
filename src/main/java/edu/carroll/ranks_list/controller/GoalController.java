@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.controller;
 
+import edu.carroll.ranks_list.form.GoalForm;
 import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.service.GoalService;
 import org.slf4j.Logger;
@@ -21,11 +22,10 @@ public class GoalController {
     }
 
 
-
     @PostMapping("/goals")
-    Goal newGoal(@RequestBody Goal newGoal) {
+    boolean newGoal(@RequestBody GoalForm goalForm) {
         System.out.println("Posted goal");
-        return goalService.newGoal(newGoal);
+        return goalService.newGoal(goalForm.getName(), goalForm.getDescription());
     }
 
     @GetMapping("/goals")
@@ -35,10 +35,8 @@ public class GoalController {
 
     @DeleteMapping("/goals/{id}")
     public void deleteGoal(@PathVariable("id") Integer id) {
-        System.out.println("Delete Mapping");
         // Ad deletedAd = adRepository.getReferenceById(id);
         goalService.deleteGoal(id);
-        System.out.println(id);
         log.info("Goal #{id} deleted");
 
 

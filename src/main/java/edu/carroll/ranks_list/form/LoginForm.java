@@ -33,8 +33,8 @@ public class LoginForm {
     }
 
     @PostMapping("/login")
-    public String loginPost(@Valid @ModelAttribute LoginForm loginForm, BindingResult result) {
-        System.out.println("User '" + loginForm.getUsername() + "' attempted login");
+    public String loginPost(@Valid @ModelAttribute String username, BindingResult result) {
+        System.out.println("User '" + username + "' attempted login");
         if (result.hasErrors()) {
             return "login";
         }

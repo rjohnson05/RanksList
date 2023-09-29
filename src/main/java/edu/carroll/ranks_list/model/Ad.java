@@ -29,6 +29,12 @@ public class Ad {
     public Ad() {
     }
 
+    public Ad(String name, Float price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }
@@ -68,5 +74,13 @@ public class Ad {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    private static final String EOL = System.lineSeparator();
+
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("Ad :").append(getDescription()).append(EOL);
+        return builder.toString();
     }
 }

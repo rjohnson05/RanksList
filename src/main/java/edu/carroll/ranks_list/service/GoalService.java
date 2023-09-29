@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface GoalService {
 
-    public Goal newGoal(Goal goal);
+    public boolean newGoal(String name, String description);
 
     public List<Goal> getAllGoals();
 

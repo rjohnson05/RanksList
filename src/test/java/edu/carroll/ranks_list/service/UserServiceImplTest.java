@@ -23,6 +23,7 @@ public class UserServiceImplTest {
     @Autowired
     private UserRepository userRepo;
 
+
     private User fakeUser = new User(username, password);
 
     @BeforeEach

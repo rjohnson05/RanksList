@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.form.LoginForm;
 import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepo;
+
 
     public UserServiceImpl(UserRepository userRepo) {
         this.userRepo = userRepo;
@@ -49,13 +51,13 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    public boolean createUser(User newUser){
-        if (userRepo.findByUsernameIgnoreCase(newUser.getUsername()).isEmpty()) {
-            User user = new User(newUser.getUsername(),newUser.getPassword());
+    public boolean createUser(String username, String password){
+        if (userRepo.findByUsernameIgnoreCase(username).isEmpty()) {
+            User user = new User(username,password);
             userRepo.save(user);
-            newUser.setHashedPassword(newUser.getPassword());
-            log.info("New Password: {}", newUser.getPassword());
-            log.info("Registered New User: " + newUser.getUsername());
+            user.setHashedPassword(password);
+            log.info("Set Password: ****");
+            log.info("Registered New User: " + username);
             return true;
         }
         log.debug("Attempted registration for already existing user");

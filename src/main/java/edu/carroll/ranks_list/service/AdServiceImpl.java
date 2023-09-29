@@ -14,11 +14,11 @@ public class AdServiceImpl implements AdService {
         this.adRepo = adRepo;
     }
 
-
     @Override
-    public Ad newAd(Ad newAd) {
+    public boolean newAd(String name, String description, Float price) {
+        Ad newAd = new Ad(name, price, description);
         adRepo.save(newAd);
-        return newAd;
+        return true;
     }
 
     @Override
@@ -32,5 +32,6 @@ public class AdServiceImpl implements AdService {
         adRepo.deleteById(id);
         return deletedAd;
     }
+
 
 }

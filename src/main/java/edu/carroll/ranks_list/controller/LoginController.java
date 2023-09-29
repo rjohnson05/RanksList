@@ -1,6 +1,6 @@
 package edu.carroll.ranks_list.controller;
 
-import edu.carroll.ranks_list.model.User;
+import edu.carroll.ranks_list.form.LoginForm;
 import edu.carroll.ranks_list.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,22 +21,23 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public boolean createUser(@RequestBody User newUser) {
-        return userService.createUser(newUser);
+    public boolean createUser(@RequestBody String username, String password) {
+        return userService.createUser(username, password);
     }
 
     /**
      * Determines if the login credential information matches a current user in the database.
-     * @param potentialUser     User object containing a username and password being used to try to log in
+     * @param loginForm
      * @return True if the credentials match a user in the database; False otherwise
      */
     @PostMapping("/login")
-    public boolean loginPost(@RequestBody User potentialUser) {
-        if (!userService.validateUser(potentialUser.getUsername(), potentialUser.getPassword())) {
-            log.debug(potentialUser.getUsername(), " attempted to log in");
+    public boolean loginPost(@RequestBody LoginForm loginForm) {
+        if (!userService.validateUser(loginForm.getUsername(), loginForm.getPassword())) {
+            System.out.println(loginForm.getUsername() + " attempted to log in");
+            log.debug(loginForm.getUsername(), " attempted to log in");
             return false;
         }
-        log.info(potentialUser.getUsername(), " successfully logged in");
+        log.info(loginForm.getUsername(), " successfully logged in");
         return true;
     }
 }

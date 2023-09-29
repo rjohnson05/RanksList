@@ -14,7 +14,15 @@ public class Goal {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     public Goal() {
+    }
+
+    public Goal(String name, String description){
+        this.description = description;
+        this.name = name;
     }
 
     public void setDescription(String description) {
@@ -30,10 +38,18 @@ public class Goal {
     }
 
     public boolean equals(Goal goal){
-        return goal.getDescription() == goal.getDescription();
+        return goal.getDescription() == this.getDescription();
     }
 
     public int hashcode(){
         return Objects.hash(description);
+    }
+
+    private static final String EOL = System.lineSeparator();
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append("Goal :").append(getDescription()).append(EOL);
+        return builder.toString();
     }
 }

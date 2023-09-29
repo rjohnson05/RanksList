@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface AdService {
 
-    Ad newAd(Ad newAd);
-
     List<Ad> getAllAds();
 
     Ad deleteAds(Integer id);
+
+    boolean newAd(String name, String description, Float price);
 }
