@@ -21,7 +21,7 @@ public class Goal {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "ad_id")
+    @Column(name = "ad_id", nullable = false)
     private Integer ad_id;
 
     public Integer getAd_id() {
