@@ -21,8 +21,8 @@ public class Ad {
     private Integer id;
 
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "price", nullable = false)
     private Float price;
@@ -43,8 +43,8 @@ public class Ad {
     }
 
 
-    public Ad(String title, Float price, String description) {
-        this.title = title;
+    public Ad(String name, Float price, String description) {
+        this.name = name;
         this.price = price;
         this.description = description;
     }
@@ -73,8 +73,8 @@ public class Ad {
      * @return String object containing the title of the advertisement
      */
     @NonNull
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -82,8 +82,8 @@ public class Ad {
      *
      * @param title String object containing the title of the advertisement
      */
-    public void setTitle(@NonNull String title) {
-        this.title = title;
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 
     /**
@@ -165,8 +165,8 @@ public class Ad {
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Ad #").append(getId()).append(" [").append(EOL);
-        builder.append(TAB).append("Title: ").append(title).append(EOL);
+//        builder.append("Ad #").append(getId()).append(" [").append(EOL);
+        builder.append(TAB).append("Name: ").append(name).append(EOL);
         builder.append(TAB).append("Price: ").append(price).append(EOL);
         builder.append(TAB).append("Description: ").append(description).append(EOL);
         builder.append(TAB).append("Saved Status: ").append(saved).append(EOL);

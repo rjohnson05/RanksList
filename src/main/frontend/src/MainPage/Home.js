@@ -164,7 +164,27 @@ export default function Home() {
                         </Row>
                     </div>
                 </div>
+
+            <div className="col py-3">
+
+                <Row xs={3}>
+                    {allAdsData.map((ad, id) => (
+                        <div className="col border border-5" key={id}>
+                            <p>Name: {ad.name}</p>
+                            <p>Price: {ad.price}</p>
+                            <p>Description: {ad.description}</p>
+                            <IconButton value={id} onClick={() => {saveAd(ad.id)}}>
+                                {isSelected ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
+                            </IconButton>
+                            <IconButton value={id} onClick={() => deleteAd(ad.id)}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </div>
+                    ))}
+                </Row>
             </div>
         </div>
+        </div>
+
     );
 }
