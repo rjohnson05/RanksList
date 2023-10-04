@@ -44,7 +44,7 @@ public class GoalController {
     @PostMapping("/goals")
     boolean newGoal(@RequestBody GoalForm goalForm) {
         System.out.println("Posted goal");
-        return goalService.newGoal(goalForm.getName(), goalForm.getDescription());
+        return goalService.newGoal(goalForm.getName(), goalForm.getDescription(), goalForm.getAdId());
     }
 
     /**
@@ -56,6 +56,17 @@ public class GoalController {
     List<Goal> getAllGoals() {
         return goalService.getAllGoals();
     }
+
+    /**
+     * Gets all the current goals.
+     *
+     * @return List of all Goal objects in the database
+     */
+    @GetMapping("/goals/{adId}")
+    List<Goal> getIndividualGoals(@PathVariable("adId") Integer adId) {
+        return goalService.getIndividualGoals(adId);
+    }
+
 
     /**
      * Deletes a selected goal and removes it from the database.

@@ -6,11 +6,12 @@ import java.util.List;
 
 public interface GoalService {
 
-    public boolean newGoal(String name, String description);
+    public boolean newGoal(String name, String description, Integer ad_id);
 
     public List<Goal> getAllGoals();
 
-    public Goal deleteGoal(Integer id);
+    public List<Goal> getIndividualGoals(Integer ad_id);
 
+    public Goal deleteGoal(Integer id);
 
 }

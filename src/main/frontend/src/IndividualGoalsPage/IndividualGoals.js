@@ -3,22 +3,22 @@ import { Row } from 'react-bootstrap';
 import IconButton from 'rsuite/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-import {Link} from "react-router-dom";
-import NavBar from "./NavBar";
+import CreateGoalForm from "../CreateGoalPage/CreateGoalForm";
+import {Link, useLocation} from "react-router-dom";
+import NavBar from "../MainPage/NavBar";
 
 export default function Home() {
     const [allGoalsData, setGoals] = useState([]);
-    const goalId = useState();
+    let ad_id = Number(useLocation().pathname.split('/').pop());
 
     useEffect(() => {
         loadGoals();
-    }, []);
+    }, );
 
     const loadGoals = async () => {
-        const goals_data = await axios.get("http://localhost:8080/goals" );
+        const goals_data = await axios.get("http://localhost:8080/goals/" + ad_id);
         setGoals(goals_data.data);
     }
-
 
     const deleteGoal = (goalId) => {
         console.log(goalId);
@@ -116,7 +116,6 @@ export default function Home() {
                 </div>
                 {/* End of copied sidebar code */}
                 <div class="col py-3">
-
                     <Row xs={3}>
                         {allGoalsData.map((goal, id) => (
                             <div class="col border border-5" key={id}>

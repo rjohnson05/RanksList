@@ -21,17 +21,29 @@ public class Goal {
     @Column(name = "name", nullable = false)
     private String name;
 
-    public Goal(String name, String description){
-        this.description = description;
-        this.name = name;
+    @Column(name = "ad_id")
+    private Integer ad_id;
+
+    public Integer getAd_id() {
+        return ad_id;
     }
 
+    public void setAd_id(Integer ad_id) {
+        this.ad_id = ad_id;
+    }
 
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
      */
     public Goal() {
     }
+
+    public Goal(String name, String description, Integer ad_id){
+        this.description = description;
+        this.name = name;
+        this.ad_id = ad_id;
+    }
+
 
     /**
      * Returns the ID of the goal.

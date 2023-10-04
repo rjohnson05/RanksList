@@ -15,7 +15,6 @@ import java.util.List;
 @Service
 public class GoalServiceImpl implements GoalService {
 
-
     private GoalRepository goalRepo;
 
     /**
@@ -40,24 +39,27 @@ public class GoalServiceImpl implements GoalService {
 
 
     @Override
-    public boolean newGoal(String name, String description) {
-        Goal goal = new Goal(name, description);
+    public boolean newGoal(String name, String description, Integer ad_id) {
+        Goal goal = new Goal(name, description, ad_id);
         goalRepo.save(goal);
         return true;
-    }
-
-    /**
-     * Adds a goal to the database.
-     *
-     * @param goal
-     */
-    public void addGoal(GoalServiceImpl goal){
-        allGoals.add(goal);
     }
 
     @Override
     public List<Goal> getAllGoals() {
         return goalRepo.findAll();
+    }
+
+    @Override
+    public List<Goal> getIndividualGoals(Integer adId) {
+        List<Goal> all = goalRepo.findAll();
+        List<Goal> individual = new ArrayList<>();
+        for (Goal g : all){
+            if (g.getAd_id().equals(adId)){
+                individual.add(g);
+            }
+        }
+        return individual;
     }
 
     @Override
