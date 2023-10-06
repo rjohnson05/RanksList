@@ -13,14 +13,12 @@ public interface AdService {
 
     List<Ad> loadAllAds();
 
-    List<Ad> loadSavedAds();
+    List<Ad> loadStarredAds();
 
     Ad deleteAd(Integer id);
 
-    Ad removeSavedAd(Integer id);
+    Ad removeStarredAd(Integer id);
 
-    Ad saveAd(Integer id);
-
-
+    Ad starAd(Integer id);
 }
 

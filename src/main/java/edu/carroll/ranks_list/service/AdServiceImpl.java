@@ -34,17 +34,23 @@ public class AdServiceImpl implements AdService {
     /**
      * Creates a new advertisement and adds it to the database.
      *
-     * @param name name of new ad
+     * @param name        name of new ad
      * @param description description of new ad
-     * @param price price of new ad
+     * @param price       price of new ad
+     * @return True if ad successfully added to the database; False otherwise
      */
     @Override
     public boolean createAd(String name, String description, Float price) {
-        Ad newAd = new Ad(name, price, description);
-        log.info("New Ad: " + newAd);
-        adRepo.save(newAd);
-        return true;
+        // Adds an advertisement to the DB only if all fields have been filled
+        if (name != null && description != null && price != null) {
+            Ad newAd = new Ad(name, price, description);
+            log.info("New Ad: " + newAd);
+            adRepo.save(newAd);
+            return true;
+        }
+        return false;
     }
+
     /**
      * Returns a list of all advertisements in the database.
      *
@@ -59,9 +65,9 @@ public class AdServiceImpl implements AdService {
      *
      * @return List of all Ad objects with a "saved" status of True
      */
-    public List<Ad> loadSavedAds() {
-        List<Ad> savedAds = adRepo.findBySaved(true);
-        return savedAds;
+    public List<Ad> loadStarredAds() {
+        List<Ad> starredAds = adRepo.findByStarred(true);
+        return starredAds;
     }
 
     /**
@@ -79,29 +85,53 @@ public class AdServiceImpl implements AdService {
     }
 
     /**
-     * Removes a designated advertisement from the list of saved ads.
+     * Testing class that removes all advertisements from the database.
+     */
+    public void deleteAllAds() {
+        adRepo.deleteAll();
+    }
+
+    /**
+     * Removes a designated advertisement from the list of starred ads.
      *
      * @param id Integer representing the ID of the Ad object to be removed from the list of saved ads
      * @return Ad object removed from the list of saved advertisements
      */
-    public Ad removeSavedAd(Integer id) {
+    public Ad removeStarredAd(Integer id) {
+        System.out.println("ID: " + id);
         Ad changedAd = adRepo.getReferenceById(id);
-        changedAd.setSaved(false);
-        adRepo.save(changedAd);
-        log.info("Advertisement #{id} removed from saved ads");
-
+        System.out.println("Changed Ad: " + changedAd);
+        if (changedAd != null) {
+            changedAd.setStarred(false);
+            adRepo.save(changedAd);
+            log.info("Advertisement #{id} removed from saved ads");
+        }
         return changedAd;
     }
 
     /**
-     * Places a designated advertisement onto the list of saved advertisements.
+     * Removes all ads from the list of starred ads.
      *
-     * @param id Integer representing the ID of the Ad object to be added to the list of saved advertisements
-     * @return Ad object being added to the list of saved advertisements
+     * @return True if ads were successfully removed from the starred list; False otherwise
      */
-    public Ad saveAd(Integer id) {
+    public boolean removeAllStarredAds() {
+        List<Ad> starredAds = loadStarredAds();
+        for (Ad ad : starredAds) {
+            ad.setStarred(false);
+            adRepo.save(ad);
+        }
+        return true;
+    }
+
+    /**
+     * Places a designated advertisement onto the list of starred advertisements.
+     *
+     * @param id Integer representing the ID of the Ad object to be added to the list of starred advertisements
+     * @return Ad object being added to the list of starred advertisements
+     */
+    public Ad starAd(Integer id) {
         Ad changedAd = adRepo.getReferenceById(id);
-        changedAd.setSaved(true);
+        changedAd.setStarred(true);
         adRepo.save(changedAd);
 
         return changedAd;
@@ -111,8 +141,5 @@ public class AdServiceImpl implements AdService {
     public List<Ad> getAllAds() {
         return adRepo.findAll();
     }
-
-
-
 }
 
