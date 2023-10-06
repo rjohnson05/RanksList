@@ -3,10 +3,8 @@ import { Row } from 'react-bootstrap';
 import IconButton from 'rsuite/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-import CreateAdForm from '.././CreateAdPage/CreateAdForm'
-import * as allGoalsData from "react-bootstrap/ElementChildren";
-import CreateGoalForm from "../CreateGoalPage/CreateGoalForm";
 import {Link} from "react-router-dom";
+import NavBar from "./NavBar";
 
 export default function Home() {
     const [allGoalsData, setGoals] = useState([]);
@@ -17,9 +15,10 @@ export default function Home() {
     }, []);
 
     const loadGoals = async () => {
-        const goals_data = await axios.get("http://localhost:8080/goals");
+        const goals_data = await axios.get("http://localhost:8080/goals" );
         setGoals(goals_data.data);
     }
+
 
     const deleteGoal = (goalId) => {
         console.log(goalId);
@@ -30,7 +29,9 @@ export default function Home() {
     }
 
     return (
-        // Sidebar code came from https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb
+        <div>
+            {/*Navbar code came from https://getbootstrap.com/docs/5.0/components/navbar/*/}
+            <NavBar />
         <div class="container-fluid">
             <div class="row flex-nowrap">
                 <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
@@ -121,17 +122,15 @@ export default function Home() {
                             <div class="col border border-5" key={id}>
                                 <p>Name: {goal.name}</p>
                                 <p>Description: {goal.description}</p>
-                                <p>Completed: {goal.completed}</p>
                                 <IconButton aria-label="delete" value={id} onClick={() => deleteGoal(goal.id)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </div>
                         ))}
                     </Row>
-                    <CreateGoalForm />
-
                 </div>
             </div>
+        </div>
         </div>
     );
 }
