@@ -30,8 +30,8 @@ public class Ad {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "saved")
-    private Boolean saved = Boolean.FALSE;
+    @Column(name = "starred")
+    private Boolean starred = Boolean.FALSE;
 
     @Column(name = "image")
     private byte[] image;
@@ -41,7 +41,6 @@ public class Ad {
      */
     public Ad() {
     }
-
 
     public Ad(String name, Float price, String description) {
         this.name = name;
@@ -80,7 +79,7 @@ public class Ad {
     /**
      * Sets the title of the advertisement.
      *
-     * @param title String object containing the title of the advertisement
+     * @param name String object containing the title of the advertisement
      */
     public void setName(@NonNull String name) {
         this.name = name;
@@ -127,19 +126,19 @@ public class Ad {
     /**
      * Returns the status of the advertisement.
      *
-     * @return True if the advertisement is saved; False otherwise
+     * @return True if the advertisement is starred; False otherwise
      */
-    public Boolean getSaved() {
-        return saved;
+    public Boolean getStarred() {
+        return starred;
     }
 
     /**
      * Sets the status of the advertisement.
      *
-     * @param saved True if the advertisement is being saved; False otherwise
+     * @param starred True if the advertisement is being starred; False otherwise
      */
-    public void setSaved(Boolean saved) {
-        this.saved = saved;
+    public void setStarred(Boolean starred) {
+        this.starred = starred;
     }
 
     /**
@@ -169,7 +168,7 @@ public class Ad {
         builder.append(TAB).append("Name: ").append(name).append(EOL);
         builder.append(TAB).append("Price: ").append(price).append(EOL);
         builder.append(TAB).append("Description: ").append(description).append(EOL);
-        builder.append(TAB).append("Saved Status: ").append(saved).append(EOL);
+        builder.append(TAB).append("Starred Status: ").append(starred).append(EOL);
         builder.append("]").append(EOL);
         return builder.toString();
     }

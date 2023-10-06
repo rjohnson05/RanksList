@@ -35,7 +35,7 @@ public class AdController {
     /**
      * Creates a new advertisement and adds it to the database.
      *
-     * @param newAd Ad to be added to the database
+     * @param adForm Ad to be added to the database
      * @return the Ad successfully added to the database
      */
     @PostMapping("/ads")
@@ -77,7 +77,7 @@ public class AdController {
      */
     @GetMapping("/saved_ads")
     List<Ad> getSavedAds() {
-        List<Ad> savedAds = adService.loadSavedAds();
+        List<Ad> savedAds = adService.loadStarredAds();
         log.debug("List of Saved Ads: " + savedAds);
         return savedAds;
     }
@@ -90,10 +90,10 @@ public class AdController {
      */
     @PutMapping("/saved_ads/{id}")
     Ad changeAdStatus(@PathVariable("id") Integer id) {
-        Ad savedAd = adService.saveAd(id);
-        log.info("Ad # " + savedAd.getId() + "saved");
-        log.debug("Ad # " + savedAd.getId() + "saved: " + savedAd);
-        return savedAd;
+        Ad starredAd = adService.starAd(id);
+        log.info("Ad # " + starredAd.getId() + "saved");
+        log.debug("Ad # " + starredAd.getId() + "saved: " + starredAd);
+        return starredAd;
     }
 
     /**
@@ -103,9 +103,9 @@ public class AdController {
      */
     @DeleteMapping("/saved_ads/{id}")
     Ad removedSavedAd(@PathVariable("id") Integer id) {
-        Ad unsavedAd = adService.removeSavedAd(id);
-        log.info("Ad # " + unsavedAd.getId() + "unsaved");
-        log.debug("Ad # " + unsavedAd.getId() + "unsaved: " + unsavedAd);
-        return unsavedAd;
+        Ad unstarredAd = adService.removeStarredAd(id);
+        log.info("Ad # " + unstarredAd.getId() + "unsaved");
+        log.debug("Ad # " + unstarredAd.getId() + "unsaved: " + unstarredAd);
+        return unstarredAd;
     }
 }
