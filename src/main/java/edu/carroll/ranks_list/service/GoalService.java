@@ -14,4 +14,6 @@ public interface GoalService {
 
     public Goal deleteGoal(Integer id);
 
+    public boolean deleteAllGoals();
+
 }

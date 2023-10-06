@@ -20,7 +20,6 @@ public class Ad {
     @GeneratedValue
     private Integer id;
 
-
     @Column(name = "name", nullable = false)
     private String name;
 

@@ -60,6 +60,7 @@ public class GoalServiceImpl implements GoalService {
             }
         }
         return individual;
+//        return goalRepo.findByAdId(adId);
     }
 
     @Override
@@ -67,6 +68,14 @@ public class GoalServiceImpl implements GoalService {
         Goal deletedGoal = goalRepo.getReferenceById(id);
         goalRepo.deleteById(id);
         return deletedGoal;
+    }
+
+    @Override
+    public boolean deleteAllGoals(){
+        for(Goal g : getAllGoals()){
+            deleteGoal(g.getId());
+        }
+        return true;
     }
 }
 
