@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property name="LOG_PATH" value="./logs" />
+    <property name="LOG_FILE_NAME" value="application_logback" />
+
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <file>C://Users/ryanj/Desktop/College/CS-389/ranks_list/log.log</file>
         <encoder>
             <pattern>%date - [%level] - from %logger in %thread %n%message%n%xException%n</pattern>
         </encoder>
