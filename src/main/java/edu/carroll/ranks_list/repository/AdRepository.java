@@ -24,8 +24,8 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
     /**
      * Returns a list of all advertisements containing the designated name.
      *
-     * @param name String designating the name to be searched for
-     * @return List of Ad objects with the indicated name
+     * @param user_id Integer representing the ID of the specified user
+     * @return List of Ad objects created by the specified user
      */
-    public List<Ad> findByName(String name);
+    public List<Ad> findByUserId(Integer user_id);
 }

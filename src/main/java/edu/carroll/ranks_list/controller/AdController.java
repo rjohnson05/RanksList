@@ -4,10 +4,15 @@ package edu.carroll.ranks_list.controller;
 import edu.carroll.ranks_list.form.AdForm;
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.service.AdService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,7 +21,7 @@ import java.util.List;
  * @author Ryan Johnson, Hank Rugg
  */
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class AdController {
     private static final Logger log = LoggerFactory.getLogger(AdController.class);
 
@@ -39,10 +44,17 @@ public class AdController {
      * @return the Ad successfully added to the database
      */
     @PostMapping("/ads")
-    boolean newAd(@RequestBody AdForm adForm) {
-        boolean newAd = adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice());
-        log.info("New Ad Created: " + newAd);
-        return newAd;
+    boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
+        Integer currentUser = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie c : cookies) {
+            if (c.getName().equals("userID")) {
+                currentUser = Integer.parseInt(c.getValue());
+                break;
+            }
+        }
+
+        return adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), currentUser);
     }
 
     /**
@@ -58,54 +70,76 @@ public class AdController {
     }
 
     /**
+     * Gets all advertisements starred by the current user.
+     *
+     * @return list of all starred advertisements
+     */
+    @GetMapping("/starred_ads")
+    List<Ad> getStarredAds() {
+        List<Ad> starredAds = adService.loadStarredAds();
+        log.debug("List of Starred Ads: " + starredAds);
+        return starredAds;
+    }
+
+    /**
+     * Saves the advertisement for the current user. Changes the advertisement status from "unstarred" to "starred".
+     *
+     * @param id the ID number of the selected advertisement, as given by the database
+     * @return the Ad successfully changed to "save" in the database
+     */
+    @PutMapping("/starred_ads/{id}")
+    Ad changeAdStatus(@PathVariable("id") Integer id) {
+        Ad starredAd = adService.starAd(id);
+        log.info("Ad # " + starredAd.getId() + "starred");
+        log.debug("Ad # " + starredAd.getId() + "starred: " + starredAd);
+        return starredAd;
+    }
+
+    /**
+     * Removes the selected advertisement from the list of starred ads for the current user.
+     * @param id the ID number of the selected advertisement, as given by the database
+     * @return the Ad successfully changed to "unstarred" in the database
+     */
+    @DeleteMapping("/starred_ads/{id}")
+    Ad removedStarredAd(@PathVariable("id") Integer id) {
+        Ad unstarredAd = adService.removeStarredAd(id);
+        log.info("Ad # " + unstarredAd.getId() + "unstarred");
+        log.debug("Ad # " + unstarredAd.getId() + "unstarred: " + unstarredAd);
+        return unstarredAd;
+    }
+
+    /**
+     * Gets all advertisements created by the current user.
+     *
+     * @return list of all advertisements created by the current user
+     */
+    @GetMapping("/my_ads")
+    List<Ad> createdAds(HttpServletRequest request) {
+        // Get the ID number of the current user from the list of cookies
+        Integer currentUser = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie c : cookies) {
+            if (c.getName().equals("userID")) {
+                currentUser = Integer.parseInt(c.getValue());
+                break;
+            }
+        }
+
+        List<Ad> createdAds = adService.loadCreatedAds(currentUser);
+        log.debug("List of Starred Ads: " + createdAds);
+        return createdAds;
+    }
+
+    /**
      * Removes the selected advertisement from the database
      *
      * @param id the ID number of the selected advertisement, as given by the database
      * @return the Ad successfully removed from the database
      */
-    @DeleteMapping("/ads/{id}")
-    public Ad deleteAd(@PathVariable("id") Integer id) {
+    @DeleteMapping("/my_ads/{id}")
+    public Ad deleteMyAd(@PathVariable("id") Integer id) {
         Ad deletedAd = adService.deleteAd(id);
         log.info("Ad Deleted: " + deletedAd);
         return deletedAd;
-    }
-
-    /**
-     * Gets all advertisements saved by the current user.
-     *
-     * @return list of all saved advertisements
-     */
-    @GetMapping("/saved_ads")
-    List<Ad> getSavedAds() {
-        List<Ad> savedAds = adService.loadStarredAds();
-        log.debug("List of Saved Ads: " + savedAds);
-        return savedAds;
-    }
-
-    /**
-     * Saves the advertisement for the current user. Changes the advertisement status from "unsaved" to "saved".
-     *
-     * @param id the ID number of the selected advertisement, as given by the database
-     * @return the Ad successfully changed to "save" in the database
-     */
-    @PutMapping("/saved_ads/{id}")
-    Ad changeAdStatus(@PathVariable("id") Integer id) {
-        Ad starredAd = adService.starAd(id);
-        log.info("Ad # " + starredAd.getId() + "saved");
-        log.debug("Ad # " + starredAd.getId() + "saved: " + starredAd);
-        return starredAd;
-    }
-
-    /**
-     * Removes the selected advertisement from the list of saved ads for the current user.
-     * @param id the ID number of the selected advertisement, as given by the database
-     * @return the Ad successfully changed to "unsaved" in the database
-     */
-    @DeleteMapping("/saved_ads/{id}")
-    Ad removedSavedAd(@PathVariable("id") Integer id) {
-        Ad unstarredAd = adService.removeStarredAd(id);
-        log.info("Ad # " + unstarredAd.getId() + "unsaved");
-        log.debug("Ad # " + unstarredAd.getId() + "unsaved: " + unstarredAd);
-        return unstarredAd;
     }
 }

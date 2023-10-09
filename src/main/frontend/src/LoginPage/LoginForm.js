@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import { useCookies } from "react-cookie";
+axios.defaults.withCredentials = true;
+
 
 export default function RegisterForm() {
     const navigate = useNavigate();
     const [loginStatus, setLoginStatus] = useState(0);
+    const [cookies, setCookie] = useCookies(['user']);
     console.log(loginStatus);
     const [formData, setFormData] = useState({
         username: "",

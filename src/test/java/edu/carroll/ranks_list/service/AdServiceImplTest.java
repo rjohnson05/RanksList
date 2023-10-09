@@ -17,6 +17,7 @@ public class AdServiceImplTest {
     final private String name = "testname";
     final private Float price = 5.99F;
     final private String description = "testdescription";
+    final private Integer userId = 0;
 
     @Autowired
     private AdServiceImpl adService;
@@ -32,7 +33,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
         Ad createdAd = adService.loadAllAds().get(0);
 
         assertEquals("createAdValidDataTest: should pass with valid advertisement data", 1, adService.loadAllAds().size());
@@ -47,8 +48,8 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
+        adService.createAd(name, description, price, userId);
 
         assertEquals("createAdDuplicateTest: should pass with duplicate advertisements", 2, adService.loadAllAds().size());
     }
@@ -59,7 +60,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, (float) 0);
+        adService.createAd(name, description, (float) 0, userId);
 
         assertEquals("createAdPriceZeroTest: should pass with a price of $0.00", 1, adService.loadAllAds().size());
     }
@@ -70,7 +71,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(null, description, price);
+        adService.createAd(null, description, price, userId);
 
         assertEquals("createAdNullNameTest: should fail with Null name", 0, adService.loadAllAds().size());
     }
@@ -81,7 +82,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, null);
+        adService.createAd(name, description, null, userId);
 
         assertEquals("createAdNullPriceTest: should fail with Null price", 0, adService.loadAllAds().size());
     }
@@ -92,7 +93,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, null, price);
+        adService.createAd(name, null, price, userId);
 
         assertEquals("createAdNullDescriptionTest: should fail with Null description", 0, adService.loadAllAds().size());
     }
@@ -103,7 +104,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, null, price);
+        adService.createAd(name, null, price, userId);
 
         assertEquals("createAdNullAllTest: should fail with all Null data", 0, adService.loadAllAds().size());
     }
@@ -114,7 +115,7 @@ public class AdServiceImplTest {
         for (int i = 1; i < 10; i++) {
             adService.deleteAllAds();
             for (int j = 0; j < i; j++) {
-                adService.createAd(name, description, price);
+                adService.createAd(name, description, price, userId);
             }
             assertEquals("loadAllAdsVariedNumberOfAdsTest: should pass with valid data for any number of ads", i, adService.loadAllAds().size());
         }
@@ -133,8 +134,8 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
+        adService.createAd(name, description, price, userId);
 
         assertEquals("loadAllAdsDuplicatesTest: should successfully load each duplicate ad", 2, adService.loadAllAds().size());
     }
@@ -148,7 +149,7 @@ public class AdServiceImplTest {
         for (int i = 1; i < 10; i++) {
             adService.removeAllStarredAds();
             for (int j = 0; j < i; j++) {
-                adService.createAd(name, description, price);
+                adService.createAd(name, description, price, userId);
                 int createdAdId = adService.loadAllAds().get(j).getId();
                 adService.starAd(createdAdId);
             }
@@ -172,7 +173,7 @@ public class AdServiceImplTest {
             adService.deleteAllAds();
         }
         for (int i = 0; i < 10; i++) {
-            adService.createAd(name, description, price);
+            adService.createAd(name, description, price, userId);
             if (i < 5) {
                 Ad createdAd = adService.loadAllAds().get(i);
                 adService.starAd(createdAd.getId());
@@ -187,8 +188,8 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
+        adService.createAd(name, description, price, userId);
         Integer createdAdId = adService.loadAllAds().get(0).getId();
         adService.deleteAd(createdAdId);
 
@@ -202,7 +203,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
         int createdAdId = adService.loadAllAds().get(0).getId();
         adService.deleteAd(createdAdId - 1);
 
@@ -214,7 +215,7 @@ public class AdServiceImplTest {
         // Ensures that all ads in the database are deleted, no matter the number of ads present
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < i; j++) {
-                adService.createAd(name, description, price);
+                adService.createAd(name, description, price, userId);
             }
             adService.deleteAllAds();
             assertEquals("deleteAllAdsVariedNumberOfAdsTest: should pass if all ads are deleted", 0, adService.loadAllAds().size());
@@ -241,8 +242,8 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
+        adService.createAd(name, description, price, userId);
         int createdAdId = adService.loadAllAds().get(1).getId();
         adService.starAd(createdAdId);
         adService.removeStarredAd(createdAdId);
@@ -275,7 +276,7 @@ public class AdServiceImplTest {
         }
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < i; j++) {
-                adService.createAd(name, description, price);
+                adService.createAd(name, description, price, userId);
                 int adId = adService.loadAllAds().get(adService.loadAllAds().size() - 1).getId();
                 adService.starAd(adId);
             }
@@ -291,7 +292,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
         adService.removeAllStarredAds();
 
         assertEquals("removeAllStarredAdsNoAdsTest: should pass if there are no starred ads", 0, adService.loadStarredAds().size());
@@ -303,7 +304,7 @@ public class AdServiceImplTest {
         if (!adService.loadAllAds().isEmpty()) {
             adService.deleteAllAds();
         }
-        adService.createAd(name, description, price);
+        adService.createAd(name, description, price, userId);
         int adId = adService.loadAllAds().get(0).getId();
         adService.starAd(adId);
 

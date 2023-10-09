@@ -124,9 +124,7 @@ public class Goal {
 
     private static final String EOL = System.lineSeparator();
 
-    /**
-     * @return String with goal description after it
-     */
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();

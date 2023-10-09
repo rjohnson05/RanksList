@@ -43,7 +43,6 @@ public class UserServiceImpl implements UserService {
         // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
         // NEVER EVER do this in production code!
         final String userProvidedHash = Integer.toString(password.hashCode());
-        log.info("Hash: {}", userProvidedHash);
         if (!u.getPassword().equals(userProvidedHash)){
             log.debug("validateUser: password !match");
             return false;

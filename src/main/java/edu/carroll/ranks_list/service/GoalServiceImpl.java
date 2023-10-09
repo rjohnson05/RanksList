@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.controller.AdController;
 import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.repository.GoalRepository;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ public class GoalServiceImpl implements GoalService {
     public GoalServiceImpl(GoalRepository goalRepo) {
         this.goalRepo = goalRepo;
     }
+
 
 
     /**
