@@ -2,6 +2,8 @@ package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.repository.GoalRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,17 +17,9 @@ import java.util.List;
 @Service
 public class GoalServiceImpl implements GoalService {
 
+    private static final Logger log = LoggerFactory.getLogger(GoalServiceImpl.class);
+
     private GoalRepository goalRepo;
-
-    /**
-     * List of all goals that have been entered in the system
-     */
-    private List<GoalServiceImpl> allGoals = new ArrayList<GoalServiceImpl>();
-
-    /**
-     * True if goal is completed, false otherwise
-     */
-    private boolean completed;
 
 
     /**
@@ -38,45 +32,66 @@ public class GoalServiceImpl implements GoalService {
     }
 
 
+    /**
+     * Creates a new goal and adds it to the repo
+     * @param name
+     * @param description
+     * @param ad_id
+     * @return
+     */
     @Override
     public boolean newGoal(String name, String description, Integer ad_id) {
-        Goal goal = new Goal(name, description, ad_id);
-        goalRepo.save(goal);
-        return true;
+            Goal goal = new Goal(name, description, ad_id);
+            goalRepo.save(goal);
+            log.info("New goal created for Ad with id:{}", ad_id);
+            return true;
     }
 
+    /**
+     *
+     * @return All goals that have been saved
+     */
     @Override
     public List<Goal> getAllGoals() {
         return goalRepo.findAll();
     }
 
+    /**
+     * Finds goals that are related to the specific ad
+     * @param adId
+     * @return
+     */
     @Override
     public List<Goal> getIndividualGoals(Integer adId) {
-        List<Goal> all = goalRepo.findAll();
-        List<Goal> individual = new ArrayList<>();
-        for (Goal g : all){
-            if (g.getAd_id().equals(adId)){
-                individual.add(g);
-            }
-        }
-        return individual;
-//        return goalRepo.findByAdId(adId);
+        return goalRepo.findByadId(adId);
     }
 
+    /**
+     * Deletes the specified goal from the database
+     * @param id
+     * @return Goal that was deleted
+     */
     @Override
     public Goal deleteGoal(Integer id){
         Goal deletedGoal = goalRepo.getReferenceById(id);
         goalRepo.deleteById(id);
+        log.info("Deleted goal {}", id);
         return deletedGoal;
     }
 
+    /**
+     * Deletes all goals from the database
+     * @return true
+     */
     @Override
     public boolean deleteAllGoals(){
         for(Goal g : getAllGoals()){
             deleteGoal(g.getId());
         }
+        log.info("Deleted all goals.");
         return true;
     }
+
 }
 
 

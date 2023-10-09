@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface AdService {
 
-    List<Ad> getAllAds();
-
     boolean createAd(String name, String description, Float price);
 
     List<Ad> loadAllAds();

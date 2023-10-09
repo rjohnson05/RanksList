@@ -21,28 +21,38 @@ public class Goal {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "ad_id", nullable = false)
-    private Integer ad_id;
+    @Column(name = "adId", nullable = false)
+    private Integer adId;
 
+    /**
+     *
+     * @return ad_Id for this goal
+     */
     public Integer getAd_id() {
-        return ad_id;
+        return adId;
     }
 
-    public void setAd_id(Integer ad_id) {
-        this.ad_id = ad_id;
+    /**
+     * Sets ad id for this goal
+     * @param adId
+     */
+    public void setAd_id(Integer adId) {
+        this.adId = adId;
+    }
+
+    /**
+     * No argument constructor for the Goal model. Creates a default Gaol object with no information.
+     */
+    public Goal() {
     }
 
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
      */
-    public Goal() {
-    }
-
-
-    public Goal(String name, String description, Integer ad_id){
+    public Goal(String name, String description, Integer adId){
         this.description = description;
         this.name = name;
-        this.ad_id = ad_id;
+        this.adId = adId;
     }
 
 
@@ -65,10 +75,20 @@ public class Goal {
         return description;
     }
 
+    /**
+     * Getter for the name of the goal
+     *
+     * @return name of goal
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Setter for name of goal
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -84,16 +104,29 @@ public class Goal {
     }
 
 
+    /**
+     * Equals method, compares the descriptions of the goals
+     * @param goal
+     * @return
+     */
     public boolean equals(Goal goal) {
         return goal.getDescription() == this.getDescription();
     }
 
 
+    /**
+     * Java hashcode
+     * @return hashcode of the description
+     */
     public int hashcode(){
         return Objects.hash(description);
     }
 
     private static final String EOL = System.lineSeparator();
+
+    /**
+     * @return String with goal description after it
+     */
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();

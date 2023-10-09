@@ -1,8 +1,6 @@
 package edu.carroll.ranks_list.model;
 
 import jakarta.persistence.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 import java.util.Objects;
@@ -100,6 +98,10 @@ public class User {
         this.password = password;
     }
 
+    /**
+     * Sets the hashed password to the password. NEEDS TO BE REDONE XXX
+     * @param rawPassword
+     */
     public void setHashedPassword(String rawPassword) {
         // XXX - This should *NEVER* be done in a real project
         this.password = Integer.toString(rawPassword.hashCode());
@@ -108,6 +110,10 @@ public class User {
     private static final String EOL = System.lineSeparator();
     private static final String TAB = "\t";
 
+    /**
+     *
+     * @return String with login, username, and hidden password
+     */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -118,6 +124,11 @@ public class User {
         return builder.toString();
     }
 
+    /**
+     *
+     * @param o
+     * @return True if objects are equal to eachother, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -129,6 +140,10 @@ public class User {
         return username.equals(user.username) && password.equals(user.password);
     }
 
+    /**
+     * NEEDS TO BE REDONE
+     * @return java hashcode
+     */
     @Override
     public int hashCode() {
         return Objects.hash(username, password);

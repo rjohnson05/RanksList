@@ -6,7 +6,6 @@ public interface UserService {
      * @return true if data exists and matches what's on record, false otherwise
      */
 
-
     boolean validateUser(String username, String password);
 
     boolean createUser(String username, String password);

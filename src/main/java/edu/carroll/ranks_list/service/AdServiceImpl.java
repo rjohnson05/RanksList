@@ -137,9 +137,5 @@ public class AdServiceImpl implements AdService {
         return changedAd;
     }
 
-    @Override
-    public List<Ad> getAllAds() {
-        return adRepo.findAll();
-    }
 }
 

@@ -1,6 +1,5 @@
 package edu.carroll.ranks_list.service;
 
-import edu.carroll.ranks_list.form.LoginForm;
 import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
@@ -18,7 +17,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepo;
-
 
     public UserServiceImpl(UserRepository userRepo) {
         this.userRepo = userRepo;

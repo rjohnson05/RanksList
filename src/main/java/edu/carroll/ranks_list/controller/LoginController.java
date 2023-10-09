@@ -2,6 +2,8 @@ package edu.carroll.ranks_list.controller;
 
 
 import edu.carroll.ranks_list.form.LoginForm;
+import edu.carroll.ranks_list.form.RegistrationForm;
+import edu.carroll.ranks_list.repository.UserRepository;
 import edu.carroll.ranks_list.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import edu.carroll.ranks_list.model.User;
-import edu.carroll.ranks_list.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -47,8 +45,8 @@ public class LoginController {
      * @return True if the credentials do not match credentials from another user; False otherwise
      */
     @PostMapping("/register")
-    public boolean createUser(@RequestBody String username, String password) {
-        return userService.createUser(username, password);
+    public boolean createUser(@RequestBody RegistrationForm registrationForm) {
+        return userService.createUser(registrationForm.getUsername(), registrationForm.getPassword());
     }
 
     /**
@@ -59,7 +57,6 @@ public class LoginController {
     @PostMapping("/login")
     public boolean loginPost(@RequestBody LoginForm loginForm) {
         if (!userService.validateUser(loginForm.getUsername(), loginForm.getPassword())) {
-            System.out.println(loginForm.getUsername() + " attempted to log in");
             log.debug(loginForm.getUsername(), " attempted to log in");
             return false;
         }

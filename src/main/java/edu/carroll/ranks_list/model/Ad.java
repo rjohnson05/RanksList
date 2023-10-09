@@ -41,6 +41,12 @@ public class Ad {
     public Ad() {
     }
 
+    /**
+     * Constructor for Ad model. Creates an Ad object
+     * @param name
+     * @param price
+     * @param description
+     */
     public Ad(String name, Float price, String description) {
         this.name = name;
         this.price = price;

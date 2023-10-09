@@ -1,7 +1,6 @@
 package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
-import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
