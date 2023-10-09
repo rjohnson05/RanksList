@@ -11,7 +11,7 @@ import java.util.Objects;
  * @author Hank Rugg, Ryan Johnson
  */
 @Entity
-@Table(name = "user")
+@Table(name = "`user`")
 public class User {
     @Id
     @GeneratedValue
