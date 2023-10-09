@@ -5,20 +5,20 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Row} from "react-bootstrap";
 
-export default function SavedAds() {
-    const [savedAdsData, setSavedAds] = useState([]);
+export default function StarredAds() {
+    const [starredAdsData, setStarredAds] = useState([]);
 
     useEffect(() => {
         loadAds();
-    }, []);
+    });
 
     const loadAds = async () => {
-        const ads_data = await axios.get("http://localhost:8080/saved_ads");
-        setSavedAds(ads_data.data);
+        const ads_data = await axios.get("http://localhost:8080/starred_ads");
+        setStarredAds(ads_data.data);
     }
 
     const removeAd = (adId) => {
-        axios.delete("http://localhost:8080/saved_ads/" + adId)
+        axios.delete("http://localhost:8080/starred_ads/" + adId)
             .then(response => {console.log("Deleted ad with ID " + adId)})
             .catch(error => {console.error(error)});
     }
@@ -28,7 +28,7 @@ export default function SavedAds() {
             <NavBar />
 
             <Row xs={3}>
-                {savedAdsData.map((ad, id) => (
+                {starredAdsData.map((ad, id) => (
                     <div className="col border border-5" key={id}>
                         <p>Name: {ad.name}</p>
                         <p>Price: {ad.price}</p>

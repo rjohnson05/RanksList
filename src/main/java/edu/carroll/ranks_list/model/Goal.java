@@ -85,6 +85,15 @@ public class Goal {
     }
 
     private static final String EOL = System.lineSeparator();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();

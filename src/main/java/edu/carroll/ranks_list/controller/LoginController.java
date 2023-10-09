@@ -1,18 +1,17 @@
 package edu.carroll.ranks_list.controller;
 
-
 import edu.carroll.ranks_list.form.LoginForm;
 import edu.carroll.ranks_list.service.UserService;
+import jakarta.servlet.http.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 
 /**
@@ -21,8 +20,8 @@ import org.slf4j.LoggerFactory;
  * @author Hank Rugg, Ryan Johnson
  */
 @RestController
-@CrossOrigin("http://localhost:3000")
-public class LoginController {
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+public class LoginController extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     private final UserService userService;
@@ -57,13 +56,20 @@ public class LoginController {
      * @return True if the credentials match a user in the database; False otherwise
      */
     @PostMapping("/login")
-    public boolean loginPost(@RequestBody LoginForm loginForm) {
+    public boolean loginPost(@RequestBody LoginForm loginForm, HttpServletRequest request, HttpServletResponse response) {
         if (!userService.validateUser(loginForm.getUsername(), loginForm.getPassword())) {
-            System.out.println(loginForm.getUsername() + " attempted to log in");
             log.debug(loginForm.getUsername(), " attempted to log in");
             return false;
         }
-        log.info(loginForm.getUsername(), " successfully logged in");
+        Integer currentUserId = userRepo.findByUsernameIgnoreCase(loginForm.getUsername()).get(0).getId();
+        Cookie cookie = new Cookie("userID", currentUserId.toString());
+        response.addCookie(cookie);
+        log.info("Cookie: " + cookie.getValue());
+        cookie.setPath("/");
+        cookie.setHttpOnly(false);
+
+        Cookie[] cookies = request.getCookies();
+        log.info("Cookies: " + Arrays.toString(cookies));
         return true;
     }
 }

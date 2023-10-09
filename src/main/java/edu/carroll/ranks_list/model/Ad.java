@@ -33,6 +33,17 @@ public class Ad {
     @Column(name = "starred")
     private Boolean starred = Boolean.FALSE;
 
+    @Column(name = "user_id")
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     @Column(name = "image")
     private byte[] image;
 
@@ -42,10 +53,11 @@ public class Ad {
     public Ad() {
     }
 
-    public Ad(String name, Float price, String description) {
+    public Ad(String name, Float price, String description, Integer userId) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.userId = userId;
     }
 
     /**
@@ -169,6 +181,7 @@ public class Ad {
         builder.append(TAB).append("Price: ").append(price).append(EOL);
         builder.append(TAB).append("Description: ").append(description).append(EOL);
         builder.append(TAB).append("Starred Status: ").append(starred).append(EOL);
+        builder.append(TAB).append("Created by User #").append(userId).append(EOL);
         builder.append("]").append(EOL);
         return builder.toString();
     }

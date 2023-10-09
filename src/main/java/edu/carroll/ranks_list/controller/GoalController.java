@@ -16,15 +16,11 @@ import java.util.List;
  * @author Hank Rugg, Ryan Johnson
  */
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(value="http://localhost:3000", allowCredentials = "true")
 public class GoalController {
     private static final Logger log = LoggerFactory.getLogger(AdController.class);
 
-    private GoalService goalService;
-
-
-    private GoalRepository goalRepository;
-
+    private final GoalService goalService;
 
     /**
      * Constructor for the Goal Controller. Creates a service for the goals business logic.
@@ -38,12 +34,11 @@ public class GoalController {
     /**
      * Creates a new Goal and adds it to the database.
      *
-     * @param newGoal Goal object to be added to the database
+     * @param goalForm Goal data to be added to the database
      * @return Goal object that has been successfully added to the database
      */
     @PostMapping("/goals")
     boolean newGoal(@RequestBody GoalForm goalForm) {
-        System.out.println("Posted goal");
         return goalService.newGoal(goalForm.getName(), goalForm.getDescription(), goalForm.getAdId());
     }
 
@@ -62,18 +57,17 @@ public class GoalController {
      *
      * @return List of all Goal objects in the database
      */
-    @GetMapping("/goals/{adId}")
+    @GetMapping("/individual_goals/{adId}")
     List<Goal> getIndividualGoals(@PathVariable("adId") Integer adId) {
         return goalService.getIndividualGoals(adId);
     }
-
 
     /**
      * Deletes a selected goal and removes it from the database.
      *
      * @param id Integer representing the ID of the selected goal
      */
-    @DeleteMapping("/goals/{id}")
+    @DeleteMapping("/individual_goals/{id}")
     public void deleteGoal(@PathVariable("id") Integer id) {
         goalService.deleteGoal(id);
         log.info("Goal #{id} deleted");

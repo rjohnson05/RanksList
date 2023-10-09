@@ -21,8 +21,6 @@ export default function Home() {
 
 
     const deleteGoal = (goalId) => {
-        console.log(goalId);
-
         axios.delete("http://localhost:8080/goals/" + goalId)
             .then(response => {console.log("Deleted goal with ID " + goalId)})
             .catch(error => {console.error(error)});

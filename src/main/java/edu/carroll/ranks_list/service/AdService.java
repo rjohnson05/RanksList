@@ -9,7 +9,7 @@ public interface AdService {
 
     List<Ad> getAllAds();
 
-    boolean createAd(String name, String description, Float price);
+    boolean createAd(String name, String description, Float price, Integer userId);
 
     List<Ad> loadAllAds();
 
@@ -20,5 +20,7 @@ public interface AdService {
     Ad removeStarredAd(Integer id);
 
     Ad starAd(Integer id);
+
+    List<Ad> loadCreatedAds(Integer request);
 }
 

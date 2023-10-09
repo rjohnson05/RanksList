@@ -3,8 +3,7 @@ import { Row } from 'react-bootstrap';
 import IconButton from 'rsuite/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-import CreateGoalForm from "../CreateGoalPage/CreateGoalForm";
-import {Link, useLocation} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import NavBar from "../MainPage/NavBar";
 
 export default function Home() {
@@ -13,17 +12,15 @@ export default function Home() {
 
     useEffect(() => {
         loadGoals();
-    }, );
+    });
 
-    const loadGoals = async () => {
-        const goals_data = await axios.get("http://localhost:8080/goals/" + ad_id);
+    let loadGoals = async () => {
+        const goals_data = await axios.get("http://localhost:8080/individual_goals/" + ad_id);
         setGoals(goals_data.data);
     }
 
     const deleteGoal = (goalId) => {
-        console.log(goalId);
-
-        axios.delete("http://localhost:8080/goals/" + goalId)
+        axios.delete("http://localhost:8080/individual_goals/" + goalId)
             .then(response => {console.log("Deleted goal with ID " + goalId)})
             .catch(error => {console.error(error)});
     }

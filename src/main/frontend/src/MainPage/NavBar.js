@@ -14,10 +14,13 @@ export default function NavBar() {
                             <a className="nav-link active" aria-current="page" href="/home">Home</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/saved_ads">Saved Ads</a>
+                            <a className="nav-link" href="/starred_ads">Starred Ads</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" href="/create_ad">Create Ad</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className="nav-link" href="/my_ads">My Created Ads</a>
                         </li>
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">

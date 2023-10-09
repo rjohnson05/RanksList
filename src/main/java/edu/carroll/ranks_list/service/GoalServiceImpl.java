@@ -1,7 +1,10 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.controller.AdController;
 import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.repository.GoalRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ import java.util.List;
  */
 @Service
 public class GoalServiceImpl implements GoalService {
-
+    private static final Logger log = LoggerFactory.getLogger(AdController.class);
     private GoalRepository goalRepo;
 
     /**
@@ -36,7 +39,6 @@ public class GoalServiceImpl implements GoalService {
     public GoalServiceImpl(GoalRepository goalRepo) {
         this.goalRepo = goalRepo;
     }
-
 
     @Override
     public boolean newGoal(String name, String description, Integer ad_id) {
