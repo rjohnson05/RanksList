@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+    <property name="LOG_PATH" value="./logs" />
+    <property name="LOG_FILE_NAME" value="application_logback" />
+
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>C://Users/ryanj/Desktop/College/CS-389/ranks_list/logs/logFile.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
         <encoder>
             <pattern>%date - [%level] - from %logger in %thread %n%message%n%xException%n</pattern>
         </encoder>
+    </appender>
+
+    <appender name="roll-by-size" class="org.apache.log4j.RollingFileAppender">
+        <param name="file" value="target/log4j/roll-by-size/app.log" />
+        <param name="MaxFileSize" value="5KB" />
+        <param name="MaxBackupIndex" value="2" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %m%n" />
+        </layout>
     </appender>
 
     <!-- Reduce DB startup chatter -->
@@ -18,6 +37,6 @@
 
     <!-- Default level is INFO -->
     <root level="INFO">
-        <appender-ref ref="Console"/>
+        <appender-ref ref="File"/>
     </root>
 </configuration>
