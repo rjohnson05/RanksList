@@ -23,5 +23,7 @@ public interface AdService {
     Ad starAd(Integer id);
 
     List<Ad> loadCreatedAds(Integer request);
+
+    Ad getReferenceById(Integer id);
 }
 

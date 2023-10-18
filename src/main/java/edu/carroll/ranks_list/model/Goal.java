@@ -15,6 +15,7 @@ public class Goal {
     @Id
     @GeneratedValue
     private Integer id;
+
     @Column(name = "description", nullable = false)
     private String description;
 
