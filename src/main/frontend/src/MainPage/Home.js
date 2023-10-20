@@ -9,12 +9,10 @@ import NavBar from "./NavBar";
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
-    const [isSelected, setSelected] = useState(false);
-
 
     useEffect(() => {
         loadAds();
-    }, []);
+    });
 
     const loadAds = async () => {
         const ads_data = await axios.get("http://localhost:8080/ads");
@@ -22,7 +20,8 @@ export default function Home() {
     }
 
     const starAd = (adId, selected) => {
-        if (!isSelected) {
+        let desiredAd = allAdsData.find((element) => {return element.id === adId});
+        if (!desiredAd.starred) {
             axios.put("http://localhost:8080/starred_ads/" + adId)
                 .then(response => {console.log("Starred Ad #" + adId)})
                 .catch(error => {console.log(error.response.data)})
@@ -31,7 +30,6 @@ export default function Home() {
                 .then(response => {console.log("Unstarred Ad #" + adId)})
                 .catch(error => {console.log(error.response.data)})
         }
-        setSelected(!isSelected);
     }
 
     return (
@@ -40,17 +38,17 @@ export default function Home() {
             <NavBar />
             <div className="col py-3">
                 <Row xs={3}>
-                    {allAdsData.map((ad, id) => (
+                    {allAdsData.map((ad, index) => (
+                        <div className="col border border-5" key={ad.id}>
                         <Link to={"/individual_goals/" + ad.id}>
-                        <div className="col border border-5" key={id}>
                             <p>Name: {ad.name}</p>
                             <p>Price: {ad.price}</p>
                             <p>Description: {ad.description}</p>
-                            <IconButton value={id} onClick={() => {starAd(ad.id)}}>
-                                {isSelected ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
+                        </Link>
+                            <IconButton value={ad.id} onClick={() => {starAd(ad.id)}}>
+                                {ad.starred ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
                             </IconButton>
                         </div>
-                        </Link>
                     ))}
                 </Row>
             </div>
