@@ -28,20 +28,30 @@ export default function CreateGoalForm() {
             <NavBar />
         <form onSubmit={handleSubmit}>
             <h1>Add New Goal</h1>
-
-            <label>Goal Name:
-                <input type="text" name="name" value = {formData.name}
-                       onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
-            </label>
             <label>Description:
                 <input type="text" name="description" value = {formData.description}
                        onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))} />
             </label>
             <input type="hidden" name="adId" value = {formData.adId}
                    onChange={(e) => setFormData((prev) => ({ ...prev, adId: e.target.value }))} />
-
-
             <input type="submit" value="Submit" />
+
+            {/*// checkboxes*/}
+            <fieldset>
+                <legend>Choose your monster's features:</legend>
+
+                <div>
+                    <input type="checkbox" id="scales" name="scales"  />
+                    <label htmlFor="scales">Scales</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="horns" name="horns" />
+                    <label for="horns">Horns</label>
+                </div>
+            </fieldset>
+
+
         </form>
         </div>
     );

@@ -40,7 +40,7 @@ public class GoalController {
     @PostMapping("/goals")
     boolean newGoal(@RequestBody GoalForm goalForm) {
         log.info("New goal posted with ad id: {}", goalForm.getAdId());
-        return goalService.newGoal(goalForm.getName(), goalForm.getDescription(), goalForm.getAdId());
+        return goalService.newGoal(goalForm.getDescription(), goalForm.getAdId());
     }
 
     /**

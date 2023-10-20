@@ -59,7 +59,6 @@ export default function Home() {
                 <Row xs={3}>
                     {allGoalsData.map((goal, id) => (
                         <div class="col border border-5" key={id}>
-                            <p>Name: {goal.name}</p>
                             <p>Description: {goal.description}</p>
                             <IconButton aria-label="delete" value={id} onClick={() => deleteGoal(goal.id)}>
                                 <DeleteIcon />

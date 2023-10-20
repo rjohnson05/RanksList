@@ -36,14 +36,13 @@ public class GoalServiceImpl implements GoalService {
 
     /**
      * Creates a new goal and adds it to the repo
-     * @param name
      * @param description
      * @param ad_id
      * @return
      */
     @Override
-    public boolean newGoal(String name, String description, Integer ad_id) {
-            Goal goal = new Goal(name, description, ad_id);
+    public boolean newGoal(String description, Integer ad_id) {
+            Goal goal = new Goal(description, ad_id);
             goalRepo.save(goal);
             log.info("New goal created for Ad with id:{}", ad_id);
             return true;
