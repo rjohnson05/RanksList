@@ -39,16 +39,16 @@ export default function Home() {
             <div className="col py-3">
                 <Row xs={3}>
                     {allAdsData.map((ad, index) => (
-                        <Link to={"/individual_goals/" + ad.id}>
                         <div className="col border border-5" key={ad.id}>
+                        <Link to={"/individual_goals/" + ad.id}>
                             <p>Name: {ad.name}</p>
                             <p>Price: {ad.price}</p>
                             <p>Description: {ad.description}</p>
+                        </Link>
                             <IconButton value={ad.id} onClick={() => {starAd(ad.id)}}>
                                 {ad.starred ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
                             </IconButton>
                         </div>
-                        </Link>
                     ))}
                 </Row>
             </div>
