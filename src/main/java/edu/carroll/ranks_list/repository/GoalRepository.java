@@ -14,9 +14,7 @@ import java.util.List;
  */
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Integer> {
-    public List<Goal> findByadId(Integer adId);
-
-    public List<User> findByNameIgnoreCase(String name);
+    List<Goal> findByadId(Integer adId);
 
 
 }

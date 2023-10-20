@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -146,5 +147,10 @@ public class AdServiceImpl implements AdService {
     @Override
     public List<Ad> getAllAds() {
         return adRepo.findAll();
+    }
+
+    @Override
+    public Ad getReferenceById(Integer id){
+        return adRepo.getReferenceById(id);
     }
 }

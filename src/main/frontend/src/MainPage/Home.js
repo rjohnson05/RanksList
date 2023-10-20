@@ -3,11 +3,9 @@ import { Row } from 'react-bootstrap';
 import IconButton from '@mui/material/IconButton';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
-import CreateIcon from '@mui/icons-material/Create';
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import NavBar from "./NavBar";
-import CreateGoalForm from "../CreateGoalPage/CreateGoalForm";
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
@@ -34,10 +32,6 @@ export default function Home() {
         }
     }
 
-    function createGoal(adId) {
-        CreateGoalForm.adId = adId
-        }
-
     return (
         <div>
             {/*Navbar code came from https://getbootstrap.com/docs/5.0/components/navbar/*/}
@@ -45,20 +39,16 @@ export default function Home() {
             <div className="col py-3">
                 <Row xs={3}>
                     {allAdsData.map((ad, index) => (
+                        <Link to={"/individual_goals/" + ad.id}>
                         <div className="col border border-5" key={ad.id}>
                             <p>Name: {ad.name}</p>
                             <p>Price: {ad.price}</p>
                             <p>Description: {ad.description}</p>
-                            <p><Link to={"/individual_goals/" + ad.star}> View Goals </Link></p>
                             <IconButton value={ad.id} onClick={() => {starAd(ad.id)}}>
                                 {ad.starred ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
                             </IconButton>
-                            <IconButton value={ad.id} onClick={() => createGoal(ad.id)}>
-                                <Link to={'create_goal/' + ad.id}>
-                                <CreateIcon />
-                                </Link>
-                            </IconButton>
                         </div>
+                        </Link>
                     ))}
                 </Row>
             </div>

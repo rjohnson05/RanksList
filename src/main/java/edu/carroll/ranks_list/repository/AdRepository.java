@@ -19,7 +19,7 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
      * @param starred True if advertisement is saved; False otherwise
      * @return List of Ad objects with the indicated "saved" status
      */
-    public List<Ad> findByStarred(Boolean starred);
+    List<Ad> findByStarred(Boolean starred);
 
     /**
      * Returns a list of all advertisements containing the designated name.
@@ -27,5 +27,13 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
      * @param user_id Integer representing the ID of the specified user
      * @return List of Ad objects created by the specified user
      */
-    public List<Ad> findByUserId(Integer user_id);
+    List<Ad> findByUserId(Integer user_id);
+
+    /**
+     * Returns the ad with the matching Id
+     *
+     * @param id
+     * @return
+     */
+    Ad getReferenceById(Integer id);
 }

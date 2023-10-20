@@ -6,7 +6,7 @@ import LoginForm from './LoginPage/LoginForm';
 import Goals from './MainPage/Goals'
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import CreateAdForm from "./CreateAdPage/CreateAdForm";
-import IndividualGoals from "./IndividualGoalsPage/IndividualGoals"
+import IndividualGoals from "./IndividualGoalsPage/IndividualGoals";
 import CreateGoalForm from "./CreateGoalPage/CreateGoalForm";
 import StarredAds from "./StarredAdsPage/StarredAds";
 import MyCreatedAds from "./MyCreatedAdsPage/MyCreatedAds";
@@ -25,8 +25,8 @@ export default function App() {
                         <Route path='goals' element={<Goals />} />
                         <Route path='starred_ads' element={<StarredAds />} />
                         <Route path={'my_ads'} element={<MyCreatedAds />} />
-                        <Route path={'individual_goals/*'} element={<IndividualGoals />} />
-                        <Route path={'home/create_goal/*'} element={<CreateGoalForm/>} />
+                        <Route path={'individual_goals/*'} element={<IndividualGoals/>} />
+                        <Route path={'individual_goals/create_goal/*'} element={<CreateGoalForm/>} />
                     </Routes>
                 </BrowserRouter>
             </div>

@@ -142,4 +142,14 @@ public class AdController {
         log.info("Ad Deleted: " + deletedAd);
         return deletedAd;
     }
+
+    /**
+     * Removes the selected advertisement from the list of starred ads for the current user.
+     * @param id the ID number of the selected advertisement, as given by the database
+     * @return the Ad successfully changed to "unstarred" in the database
+     */
+    @GetMapping("/ads/{id}")
+    Ad getAd(@PathVariable("id") Integer id) {
+        return adService.getReferenceById(id);
+    }
 }
