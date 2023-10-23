@@ -25,5 +25,6 @@ public interface AdService {
     List<Ad> loadCreatedAds(Integer request);
 
     Ad getReferenceById(Integer id);
-}
 
+    boolean editAd(String name, String description, Float price, Integer userId);
+}

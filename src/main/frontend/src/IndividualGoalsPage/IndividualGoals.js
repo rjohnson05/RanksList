@@ -21,7 +21,6 @@ export default function Home() {
         CreateGoalForm.adId = adId
     }
 
-
     useEffect(() => {
         loadGoalsAds();
     });
@@ -32,7 +31,6 @@ export default function Home() {
         setAds(ads_data.data);
         setGoals(goals_data.data);
     }
-
 
     const deleteGoal = (goalId) => {
         axios.delete("http://localhost:8080/individual_goals/" + goalId)

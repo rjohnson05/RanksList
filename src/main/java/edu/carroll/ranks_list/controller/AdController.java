@@ -44,7 +44,7 @@ public class AdController {
      * @return the Ad successfully added to the database
      */
     @PostMapping("/ads")
-    boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
+    public boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
         Integer currentUser = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie c : cookies) {
@@ -63,7 +63,7 @@ public class AdController {
      * @return list of all created advertisements
      */
     @GetMapping("/ads")
-    List<Ad> getAllAds() {
+    public List<Ad> getAllAds() {
         List<Ad> allAds = adService.loadAllAds();
         log.debug("All Current Ads: " + allAds);
         return allAds;
@@ -75,7 +75,7 @@ public class AdController {
      * @return list of all starred advertisements
      */
     @GetMapping("/starred_ads")
-    List<Ad> getStarredAds() {
+    public List<Ad> getStarredAds() {
         List<Ad> starredAds = adService.loadStarredAds();
         log.debug("List of Starred Ads: " + starredAds);
         return starredAds;
@@ -88,7 +88,7 @@ public class AdController {
      * @return the Ad successfully changed to "save" in the database
      */
     @PutMapping("/starred_ads/{id}")
-    Ad changeAdStatus(@PathVariable("id") Integer id) {
+    public Ad changeAdStatus(@PathVariable("id") Integer id) {
         Ad starredAd = adService.starAd(id);
         log.info("Ad # " + starredAd.getId() + "starred");
         log.debug("Ad # " + starredAd.getId() + "starred: " + starredAd);
@@ -101,7 +101,7 @@ public class AdController {
      * @return the Ad successfully changed to "unstarred" in the database
      */
     @DeleteMapping("/starred_ads/{id}")
-    Ad removedStarredAd(@PathVariable("id") Integer id) {
+    public Ad removedStarredAd(@PathVariable("id") Integer id) {
         Ad unstarredAd = adService.removeStarredAd(id);
         log.info("Ad # " + unstarredAd.getId() + "unstarred");
         log.debug("Ad # " + unstarredAd.getId() + "unstarred: " + unstarredAd);
@@ -114,7 +114,7 @@ public class AdController {
      * @return list of all advertisements created by the current user
      */
     @GetMapping("/my_ads")
-    List<Ad> createdAds(HttpServletRequest request) {
+    public List<Ad> createdAds(HttpServletRequest request) {
         // Get the ID number of the current user from the list of cookies
         Integer currentUser = null;
         Cookie[] cookies = request.getCookies();
@@ -143,13 +143,17 @@ public class AdController {
         return deletedAd;
     }
 
-    /**
-     * Removes the selected advertisement from the list of starred ads for the current user.
-     * @param id the ID number of the selected advertisement, as given by the database
-     * @return the Ad successfully changed to "unstarred" in the database
-     */
     @GetMapping("/ads/{id}")
     Ad getAd(@PathVariable("id") Integer id) {
         return adService.getReferenceById(id);
+    }
+
+    @PutMapping ("/edit_ad/{id}")
+    public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm, HttpServletRequest request) {
+        if (adForm != null) {
+            Ad editedAd = adService.getReferenceById(id);
+            adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id);
+        }
+        return true;
     }
 }

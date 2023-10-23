@@ -10,6 +10,7 @@ import IndividualGoals from "./IndividualGoalsPage/IndividualGoals";
 import CreateGoalForm from "./CreateGoalPage/CreateGoalForm";
 import StarredAds from "./StarredAdsPage/StarredAds";
 import MyCreatedAds from "./MyCreatedAdsPage/MyCreatedAds";
+import EditAd from "./MyCreatedAdsPage/EditAd";
 
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
                         <Route path='create_ad' element={<CreateAdForm />} />
                         <Route path='goals' element={<Goals />} />
                         <Route path='starred_ads' element={<StarredAds />} />
+                        <Route path='edit_ad/*' element={<EditAd />} />
                         <Route path={'my_ads'} element={<MyCreatedAds />} />
                         <Route path={'individual_goals/*'} element={<IndividualGoals/>} />
                         <Route path={'individual_goals/create_goal/*'} element={<CreateGoalForm/>} />

@@ -144,6 +144,18 @@ public class AdServiceImpl implements AdService {
         return adRepo.findByUserId(id);
     }
 
+    public boolean editAd(String name, String description, Float price, Integer id) {
+        if (name != null && price != null && description != null) {
+            Ad originalAd = adRepo.getReferenceById(id);
+            originalAd.setName(name);
+            originalAd.setDescription(description);
+            originalAd.setPrice(price);
+            adRepo.save(originalAd);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public List<Ad> getAllAds() {
         return adRepo.findAll();
