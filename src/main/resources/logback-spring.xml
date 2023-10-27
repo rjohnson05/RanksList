@@ -4,9 +4,9 @@
     <property name="LOG_FILE_NAME" value="application_logback" />
 
     <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>C://Users/ryanj/Desktop/College/CS-389/ranks_list/logs/logFile.log</file>
+        <file>C://Users/ryanj/Desktop/College/CS-389/ranks_list/logs/%d{yyyy-MM-dd}.%i.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>logs/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
