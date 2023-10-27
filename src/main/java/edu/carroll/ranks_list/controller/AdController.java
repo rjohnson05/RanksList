@@ -1,18 +1,14 @@
 package edu.carroll.ranks_list.controller;
 
-
 import edu.carroll.ranks_list.form.AdForm;
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.service.AdService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
-public class AdController {
+public class    AdController {
     private static final Logger log = LoggerFactory.getLogger(AdController.class);
 
     private final AdService adService;
@@ -32,7 +28,6 @@ public class AdController {
      *
      * @param adService contains all logic related to advertisement data
      */
-
     public AdController(AdService adService) {
         this.adService = adService;
     }
@@ -41,6 +36,7 @@ public class AdController {
      * Creates a new advertisement and adds it to the database.
      *
      * @param adForm Ad to be added to the database
+     * @param request HttpServletRequest object that allows access to parameters of a HTTP request
      * @return the Ad successfully added to the database
      */
     @PostMapping("/ads")
@@ -67,6 +63,16 @@ public class AdController {
         List<Ad> allAds = adService.loadAllAds();
         log.debug("All Current Ads: " + allAds);
         return allAds;
+    }
+
+    /**
+     * Returns the Ad object with the designated ID
+     * @param id the ID number of the desired advertisement
+     * @return Ad object with the designated ID number
+     */
+    @GetMapping("/ads/{id}")
+    Ad getAd(@PathVariable("id") Integer id) {
+        return adService.getReferenceById(id);
     }
 
     /**
@@ -143,15 +149,17 @@ public class AdController {
         return deletedAd;
     }
 
-    @GetMapping("/ads/{id}")
-    Ad getAd(@PathVariable("id") Integer id) {
-        return adService.getReferenceById(id);
-    }
-
+    /**
+     * Edits an advertisement using the information provided.
+     *
+     * @param id the ID of the advertisement to be edited
+     * @param adForm the new data to be connected with the advertisement
+     * @param request HttpServletRequest object that allows access to parameters of a HTTP request
+     * @return true if the designated ad is successfully edited; false otherwise
+     */
     @PutMapping ("/edit_ad/{id}")
     public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm, HttpServletRequest request) {
         if (adForm != null) {
-            Ad editedAd = adService.getReferenceById(id);
             adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id);
         }
         return true;
