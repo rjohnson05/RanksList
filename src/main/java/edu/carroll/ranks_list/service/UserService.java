@@ -1,5 +1,10 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.form.LoginForm;
+import edu.carroll.ranks_list.model.User;
+
+import java.util.List;
+
 public interface UserService {
     /**
      * Given a loginForm, determine if the information provided is valid, and the user exists in the system.
@@ -10,4 +15,5 @@ public interface UserService {
 
     boolean createUser(String username, String password);
 
+    List<User> findByUsernameIgnoreCase(String username);
 }

@@ -14,40 +14,51 @@ import static org.springframework.test.util.AssertionErrors.*;
 @SpringBootTest
 @Transactional
 public class AdServiceImplTest {
-    final private String name = "testname";
-    final private Float price = 5.99F;
-    final private String description = "testdescription";
-    final private Integer userId = 0;
+    private final String name = "testname";
+    private final Float price = 5.99F;
+    private final String description = "testdescription";
+    private final Integer userId = 0;
 
     @Autowired
-    private AdServiceImpl adService;
+    private AdService adService;
 
-    @BeforeEach
-    public void beforeTest() {
-        assertNotNull("userService must be injected", adService);
-    }
-    
+    // Tests to ensure createAd() method creates and stores a single advertisement correctly when passed valid data
     @Test
     public void createAdValidDataTest() {
-        // Ensure the dummy record is the only ad in the database
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
-        Ad createdAd = adService.loadAllAds().get(0);
+        List<Ad> allCreatedAds = adService.loadAllAds();
 
-        assertEquals("createAdValidDataTest: should pass with valid advertisement data", 1, adService.loadAllAds().size());
-        assertEquals("createAdValidDataTest: should pass with valid advertisement data", name, createdAd.getName());
-        assertEquals("createAdValidDataTest: should pass with valid advertisement data", price, createdAd.getPrice());
-        assertEquals("createAdValidDataTest: should pass with valid advertisement data", description, createdAd.getDescription());
+        assertEquals("createAdValidDataTest: should create a single ad with valid data", 1, allCreatedAds.size());
+        Ad createdAd = allCreatedAds.get(0);
+
+        assertEquals("createAdValidDataTest: name should be stored correctly with valid ad data", name, createdAd.getName());
+        assertEquals("createAdValidDataTest: price should be stored correctly with valid ad data", price, createdAd.getPrice());
+        assertEquals("createAdValidDataTest: description should be stored correctly with valid ad data", description, createdAd.getDescription());
+        assertEquals("createAdValidDataTest: userId should be stored correctly with valid ad data", userId, createdAd.getUserId());
+    }
+
+    // Tests to ensure createAd() method creates and stores a single advertisement correctly when all data is the same as
+    // another ad except for the ID of the user creating it
+    @Test
+    public void createAdDuplicateAdDifferentUserIdTest() {
+        adService.createAd(name, description, price, userId);
+        List<Ad> allCreatedAds = adService.loadAllAds();
+        assertEquals("createAdDuplicateAdDifferentUserIdTest: should create a single ad with valid data", 1, allCreatedAds.size());
+
+        adService.createAd(name, description, price, userId + 1);
+        allCreatedAds = adService.loadAllAds();
+        assertEquals("createAdDuplicateAdDifferentUserIdTest: should create a single duplicate ad with different user ID", 2, allCreatedAds.size());
+
+        List<Ad> duplicateAds = adService.loadCreatedAds(userId + 1);
+        assertEquals("createAdDuplicateAdDifferentUserIdTest: should create a single ad with this user ID", 1, duplicateAds.size());
+        Ad duplicateAd = duplicateAds.get(0);
+        assertEquals("createAdDuplicateAdDifferentUserIdTest: duplicate ad should have the same name as previous ad", name, duplicateAd.getName());
+        assertEquals("createAdDuplicateAdDifferentUserIdTest: duplicate ad should have the same price as previous ad", price, duplicateAd.getPrice());
+        assertEquals("createAdDuplicateAdDifferentUserIdTest: duplicate ad should have the same description as previous ad", description, duplicateAd.getDescription());
     }
 
     @Test
     public void createAdDuplicateAdTest() {
-        // Ensure there are two identical ads in the database
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
         adService.createAd(name, description, price, userId);
 
@@ -55,11 +66,28 @@ public class AdServiceImplTest {
     }
 
     @Test
+    public void createAdNoNameTest() {
+        adService.createAd("", description, price, userId);
+
+        assertEquals("createAdNoNameTest: should not create an ad when no name is supplied", 0, adService.loadAllAds().size());
+    }
+
+    @Test
+    public void createAdNoDescriptionTest() {
+        adService.createAd(name, "", price, userId);
+
+        assertEquals("createAdNoDescriptionTest: should create an ad when no description is supplied", 1, adService.loadAllAds().size());
+    }
+
+    @Test
+    public void createAdStringPriceTest() {
+        adService.createAd(name, description, 1.0F, userId);
+
+        assertEquals("createAdNoPriceTest: should create ad when no price is supplied", 1, adService.loadAllAds().size());
+    }
+
+    @Test
     public void createAdPriceZeroTest() {
-        // Ensure the dummy record is the only ad in the database
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, (float) 0, userId);
 
         assertEquals("createAdPriceZeroTest: should pass with a price of $0.00", 1, adService.loadAllAds().size());
@@ -67,10 +95,6 @@ public class AdServiceImplTest {
 
     @Test
     public void createAdNullNameTest() {
-        // Ensure that an ad is NOT created if the user leaves the name field empty
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(null, description, price, userId);
 
         assertEquals("createAdNullNameTest: should fail with Null name", 0, adService.loadAllAds().size());
@@ -78,10 +102,6 @@ public class AdServiceImplTest {
 
     @Test
     public void createAdNullPriceTest() {
-        // Ensure that an ad is NOT created if the user leaves the price field empty
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, null, userId);
 
         assertEquals("createAdNullPriceTest: should fail with Null price", 0, adService.loadAllAds().size());
@@ -89,10 +109,6 @@ public class AdServiceImplTest {
 
     @Test
     public void createAdNullDescriptionTest() {
-        // Ensure that an ad is NOT created if the user leaves the description field empty
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, null, price, userId);
 
         assertEquals("createAdNullDescriptionTest: should fail with Null description", 0, adService.loadAllAds().size());
@@ -100,11 +116,7 @@ public class AdServiceImplTest {
 
     @Test
     public void createAdNullAllTest() {
-        // Ensure that an ad is NOT created if the user leaves all fields empty
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
-        adService.createAd(name, null, price, userId);
+        adService.createAd(null, null, null, userId);
 
         assertEquals("createAdNullAllTest: should fail with all Null data", 0, adService.loadAllAds().size());
     }
@@ -123,17 +135,11 @@ public class AdServiceImplTest {
 
     @Test
     public void loadAllAdsZerosAdsTest() {
-        // Ensure that loading all ads from an empty database doesn't return any ads
-        adService.deleteAllAds();
         assertEquals("loadAllAdsZerosAdsTest: should succeed when there are zeros ads", 0, adService.loadAllAds().size());
     }
 
     @Test
     public void loadAllAdsDuplicatesTest() {
-        // Ensure that all ads with similar information are loaded
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
         adService.createAd(name, description, price, userId);
 
@@ -142,10 +148,6 @@ public class AdServiceImplTest {
 
     @Test
     public void loadStarredAdsVariedNumberOfAdsTest() {
-        // Ensure that all starred ads are loaded despite the number of ads present
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         for (int i = 1; i < 10; i++) {
             adService.removeAllStarredAds();
             for (int j = 0; j < i; j++) {
@@ -159,19 +161,11 @@ public class AdServiceImplTest {
 
     @Test
     public void loadStarredAdsZeroAdsTest() {
-        // Ensures that no ads are loaded when none are marked as starred
-        if (!adService.loadStarredAds().isEmpty()) {
-            adService.removeAllStarredAds();
-        }
         assertEquals("loadStarredAdsZeroAdsTest: should pass with zero starred ads to load", 0, adService.loadStarredAds().size());
     }
 
     @Test
     public void loadStarredAdsNotAllStarredTest() {
-        // Ensures that only the starred ads are loaded when there are unstarred ads in the database
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         for (int i = 0; i < 10; i++) {
             adService.createAd(name, description, price, userId);
             if (i < 5) {
@@ -184,10 +178,6 @@ public class AdServiceImplTest {
 
     @Test
     public void deleteAdValidIdTest() {
-        // Ensures that the designated ad is deleted when a legitimate ID is given
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
         adService.createAd(name, description, price, userId);
         Integer createdAdId = adService.loadAllAds().get(0).getId();
@@ -199,10 +189,6 @@ public class AdServiceImplTest {
 
     @Test
     public void deleteAdInvalidIdTest() {
-        // Ensure that an ad with a different ID is not deleted
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
         int createdAdId = adService.loadAllAds().get(0).getId();
         adService.deleteAd(createdAdId - 1);
@@ -210,38 +196,34 @@ public class AdServiceImplTest {
         assertEquals("deleteAdInvalidIdTest: ad should not be deleted if not correct ID", 1, adService.loadAllAds().size());
     }
 
-    @Test
-    public void deleteAllAdsVariedNumberOfAdsTest() {
-        // Ensures that all ads in the database are deleted, no matter the number of ads present
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < i; j++) {
-                adService.createAd(name, description, price, userId);
-            }
-            adService.deleteAllAds();
-            assertEquals("deleteAllAdsVariedNumberOfAdsTest: should pass if all ads are deleted", 0, adService.loadAllAds().size());
-        }
-    }
+//    @Test
+//    public void deleteAllAdsVariedNumberOfAdsTest() {
+//        // Ensures that all ads in the database are deleted, no matter the number of ads present
+//        for (int i = 0; i < 10; i++) {
+//            for (int j = 0; j < i; j++) {
+//                adService.createAd(name, description, price, userId);
+//            }
+//            adService.deleteAllAds();
+//            assertEquals("deleteAllAdsVariedNumberOfAdsTest: should pass if all ads are deleted", 0, adService.loadAllAds().size());
+//        }
+//    }
 
-    @Test
-    public void deleteAllAdsZeroAdsTest() {
-        // Ensures that nothing is done if no ads are present in the database
-        if (!adService.loadAllAds().isEmpty()) {
-            List<Ad> allAds = adService.loadAllAds();
-            for (Ad ad : allAds) {
-                adService.deleteAd(ad.getId());
-            }
-        }
-        adService.deleteAllAds();
-
-        assertEquals("deleteAllAdsZeroAdsTest: should pass if no ads are present to delete", 0, adService.loadAllAds().size());
-    }
+//    @Test
+//    public void deleteAllAdsZeroAdsTest() {
+//        // Ensures that nothing is done if no ads are present in the database
+//        if (!adService.loadAllAds().isEmpty()) {
+//            List<Ad> allAds = adService.loadAllAds();
+//            for (Ad ad : allAds) {
+//                adService.deleteAd(ad.getId());
+//            }
+//        }
+//        adService.deleteAllAds();
+//
+//        assertEquals("deleteAllAdsZeroAdsTest: should pass if no ads are present to delete", 0, adService.loadAllAds().size());
+//    }
 
     @Test
     public void removeStarredAdValidIdTest() {
-        // Ensures that the designated ad is removed from the list of starred ads
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
         adService.createAd(name, description, price, userId);
         int createdAdId = adService.loadAllAds().get(1).getId();
@@ -270,10 +252,6 @@ public class AdServiceImplTest {
 
     @Test
     public void removeAllStarredAdsVariedNumberOfAdsTest() {
-        // Ensures that all starred ads are unstarred, no matter the number of starred ads present
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < i; j++) {
                 adService.createAd(name, description, price, userId);
@@ -288,10 +266,6 @@ public class AdServiceImplTest {
 
     @Test
     public void removeAllStarredAdsNoAdsTest() {
-        // Ensures that nothing is done if there are no starred ads
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
         adService.removeAllStarredAds();
 
@@ -300,10 +274,6 @@ public class AdServiceImplTest {
 
     @Test
     public void starAdValidIdTest() {
-        // Ensures that starring an ad adds it to the list of starred ads
-        if (!adService.loadAllAds().isEmpty()) {
-            adService.deleteAllAds();
-        }
         adService.createAd(name, description, price, userId);
         int adId = adService.loadAllAds().get(0).getId();
         adService.starAd(adId);

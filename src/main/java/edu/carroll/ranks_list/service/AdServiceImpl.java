@@ -2,12 +2,10 @@ package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.repository.AdRepository;
-import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +24,7 @@ public class AdServiceImpl implements AdService {
      *
      * @param adRepo Repository for advertisements
      */
-    public AdServiceImpl(AdRepository adRepo, UserRepository userRepo) {
+    public AdServiceImpl(AdRepository adRepo) {
         this.adRepo = adRepo;
     }
 
@@ -41,14 +39,109 @@ public class AdServiceImpl implements AdService {
     @Override
     public boolean createAd(String name, String description, Float price, Integer userId) {
         // Adds an advertisement to the DB only if all fields have been filled
-        if (name != null && description != null && price != null) {
+        if (name != null && !name.isEmpty() && description != null && price != null) {
             Ad newAd = new Ad(name, price, description, userId);
             log.info("New Ad: " + newAd);
             adRepo.save(newAd);
             return true;
         }
+        log.info("Invalid credentials used in attempting to create an advertisement");
         return false;
     }
+
+    /**
+     * Changes the data for the specified advertisement
+     *
+     * @param name        String representing the desired name of the advertisement
+     * @param description String representing the desired description of the advertisement
+     * @param price       Float representing the desired price for the advertisement
+     * @param id          Integer representing the ID of the advertisement to be changed
+     * @return true if the designated advertisement is edited successfully; false otherwise
+     */
+    public boolean editAd(String name, String description, Float price, Integer id) {
+        if (name != null && price != null && description != null) {
+            Ad changingAd = adRepo.getReferenceById(id);
+            changingAd.setName(name);
+            changingAd.setDescription(description);
+            changingAd.setPrice(price);
+            adRepo.save(changingAd);
+            log.info("Ad #" + id + " edited: " + changingAd);
+            return true;
+        }
+        log.debug("Unsuccessfully attempted to edit Ad #" + id);
+        return false;
+    }
+
+    /**
+     * Places a designated advertisement onto the list of starred advertisements.
+     *
+     * @param id Integer representing the ID of the Ad object to be added to the list of starred advertisements
+     * @return Ad object being added to the list of starred advertisements
+     */
+    public boolean starAd(Integer id) {
+        Ad changedAd = adRepo.getReferenceById(id);
+        if (changedAd != null) {
+            changedAd.setStarred(true);
+            adRepo.save(changedAd);
+            log.info("Starred Ad #" + id);
+            return true;
+        }
+        log.debug("Unsuccessfully attempted to star Ad #" + id);
+        return false;
+    }
+
+    /**
+     * Removes a designated advertisement from the list of starred ads.
+     *
+     * @param id Integer representing the ID of the Ad object to be removed from the list of saved ads
+     * @return true if the designated Ad object is successfully removed from the list of starred ads; false otherwise
+     */
+    public boolean removeStarredAd(Integer id) {
+        Ad changedAd = adRepo.getReferenceById(id);
+        if (changedAd != null) {
+            changedAd.setStarred(false);
+            adRepo.save(changedAd);
+            log.info("Advertisement #{id} was unstarred");
+            return true;
+        }
+        log.debug("Attempted to unstar Ad#" + id + " unsuccessfully");
+        return false;
+    }
+
+//    /**
+//     * Removes all ads from the list of starred ads.
+//     */
+//    public void removeAllStarredAds() {
+//        List<Ad> starredAds = loadStarredAds();
+//        for (Ad ad : starredAds) {
+//            ad.setStarred(false);
+//            adRepo.save(ad);
+//        }
+//    }
+
+    /**
+     * Removes a designated advertisement from the database.
+     *
+     * @param id Integer representing the ID of the Ad object to be removed from the database
+     * @return true if the Ad object with the designated ID is removed from the database; false otherwise
+     */
+    public boolean deleteAd(Integer id) {
+        Ad selectedAd = adRepo.getReferenceById(id);
+        if (selectedAd != null) {
+            adRepo.deleteById(id);
+            log.info("Advertisement #{id} deleted");
+            return true;
+        }
+        log.info("Attempted Ad Deletion with Invalid ID #" + id);
+        return false;
+    }
+
+//    /**
+//     * Testing class that removes all advertisements from the database.
+//     */
+//    public void deleteAllAds() {
+//        adRepo.deleteAll();
+//    }
 
     /**
      * Returns a list of all advertisements in the database.
@@ -60,80 +153,13 @@ public class AdServiceImpl implements AdService {
     }
 
     /**
-     * Returns a list of all saved advertisements.
+     * Returns a list of all starred advertisements.
      *
-     * @return List of all Ad objects with a "saved" status of True
+     * @return List of all Ad objects with a "starred" status of True
      */
     public List<Ad> loadStarredAds() {
-        List<Ad> starredAds = adRepo.findByStarred(true);
-        return starredAds;
+        return adRepo.findByStarred(true);
     }
-
-    /**
-     * Removes a designated advertisement from the database.
-     *
-     * @param id Integer representing the ID of the Ad object to be removed from the database
-     * @return Ad object removed from the database
-     */
-    public Ad deleteAd(Integer id) {
-        Ad deletedAd = adRepo.getReferenceById(id);
-        adRepo.deleteById(id);
-        log.info("Advertisement #{id} deleted");
-
-        return deletedAd;
-    }
-
-    /**
-     * Testing class that removes all advertisements from the database.
-     */
-    public void deleteAllAds() {
-        adRepo.deleteAll();
-    }
-
-    /**
-     * Removes a designated advertisement from the list of starred ads.
-     *
-     * @param id Integer representing the ID of the Ad object to be removed from the list of saved ads
-     * @return Ad object removed from the list of saved advertisements
-     */
-    public Ad removeStarredAd(Integer id) {
-        Ad changedAd = adRepo.getReferenceById(id);
-        if (changedAd != null) {
-            changedAd.setStarred(false);
-            adRepo.save(changedAd);
-            log.info("Advertisement #{id} removed from saved ads");
-        }
-        return changedAd;
-    }
-
-    /**
-     * Removes all ads from the list of starred ads.
-     *
-     * @return True if ads were successfully removed from the starred list; False otherwise
-     */
-    public boolean removeAllStarredAds() {
-        List<Ad> starredAds = loadStarredAds();
-        for (Ad ad : starredAds) {
-            ad.setStarred(false);
-            adRepo.save(ad);
-        }
-        return true;
-    }
-
-    /**
-     * Places a designated advertisement onto the list of starred advertisements.
-     *
-     * @param id Integer representing the ID of the Ad object to be added to the list of starred advertisements
-     * @return Ad object being added to the list of starred advertisements
-     */
-    public Ad starAd(Integer id) {
-        Ad changedAd = adRepo.getReferenceById(id);
-        changedAd.setStarred(true);
-        adRepo.save(changedAd);
-
-        return changedAd;
-    }
-
 
     /**
      * Loads all the ads created by the specified user ID.
@@ -144,25 +170,14 @@ public class AdServiceImpl implements AdService {
         return adRepo.findByUserId(id);
     }
 
-    public boolean editAd(String name, String description, Float price, Integer id) {
-        if (name != null && price != null && description != null) {
-            Ad originalAd = adRepo.getReferenceById(id);
-            originalAd.setName(name);
-            originalAd.setDescription(description);
-            originalAd.setPrice(price);
-            adRepo.save(originalAd);
-            return true;
-        }
-        return false;
-    }
-
+    /**
+     * Returns the Ad object with the specified ID
+     *
+     * @param id Integer representing the ID number of the desired Ad object
+     * @return Ad object with the specified ID
+     */
     @Override
-    public List<Ad> getAllAds() {
-        return adRepo.findAll();
-    }
-
-    @Override
-    public Ad getReferenceById(Integer id){
+    public Ad getReferenceById(Integer id) {
         return adRepo.getReferenceById(id);
     }
 }

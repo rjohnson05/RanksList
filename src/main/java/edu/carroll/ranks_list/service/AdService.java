@@ -7,24 +7,21 @@ import java.util.List;
 
 public interface AdService {
 
-
-    List<Ad> getAllAds();
-
     boolean createAd(String name, String description, Float price, Integer userId);
+
+    boolean editAd(String name, String description, Float price, Integer userId);
+
+    boolean starAd(Integer id);
+
+    boolean removeStarredAd(Integer id);
+
+    boolean deleteAd(Integer id);
 
     List<Ad> loadAllAds();
 
     List<Ad> loadStarredAds();
 
-    Ad deleteAd(Integer id);
-
-    Ad removeStarredAd(Integer id);
-
-    Ad starAd(Integer id);
-
-    List<Ad> loadCreatedAds(Integer request);
+    List<Ad> loadCreatedAds(Integer id);
 
     Ad getReferenceById(Integer id);
-
-    boolean editAd(String name, String description, Float price, Integer userId);
 }

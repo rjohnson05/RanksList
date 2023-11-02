@@ -20,5 +20,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * @param username String object containing the username
      * @return List of User objects that have the designated username
      */
-    public List<User> findByUsernameIgnoreCase(String username);
+    List<User> findByUsernameIgnoreCase(String username);
 }

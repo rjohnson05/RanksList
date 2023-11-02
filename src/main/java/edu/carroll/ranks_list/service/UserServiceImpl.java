@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
@@ -65,4 +66,10 @@ public class UserServiceImpl implements UserService {
         log.debug("Attempted registration for already existing user");
         return false;
     }
+
+    @Override
+    public List<User> findByUsernameIgnoreCase(String username) {
+        return userRepo.findByUsernameIgnoreCase(username);
+    }
+
 }
