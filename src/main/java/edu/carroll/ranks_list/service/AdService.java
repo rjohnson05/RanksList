@@ -1,15 +1,16 @@
 package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
+import edu.carroll.ranks_list.model.User;
 
 
 import java.util.List;
 
 public interface AdService {
 
-    boolean createAd(String name, String description, Float price, Integer userId);
+    boolean createAd(String name, String description, Float price, User user);
 
-    boolean editAd(String name, String description, Float price, Integer userId);
+    boolean editAd(String name, String description, Float price, Integer id);
 
     boolean starAd(Integer id);
 

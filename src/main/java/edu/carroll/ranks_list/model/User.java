@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Model for advertisements. Contains all information regarding any given ad.
@@ -22,6 +23,9 @@ public class User {
 
     @Column(name = "password", nullable = false)
     String password;
+
+    @OneToMany(mappedBy="user")
+    private Set<Ad> ads;
 
     /**
      * Constructor for the User model. Creates a default User object with no information.
@@ -114,14 +118,11 @@ public class User {
      *
      * @return String with login, username, and hidden password
      */
-    @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Login @ ").append(super.toString()).append("[").append(EOL);
-        builder.append(TAB).append("username=").append(username).append(EOL);
-        builder.append(TAB).append("password=").append("****").append(EOL);
-        builder.append("]").append(EOL);
-        return builder.toString();
+        return "User #" + id + " [" + EOL +
+                TAB + "Username: " + username + EOL +
+                TAB + "Password: ********" + EOL +
+                "]" + EOL;
     }
 
     /**

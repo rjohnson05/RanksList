@@ -16,4 +16,6 @@ public interface UserService {
     boolean createUser(String username, String password);
 
     List<User> findByUsernameIgnoreCase(String username);
+
+    User getReferenceById(Integer id);
 }

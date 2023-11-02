@@ -32,19 +32,9 @@ public class Ad {
     @Column(name = "starred")
     private Boolean starred = Boolean.FALSE;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    @Column(name = "image")
-    private byte[] image;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     /**
      * Constructor for the Ad model. Creates a default Ad object with no information.
@@ -54,16 +44,15 @@ public class Ad {
 
     /**
      * Constructor for Ad model. Creates an Ad object
-     * @param name
-     * @param price
-     * @param description
+     * @param name String representing the name of the advertisement
+     * @param price Float representing the price of the advertisement
+     * @param description String representing the description of the advertisement
      */
-
-    public Ad(String name, Float price, String description, Integer userId) {
+    public Ad(String name, Float price, String description, User user) {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.userId = userId;
+        this.user = user;
     }
 
     /**
@@ -159,37 +148,25 @@ public class Ad {
         this.starred = starred;
     }
 
-    /**
-     * Returns the image associated with the advertisement.
-     *
-     * @return list of bytes containing the image data
-     */
-    public byte[] getImage() {
-        return image;
+    public User getUser() {
+        return user;
     }
 
-    /**
-     * Sets the image associated with the advertisement.
-     *
-     * @param image list of bytes containing the image data
-     */
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     private static final String EOL = System.lineSeparator();
     private static final String TAB = "\t";
 
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-//        builder.append("Ad #").append(getId()).append(" [").append(EOL);
-        builder.append(TAB).append("Name: ").append(name).append(EOL);
-        builder.append(TAB).append("Price: ").append(price).append(EOL);
-        builder.append(TAB).append("Description: ").append(description).append(EOL);
-        builder.append(TAB).append("Starred Status: ").append(starred).append(EOL);
-        builder.append(TAB).append("Created by User #").append(userId).append(EOL);
-        builder.append("]").append(EOL);
-        return builder.toString();
+        return "Ad #" + id + " [" + EOL +
+                TAB + "Name: " + name + EOL +
+                TAB + "Price: " + price + EOL +
+                TAB + "Description: " + description + EOL +
+                TAB + "Starred Status: " + starred + EOL +
+                TAB + "Created by " + user + EOL +
+                "]" + EOL;
     }
 }
 

@@ -1,6 +1,7 @@
 package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
+import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.AdRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +37,10 @@ public class AdServiceImpl implements AdService {
      * @param price       price of new ad
      * @return True if ad successfully added to the database; False otherwise
      */
-    @Override
-    public boolean createAd(String name, String description, Float price, Integer userId) {
+    public boolean createAd(String name, String description, Float price, User user) {
         // Adds an advertisement to the DB only if all fields have been filled
         if (name != null && !name.isEmpty() && description != null && price != null) {
-            Ad newAd = new Ad(name, price, description, userId);
+            Ad newAd = new Ad(name, price, description, user);
             log.info("New Ad: " + newAd);
             adRepo.save(newAd);
             return true;
@@ -59,7 +59,7 @@ public class AdServiceImpl implements AdService {
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
     public boolean editAd(String name, String description, Float price, Integer id) {
-        if (name != null && price != null && description != null) {
+        if (name != null && price != null && description != null && id != null) {
             Ad changingAd = adRepo.getReferenceById(id);
             changingAd.setName(name);
             changingAd.setDescription(description);
@@ -108,17 +108,6 @@ public class AdServiceImpl implements AdService {
         return false;
     }
 
-//    /**
-//     * Removes all ads from the list of starred ads.
-//     */
-//    public void removeAllStarredAds() {
-//        List<Ad> starredAds = loadStarredAds();
-//        for (Ad ad : starredAds) {
-//            ad.setStarred(false);
-//            adRepo.save(ad);
-//        }
-//    }
-
     /**
      * Removes a designated advertisement from the database.
      *
@@ -135,13 +124,6 @@ public class AdServiceImpl implements AdService {
         log.info("Attempted Ad Deletion with Invalid ID #" + id);
         return false;
     }
-
-//    /**
-//     * Testing class that removes all advertisements from the database.
-//     */
-//    public void deleteAllAds() {
-//        adRepo.deleteAll();
-//    }
 
     /**
      * Returns a list of all advertisements in the database.

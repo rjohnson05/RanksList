@@ -72,4 +72,8 @@ public class UserServiceImpl implements UserService {
         return userRepo.findByUsernameIgnoreCase(username);
     }
 
+    @Override
+    public User getReferenceById(Integer id) {
+        return userRepo.getReferenceById(id);
+    };
 }

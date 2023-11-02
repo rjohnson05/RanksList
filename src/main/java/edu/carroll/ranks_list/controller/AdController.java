@@ -2,7 +2,9 @@ package edu.carroll.ranks_list.controller;
 
 import edu.carroll.ranks_list.form.AdForm;
 import edu.carroll.ranks_list.model.Ad;
+import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.service.AdService;
+import edu.carroll.ranks_list.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -22,14 +24,16 @@ public class AdController {
 
     private static final Logger log = LoggerFactory.getLogger(AdController.class);
     private final AdService adService;
+    private final UserService userService;
 
     /**
      * Constructor for the Ad Controller. Creates a service for the advertisements business logic.
      *
      * @param adService contains all logic related to advertisement data
      */
-    public AdController(AdService adService) {
+    public AdController(AdService adService, UserService userService) {
         this.adService = adService;
+        this.userService = userService;
     }
 
     /**
@@ -94,7 +98,8 @@ public class AdController {
     @PostMapping("/ads")
     public boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Integer currentUser = Integer.parseInt((String) session.getAttribute("userID"));
+        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        User currentUser = userService.getReferenceById(currentUserId);
 
         return adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), currentUser);
     }
