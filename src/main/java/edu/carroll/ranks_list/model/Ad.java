@@ -10,7 +10,6 @@ import org.springframework.lang.NonNull;
  *
  * @author Ryan Johnson, Hank Rugg
  */
-
 @Entity
 @Table(name = "ad")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -43,9 +42,10 @@ public class Ad {
     }
 
     /**
-     * Constructor for Ad model. Creates an Ad object
-     * @param name String representing the name of the advertisement
-     * @param price Float representing the price of the advertisement
+     * Constructor for Ad model. Creates an Ad object with the prescribed name, price, description, and user.
+     *
+     * @param name        String representing the name of the advertisement
+     * @param price       Float representing the price of the advertisement
      * @param description String representing the description of the advertisement
      */
     public Ad(String name, Float price, String description, User user) {
@@ -66,7 +66,7 @@ public class Ad {
 
     /**
      * Sets the ID of the advertisement.
-     * 
+     *
      * @param id int representing the ID of the advertisement
      */
     public void setId(Integer id) {
@@ -98,10 +98,8 @@ public class Ad {
      * @return Float object representing the price of the advertisement
      */
     public Float getPrice() {
-
         return price;
     }
-
 
     /**
      * Sets the price of the advertisement.
@@ -148,12 +146,26 @@ public class Ad {
         this.starred = starred;
     }
 
+    /**
+     * Returns the user that created the advertisement.
+     *
+     * @return User object specifying the creator of the advertisement
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Sets the user that created the advertisement.
+     *
+     * @param user User object specifying the creator of the advertisement
+     */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int hashCode() {
+        return super.hashCode();
     }
 
     private static final String EOL = System.lineSeparator();

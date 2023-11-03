@@ -12,6 +12,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "goal")
 public class Goal {
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -26,7 +27,6 @@ public class Goal {
     private Integer adId;
 
     /**
-     *
      * @return ad_Id for this goal
      */
     public Integer getAd_id() {
@@ -35,6 +35,7 @@ public class Goal {
 
     /**
      * Sets ad id for this goal
+     *
      * @param adId
      */
     public void setAd_id(Integer adId) {
@@ -50,12 +51,11 @@ public class Goal {
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
      */
-    public Goal(String name, String description, Integer adId){
+    public Goal(String name, String description, Integer adId) {
         this.description = description;
         this.name = name;
         this.adId = adId;
     }
-
 
     /**
      * Returns the ID of the goal.
@@ -94,7 +94,6 @@ public class Goal {
         this.name = name;
     }
 
-
     /**
      * Sets the description for the goal.
      *
@@ -104,30 +103,17 @@ public class Goal {
         this.description = description;
     }
 
-
-    /**
-     * Equals method, compares the descriptions of the goals
-     * @param goal
-     * @return
-     */
     public boolean equals(Goal goal) {
         return goal.getDescription() == this.getDescription();
     }
 
-
-    /**
-     * Java hashcode
-     * @return hashcode of the description
-     */
-    public int hashcode(){
+    public int hashcode() {
         return Objects.hash(description);
     }
 
     private static final String EOL = System.lineSeparator();
 
-
-    @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Goal :").append(getDescription()).append(EOL);
         return builder.toString();

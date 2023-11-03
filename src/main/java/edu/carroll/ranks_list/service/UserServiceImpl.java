@@ -7,6 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -30,26 +37,31 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean validateUser(String username, String password) {
-        log.debug("validateUser: user '{}' attempted login", username);
+        log.info("validateUser: user '{}' attempted login", username);
 
         // Always do the lookup in a case-insensitive manner (lower-casing the data).
         List<User> users = userRepo.findByUsernameIgnoreCase(username);
 
         // We expect 0 or 1, so if we get more than 1, bail out as this is an error we don't deal with properly.
         if (users.size() != 1) {
-            log.debug("validateUser: found {} users", users.size());
-            return false;
-        }
-        User u = users.get(0);
-        // XXX - Using Java's hashCode is wrong on SO many levels, but is good enough for demonstration purposes.
-        // NEVER EVER do this in production code!
-        final String userProvidedHash = Integer.toString(password.hashCode());
-        if (!u.getPassword().equals(userProvidedHash)){
-            log.debug("validateUser: password !match");
+            log.info("validateUser: found {} users", users.size());
             return false;
         }
 
-        // User exists, and the provided password matches the hashed password in the database.
+        User user = users.get(0);
+        byte[] hash = Base64.getDecoder().decode(user.getPassword());
+        log.info("Fetched hash: " + Arrays.toString(hash));
+        byte[] salt = Arrays.copyOfRange(hash, 0, 20);
+
+        // Create a temporary user that stores the password with the same salted hash algorithm as the real user to
+        // compare the password hashes.
+        User tempUser = new User(username, password, salt);
+        if (!user.equals(tempUser)) {
+            log.info("validateUser: password !match");
+            return false;
+        }
+
+        // User exists, and the provided password matches the password in the database.
         log.info("validateUser: successful login for {}", username);
         return true;
     }
@@ -58,7 +70,7 @@ public class UserServiceImpl implements UserService {
         if (userRepo.findByUsernameIgnoreCase(username).isEmpty()) {
             User user = new User(username,password);
             userRepo.save(user);
-            user.setHashedPassword(password);
+//            user.setHashedPassword(password);
             log.info("Set Password: ****");
             log.info("Registered New User: " + username);
             return true;

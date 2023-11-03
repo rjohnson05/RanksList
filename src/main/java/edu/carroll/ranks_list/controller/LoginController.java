@@ -2,7 +2,6 @@ package edu.carroll.ranks_list.controller;
 
 import edu.carroll.ranks_list.form.LoginForm;
 import edu.carroll.ranks_list.form.RegistrationForm;
-import edu.carroll.ranks_list.repository.UserRepository;
 import edu.carroll.ranks_list.service.UserService;
 import jakarta.servlet.http.*;
 import org.slf4j.Logger;

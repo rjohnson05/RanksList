@@ -17,10 +17,9 @@ import java.util.List;
 @RestController
 @CrossOrigin(value="http://localhost:3000", allowCredentials = "true")
 public class GoalController {
+
     private static final Logger log = LoggerFactory.getLogger(GoalController.class);
-
     private final GoalService goalService;
-
 
     /**
      * Constructor for the Goal Controller. Creates a service for the goals business logic.

@@ -3,8 +3,12 @@ package edu.carroll.ranks_list.model;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
-import java.util.Objects;
-import java.util.Set;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.util.*;
 
 /**
  * Model for advertisements. Contains all information regarding any given ad.
@@ -14,6 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "`user`")
 public class User {
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -24,7 +29,7 @@ public class User {
     @Column(name = "password", nullable = false)
     String password;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy = "user")
     private Set<Ad> ads;
 
     /**
@@ -34,25 +39,44 @@ public class User {
     }
 
     /**
-     * Constructor for the User model. Creates a default User object with a username and password.
+     * Constructor for the User model. Creates a User object with the provided username and password.
+     * Uses the provided salt to hash the password.
      *
-     * @param username String object containing the username associated with the user
-     * @param  rawPassword String object containing the password directly supplied by the user, without any manipulation
+     * @param username    String object containing the username associated with the user
+     * @param rawPassword String object containing the password directly supplied by the user, without any manipulation
+     * @param salt        list of bytes containing the salt to be used for hashing the password
+     */
+    public User(String username, String rawPassword, byte[] salt) {
+        this.username = username;
+        setHashedPassword(rawPassword, salt);
+    }
+
+    /**
+     * Constructor for the User model. Creates a User object with a username and password, using a random salt to hash
+     * the password.
+     *
+     * @param username    String object containing the username associated with the user
+     * @param rawPassword String object containing the password directly supplied by the user, without any manipulation
      */
     public User(String username, String rawPassword) {
         this.username = username;
-        setHashedPassword(rawPassword);
+
+        // Generates a salt for the hash
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] salt = new byte[20];
+        secureRandom.nextBytes(salt);
+        setHashedPassword(rawPassword, salt);
     }
 
     /**
      * Returns the ID of the user.
      *
-     * @return Integer object representing the ID of the user
+     * @return Integer representing the ID of the user
      */
+    @NonNull
     public Integer getId() {
         return id;
     }
-
 
     /**
      * Sets the ID of the user.
@@ -62,7 +86,6 @@ public class User {
     public void setId(Integer id) {
         this.id = id;
     }
-
 
     /**
      * Returns the username of the user.
@@ -103,50 +126,49 @@ public class User {
     }
 
     /**
-     * Sets the hashed password to the password. NEEDS TO BE REDONE XXX
-     * @param rawPassword
+     * Sets the hashed password to the password.
+     *
+     * @param rawPassword String object containing the password directly supplied by the user, without any manipulation
+     * @param salt        list of bytes containing the salt to be used for hashing the password
      */
-    public void setHashedPassword(String rawPassword) {
-        // XXX - This should *NEVER* be done in a real project
-        this.password = Integer.toString(rawPassword.hashCode());
+    public void setHashedPassword(String rawPassword, byte[] salt) {
+        try {
+            // Creates a hash of the password using the preceding generated salt
+            PBEKeySpec spec = new PBEKeySpec(rawPassword.toCharArray(), salt, 1000, 512);
+            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
+
+            byte[] hash = factory.generateSecret(spec).getEncoded();
+            // Combines the salt with the hashed password for storage in the DB, allowing the salt to be retrieved for
+            // password verification
+            byte[] salt_hash = Arrays.copyOf(salt, salt.length + hash.length);
+            System.arraycopy(hash, 0, salt_hash, salt.length, hash.length);
+
+            this.password = Base64.getEncoder().encodeToString(salt_hash);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException ignored) {
+        }
     }
 
-    private static final String EOL = System.lineSeparator();
-    private static final String TAB = "\t";
-
-    /**
-     *
-     * @return String with login, username, and hidden password
-     */
-    public String toString() {
-        return "User #" + id + " [" + EOL +
-                TAB + "Username: " + username + EOL +
-                TAB + "Password: ********" + EOL +
-                "]" + EOL;
-    }
-
-    /**
-     *
-     * @param o
-     * @return True if objects are equal to eachother, false otherwise
-     */
-    @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
 
-        final User user = (User)o;
+        final User user = (User) o;
         return username.equals(user.username) && password.equals(user.password);
     }
 
-    /**
-     * NEEDS TO BE REDONE
-     * @return java hashcode
-     */
-    @Override
     public int hashCode() {
-        return Objects.hash(username, password);
+        return Objects.hash();
+    }
+
+    private static final String EOL = System.lineSeparator();
+    private static final String TAB = "\t";
+
+    public String toString() {
+        return "User #" + id + " [" + EOL +
+                TAB + "Username: " + username + EOL +
+                TAB + "Password: ********" + password + EOL +
+                "]" + EOL;
     }
 }
