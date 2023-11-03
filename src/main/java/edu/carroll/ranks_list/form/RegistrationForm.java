@@ -1,12 +1,6 @@
 package edu.carroll.ranks_list.form;
 
-
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 public class RegistrationForm {
 

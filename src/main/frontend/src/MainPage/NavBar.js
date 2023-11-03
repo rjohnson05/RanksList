@@ -1,33 +1,34 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 export default function NavBar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
-                <a className="navbar-brand" href="#">Navbar</a>
+                <Link to={"/home"} className="navbar-brand">Rank's List</Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="/home">Home</a>
+                            <Link to={"/home"} className="nav-link">Home</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/starred_ads">Starred Ads</a>
+                            <Link to={"/starred_ads"} className="nav-link">Starred Ads</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/create_ad">Create Ad</a>
+                            <Link to={"/create_ad"} className="nav-link">Create Ad</Link>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" href="/my_ads">My Created Ads</a>
+                            <Link to={"/my_ads"} className="nav-link">My Created Ads</Link>
                         </li>
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Profile
                             </a>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a className="dropdown-item" href="/login">Sign Out</a></li>
+                                <li><Link to={"/login"} className="dropdown-item">Sign Out</Link></li>
                             </ul>
                         </li>
                     </ul>

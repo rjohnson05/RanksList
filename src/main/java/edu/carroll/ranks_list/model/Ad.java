@@ -10,7 +10,6 @@ import org.springframework.lang.NonNull;
  *
  * @author Ryan Johnson, Hank Rugg
  */
-
 @Entity
 @Table(name = "ad")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -32,19 +31,9 @@ public class Ad {
     @Column(name = "starred")
     private Boolean starred = Boolean.FALSE;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    @Column(name = "image")
-    private byte[] image;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     /**
      * Constructor for the Ad model. Creates a default Ad object with no information.
@@ -53,17 +42,17 @@ public class Ad {
     }
 
     /**
-     * Constructor for Ad model. Creates an Ad object
-     * @param name
-     * @param price
-     * @param description
+     * Constructor for Ad model. Creates an Ad object with the prescribed name, price, description, and user.
+     *
+     * @param name        String representing the name of the advertisement
+     * @param price       Float representing the price of the advertisement
+     * @param description String representing the description of the advertisement
      */
-
-    public Ad(String name, Float price, String description, Integer userId) {
+    public Ad(String name, Float price, String description, User user) {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.userId = userId;
+        this.user = user;
     }
 
     /**
@@ -77,7 +66,7 @@ public class Ad {
 
     /**
      * Sets the ID of the advertisement.
-     * 
+     *
      * @param id int representing the ID of the advertisement
      */
     public void setId(Integer id) {
@@ -109,10 +98,8 @@ public class Ad {
      * @return Float object representing the price of the advertisement
      */
     public Float getPrice() {
-
         return price;
     }
-
 
     /**
      * Sets the price of the advertisement.
@@ -160,36 +147,38 @@ public class Ad {
     }
 
     /**
-     * Returns the image associated with the advertisement.
+     * Returns the user that created the advertisement.
      *
-     * @return list of bytes containing the image data
+     * @return User object specifying the creator of the advertisement
      */
-    public byte[] getImage() {
-        return image;
+    public User getUser() {
+        return user;
     }
 
     /**
-     * Sets the image associated with the advertisement.
+     * Sets the user that created the advertisement.
      *
-     * @param image list of bytes containing the image data
+     * @param user User object specifying the creator of the advertisement
      */
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int hashCode() {
+        return super.hashCode();
     }
 
     private static final String EOL = System.lineSeparator();
     private static final String TAB = "\t";
 
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-//        builder.append("Ad #").append(getId()).append(" [").append(EOL);
-        builder.append(TAB).append("Name: ").append(name).append(EOL);
-        builder.append(TAB).append("Price: ").append(price).append(EOL);
-        builder.append(TAB).append("Description: ").append(description).append(EOL);
-        builder.append(TAB).append("Starred Status: ").append(starred).append(EOL);
-        builder.append(TAB).append("Created by User #").append(userId).append(EOL);
-        builder.append("]").append(EOL);
-        return builder.toString();
+        return "Ad #" + id + " [" + EOL +
+                TAB + "Name: " + name + EOL +
+                TAB + "Price: " + price + EOL +
+                TAB + "Description: " + description + EOL +
+                TAB + "Starred Status: " + starred + EOL +
+                TAB + "Created by " + user + EOL +
+                "]" + EOL;
     }
 }
 
