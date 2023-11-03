@@ -4,16 +4,54 @@ import edu.carroll.ranks_list.model.Goal;
 
 import java.util.List;
 
+/**
+ * Interface for goal services. Contains all business methods relating to goals.
+ *
+ * @author Hank Rugg, Ryan Johnson
+ */
 public interface GoalService {
 
-    public boolean newGoal(String name, String description, Integer ad_id);
+    /**
+     * Creates a new goal and adds it to the repo
+     *
+     * @param name String representing the name/title of the goal
+     * @param description String representing the main text of the goal
+     * @param ad_id Integer representing the ID of the advertisement the goal is being saved to
+     *
+     * @return true if the goal is successfully created; false otherwise
+     */
+    boolean newGoal(String name, String description, Integer ad_id);
 
-    public List<Goal> getAllGoals();
+    /**
+     * Returns all gaols present in the database.
+     *
+     * @return List of all goals present in the database
+     */
+    List<Goal> getAllGoals();
 
-    public List<Goal> getIndividualGoals(Integer ad_id);
+    /**
+     * Finds goals that are related to the specific ad.
+     *
+     * @param adId Integer representing the ID of the advertisement the goals is being saved to
+     *
+     * @return List of goals belonging to the advertisement with the designated ID
+     */
+    List<Goal> getIndividualGoals(Integer adId);
 
-    public Goal deleteGoal(Integer id);
+    /**
+     * Deletes the specified goal from the database.
+     *
+     * @param id Integer representing the ID of the goal to be deleted
+     *
+     * @return Goal that was deleted
+     */
+    Goal deleteGoal(Integer id);
 
-    public boolean deleteAllGoals();
+    /**
+     * Deletes all goals from the database.
+     *
+     * @return true if all goals are successfully deleted from the database; false otherwise
+     */
+    boolean deleteAllGoals();
 
 }

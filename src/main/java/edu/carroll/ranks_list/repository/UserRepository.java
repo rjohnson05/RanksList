@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+
     /**
      * Returns a list of all users with the designated username. This list will have a length of either 0 if there is no user
      * with the designated username or 1 if there is a user with the designated username.
@@ -22,5 +23,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      */
     List<User> findByUsernameIgnoreCase(String username);
 
+    /**
+     * Returns the User object with the specified ID.
+     *
+     * @param id Integer representing the ID of the desired User object
+     * @return User object with the specified ID
+     */
     User getReferenceById(Integer id);
 }

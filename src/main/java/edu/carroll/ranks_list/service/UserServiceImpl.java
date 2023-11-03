@@ -17,7 +17,7 @@ import java.util.Base64;
 import java.util.List;
 
 /**
- * Service class for users.
+ * Service class for users. Contains all business logic relating to logins and users.
  *
  * @author Hank Rugg, Ryan Johnson
  */
@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepo;
 
+    /**
+     * Constructor for the User Service, creating the service with a User Repo.
+     *
+     * @param userRepo Repository for users
+     */
     public UserServiceImpl(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
@@ -33,7 +38,7 @@ public class UserServiceImpl implements UserService {
     /**
      * Given a loginForm, determine if the information provided is valid, and the user exists in the system.
      *
-     * @return true if data exists and matches what's on record, false otherwise
+     * @return true if data exists and matches what is on record; false otherwise
      */
     @Override
     public boolean validateUser(String username, String password) {
@@ -66,12 +71,18 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    /**
+     * Creates a new User object and saves it to the database.
+     *
+     * @param username String representing the desired username for the new User object
+     * @param password String representing the desired password for the new User object
+     *
+     * @return true if a new User is successfully created and saved to the database; false otherwise
+     */
     public boolean createUser(String username, String password){
         if (userRepo.findByUsernameIgnoreCase(username).isEmpty()) {
             User user = new User(username,password);
             userRepo.save(user);
-//            user.setHashedPassword(password);
-            log.info("Set Password: ****");
             log.info("Registered New User: " + username);
             return true;
         }
@@ -79,11 +90,24 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
+    /**
+     * Returns a list of User object with the specified username.
+     *
+     * @param username String representing the desired username of the user
+     *
+     * @return list of Users with the specified username
+     */
     @Override
     public List<User> findByUsernameIgnoreCase(String username) {
         return userRepo.findByUsernameIgnoreCase(username);
     }
 
+    /**
+     * Returns the User object with the specified ID
+     *
+     * @param id Integer representing the ID number of the desired User object
+     * @return User object with the specified ID
+     */
     @Override
     public User getReferenceById(Integer id) {
         return userRepo.getReferenceById(id);

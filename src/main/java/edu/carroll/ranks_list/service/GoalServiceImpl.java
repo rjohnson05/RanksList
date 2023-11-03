@@ -19,9 +19,7 @@ import java.util.List;
 public class GoalServiceImpl implements GoalService {
 
     private static final Logger log = LoggerFactory.getLogger(GoalServiceImpl.class);
-
-    private GoalRepository goalRepo;
-
+    private final GoalRepository goalRepo;
 
     /**
      * Constructor for the Goal Service, creating an Ad service.
@@ -32,14 +30,14 @@ public class GoalServiceImpl implements GoalService {
         this.goalRepo = goalRepo;
     }
 
-
-
     /**
      * Creates a new goal and adds it to the repo
-     * @param name
-     * @param description
-     * @param ad_id
-     * @return
+     *
+     * @param name String representing the name/title of the goal
+     * @param description String representing the main text of the goal
+     * @param ad_id Integer representing the ID of the advertisement the goal is being saved to
+     *
+     * @return true if the goal is successfully created; false otherwise
      */
     @Override
     public boolean newGoal(String name, String description, Integer ad_id) {
@@ -50,8 +48,9 @@ public class GoalServiceImpl implements GoalService {
     }
 
     /**
+     * Returns all gaols present in the database.
      *
-     * @return All goals that have been saved
+     * @return List of all goals present in the database
      */
     @Override
     public List<Goal> getAllGoals() {
@@ -59,9 +58,11 @@ public class GoalServiceImpl implements GoalService {
     }
 
     /**
-     * Finds goals that are related to the specific ad
-     * @param adId
-     * @return
+     * Finds goals that are related to the specific ad.
+     *
+     * @param adId Integer representing the ID of the advertisement the goals is being saved to
+     *
+     * @return List of goals belonging to the advertisement with the designated ID
      */
     @Override
     public List<Goal> getIndividualGoals(Integer adId) {
@@ -69,8 +70,10 @@ public class GoalServiceImpl implements GoalService {
     }
 
     /**
-     * Deletes the specified goal from the database
-     * @param id
+     * Deletes the specified goal from the database.
+     *
+     * @param id Integer representing the ID of the goal to be deleted
+     *
      * @return Goal that was deleted
      */
     @Override
@@ -82,8 +85,9 @@ public class GoalServiceImpl implements GoalService {
     }
 
     /**
-     * Deletes all goals from the database
-     * @return true
+     * Deletes all goals from the database.
+     *
+     * @return true if all goals are successfully deleted from the database; false otherwise
      */
     @Override
     public boolean deleteAllGoals(){

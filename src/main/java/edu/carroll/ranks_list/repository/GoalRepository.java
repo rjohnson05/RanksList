@@ -14,7 +14,12 @@ import java.util.List;
  */
 @Repository
 public interface GoalRepository extends JpaRepository<Goal, Integer> {
+
+    /**
+     * Returns a list of Goal objects attached to the specified advertisement.
+     *
+     * @param adId Integer representing the ID of the desired advertisement
+     * @return list of Goal objects attached to the specified advertisement
+     */
     List<Goal> findByadId(Integer adId);
-
-
 }

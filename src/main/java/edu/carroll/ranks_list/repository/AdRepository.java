@@ -30,10 +30,10 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
     List<Ad> findByUserId(Integer user_id);
 
     /**
-     * Returns the ad with the matching Id
+     * Returns the ad with the matching ID.
      *
-     * @param id
-     * @return
+     * @param id Integer representing the ID of the specified ad
+     * @return Ad object with the specified ID
      */
     Ad getReferenceById(Integer id);
 }
