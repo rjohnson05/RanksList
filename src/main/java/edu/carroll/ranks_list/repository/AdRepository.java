@@ -32,8 +32,8 @@ public interface AdRepository extends JpaRepository<Ad, Integer> {
     /**
      * Returns the ad with the matching Id
      *
-     * @param id
-     * @return
+     * @param id of the ad wanted
+     * @return an Ad
      */
     Ad getReferenceById(Integer id);
 }

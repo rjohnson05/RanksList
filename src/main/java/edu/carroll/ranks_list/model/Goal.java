@@ -19,6 +19,9 @@ public class Goal {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "adId", nullable = false)
     private Integer adId;
 
@@ -47,8 +50,9 @@ public class Goal {
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
      */
-    public Goal(String description, Integer adId){
+    public Goal(String name, String description, Integer adId){
         this.description = description;
+        this.name = name;
         this.adId = adId;
     }
 
@@ -70,6 +74,24 @@ public class Goal {
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Getter for the name of the goal
+     *
+     * @return name of goal
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Setter for name of goal
+     *
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
 

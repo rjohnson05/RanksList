@@ -9,9 +9,9 @@ export default function CreateGoalForm() {
     // Initial data list for an empty form
     // This will update values of this list will change as the form is filled out.
     const [formData, setFormData] = useState({
-        name: "",
         description: "",
-        adId: Number(useLocation().pathname.split('/').pop())
+        adId: Number(useLocation().pathname.split('/').pop()),
+        name: ""
     });
 
     // Posts the entered data onto the main page when the "Submit" button is clicked
@@ -26,33 +26,21 @@ export default function CreateGoalForm() {
     return (
         <div>
             <NavBar />
-        <form onSubmit={handleSubmit}>
-            <h1>Add New Goal</h1>
-            <label>Description:
-                <input type="text" name="description" value = {formData.description}
-                       onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))} />
-            </label>
-            <input type="hidden" name="adId" value = {formData.adId}
-                   onChange={(e) => setFormData((prev) => ({ ...prev, adId: e.target.value }))} />
-            <input type="submit" value="Submit" />
+            <form onSubmit={handleSubmit}>
+                <h1>Add New Goal</h1>
 
-            {/*// checkboxes*/}
-            <fieldset>
-                <legend>Choose your monster's features:</legend>
+                <label>Description:
+                    <input type="text" name="description" value = {formData.description}
+                           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))} />
+                </label>
+                <input type="hidden" name="adId" value = {formData.adId}
+                       onChange={(e) => setFormData((prev) => ({ ...prev, adId: e.target.value }))} />
 
-                <div>
-                    <input type="checkbox" id="scales" name="scales"  />
-                    <label htmlFor="scales">Scales</label>
-                </div>
+                <input type="hidden" name="name" value = {formData.name}
+                       onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
 
-                <div>
-                    <input type="checkbox" id="horns" name="horns" />
-                    <label for="horns">Horns</label>
-                </div>
-            </fieldset>
-
-
-        </form>
+                <input type="submit" value="Submit" />
+            </form>
         </div>
     );
 }

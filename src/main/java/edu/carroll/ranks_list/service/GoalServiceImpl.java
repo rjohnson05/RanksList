@@ -1,13 +1,11 @@
 package edu.carroll.ranks_list.service;
 
-import edu.carroll.ranks_list.controller.AdController;
 import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.repository.GoalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +30,6 @@ public class GoalServiceImpl implements GoalService {
         this.goalRepo = goalRepo;
     }
 
-
-
     /**
      * Creates a new goal and adds it to the repo
      * @param description
@@ -41,8 +37,12 @@ public class GoalServiceImpl implements GoalService {
      * @return
      */
     @Override
-    public boolean newGoal(String description, Integer ad_id) {
-            Goal goal = new Goal(description, ad_id);
+    public boolean newGoal(String name, String description, Integer ad_id) {
+        if (name == null || description == null || ad_id == null){
+            log.debug("A newGoal parameter was null");
+            return false;
+        }
+            Goal goal = new Goal(name, description, ad_id);
             goalRepo.save(goal);
             log.info("New goal created for Ad with id:{}", ad_id);
             return true;
@@ -54,6 +54,7 @@ public class GoalServiceImpl implements GoalService {
      */
     @Override
     public List<Goal> getAllGoals() {
+        log.debug("Accessing all goals");
         return goalRepo.findAll();
     }
 
@@ -64,6 +65,7 @@ public class GoalServiceImpl implements GoalService {
      */
     @Override
     public List<Goal> getIndividualGoals(Integer adId) {
+        log.debug("Accessing goal :{}", adId);
         return goalRepo.findByadId(adId);
     }
 
