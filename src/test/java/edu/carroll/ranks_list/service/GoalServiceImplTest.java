@@ -1,18 +1,21 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.model.Goal;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.springframework.test.util.AssertionErrors.assertFalse;
-import static org.springframework.test.util.AssertionErrors.assertTrue;
+import java.util.List;
+
+import static org.springframework.test.util.AssertionErrors.*;
 
 @SpringBootTest
 @Transactional
 public class GoalServiceImplTest {
 
+    // goal name
     private static final String name = "Test";
 
     private static final String description = "Testing the goals";
@@ -29,21 +32,34 @@ public class GoalServiceImplTest {
 
     @Test
     public void validateNewGoalSuccess(){
+        int size = goalService.getAllGoals().size();
         assertTrue("validateNewGoalSuccess: Should pass with a new goal created returning true", goalService.newGoal(name, description, adId));
+        List<Goal> individualGoals = goalService.getIndividualGoals(adId);
+        assertEquals("validateNewGoalSuccess: Newly added goal did not increase number of goals for ad", individualGoals.size(), size+1);
+        if (individualGoals.size() == 1){
+            assertTrue("validateNewGoalSuccess: Set name of goal does not match fetched goal", individualGoals.get(0).getName().equals(name));
+            assertTrue("validateNewGoalSuccess: Set description of goal does not match fetched goal", individualGoals.get(0).getDescription().equals(description));
+        }
     }
     @Test
     public void validateNewGoalNullName(){
+        int size = goalService.getAllGoals().size();
         assertFalse("validateNewGoalFail: Should fail with a new goal not created", goalService.newGoal(null, description, adId));
+        assertTrue("validateNewGoalFail: A goal was added to the list when it shouldn't have been", size == goalService.getAllGoals().size());
     }
 
     @Test
     public void validateNewGoalNullDesc(){
+        int size = goalService.getAllGoals().size();
         assertFalse("validateNewGoalNullDesc: Should fail with a new goal not created", goalService.newGoal(name, null, adId));
+        assertTrue("validateNewGoalNullDesc: A goal was added to the list when it shouldn't have been", size == goalService.getAllGoals().size());
     }
 
     @Test
     public void validateNewGoalNullId(){
+        int size = goalService.getAllGoals().size();
         assertFalse("validateNewGoalNullId: Should fail with a new goal not created", goalService.newGoal(name, description, null));
+        assertTrue("validateNewGoalNullId: A goal was added to the list when it shouldn't have been", size == goalService.getAllGoals().size());
     }
 
     @Test
@@ -51,6 +67,50 @@ public class GoalServiceImplTest {
         goalService.newGoal(name, description, adId);
         assertTrue("validateAllGoalsSize: Should pass with the size of all goals being 1", goalService.getAllGoals().size() == 1);
     }
+
+    @Test
+    public void validateAllGoalsSizeMultiple(){
+        for (int i = 1; i < 11; i++){
+            goalService.newGoal(name, description, adId);
+            assertTrue("validateAllGoalsSizeMultiple: The size of the list of goals does not match the amount of goals added", goalService.getAllGoals().size() == i);
+        }
+        assertTrue("validateAllGoalsSizeMultiple: The size of the list of goals should be 10", goalService.getAllGoals().size() == 10);
+
+    }
+
+    @Test
+    public void validateAllGoalsSizeMultipleWithDeletion(){
+        for (int i = 1; i < 11; i++){
+            goalService.newGoal(name, description, i);
+            assertTrue("validateAllGoalsSizeMultipleWithDeletion: The size of the list of goals does not match the amount of goals added", goalService.getAllGoals().size() == i);
+        }
+        int size = goalService.getAllGoals().size();
+        goalService.deleteGoal(5);
+        System.out.println(size);
+        System.out.println(goalService.getAllGoals().size());
+        assertTrue("validateAllGoalsSizeMultipleWithDeletion: The size of the list of goals should be 9", goalService.getAllGoals().size() == size-1);
+    }
+
+    @Test
+    public void deleteSpecificGoal(){
+        goalService.newGoal(name, description, adId);
+        assertTrue("deleteSpecificGoal: The size of the list of goals should be 1", goalService.getAllGoals().size() == 1);
+        System.out.println(goalService.getAllGoals().size());
+        goalService.deleteGoal(adId);
+        System.out.println(goalService.getAllGoals().size());
+        assertTrue("deleteSpecificGoal: The size of the list of goals should be 9", goalService.getAllGoals().size() == 0);
+    }
+
+    @Test
+    public void validateAllGoalsSizeMultipleWithAllDeleted(){
+        for (int i = 1; i < 11; i++){
+            goalService.newGoal(name, description, i);
+            assertTrue("validateAllGoalsSizeMultipleWithDeletion: The size of the list of goals does not match the amount of goals added", goalService.getAllGoals().size() == i);
+        }
+        goalService.deleteGoal(5);
+        assertTrue("validateAllGoalsSizeMultipleWithDeletion: The size of the list of goals should be 10", goalService.getAllGoals().size() == 9);
+    }
+
 
     @Test
     public void validateAllGoalsSizeFail(){

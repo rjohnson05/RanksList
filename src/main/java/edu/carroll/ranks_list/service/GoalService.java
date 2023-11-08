@@ -20,6 +20,7 @@ public interface GoalService {
      *
      * @return true if the goal is successfully created; false otherwise
      */
+    //update
     boolean newGoal(String name, String description, Integer ad_id);
 
     /**
@@ -45,7 +46,7 @@ public interface GoalService {
      *
      * @return Goal that was deleted
      */
-    Goal deleteGoal(Integer id);
+    boolean deleteGoal(Integer id);
 
     /**
      * Deletes all goals from the database.

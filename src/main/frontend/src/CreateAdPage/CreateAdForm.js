@@ -24,10 +24,8 @@ export default function CreateAdForm() {
     return (
         <div>
             <NavBar />
-
             <form onSubmit={handleSubmit}>
                 <h1>Create New Advertisement</h1>
-
                 <label>Advertisement Name:
                     <input type="text" name="name" value = {formData.name}
                            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />

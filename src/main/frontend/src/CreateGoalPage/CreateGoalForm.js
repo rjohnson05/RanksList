@@ -16,7 +16,6 @@ export default function CreateGoalForm() {
 
     // Posts the entered data onto the main page when the "Submit" button is clicked
     const handleSubmit = (e) => {
-
         axios.post('http://localhost:8080/goals', formData)
             .then((response) => {console.log(response.data)})
             .catch((error) => {console.log(error)});
@@ -28,7 +27,6 @@ export default function CreateGoalForm() {
             <NavBar />
             <form onSubmit={handleSubmit}>
                 <h1>Add New Goal</h1>
-
                 <label>Description:
                     <input type="text" name="description" value = {formData.description}
                            onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))} />

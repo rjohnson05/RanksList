@@ -43,10 +43,10 @@ public class GoalServiceImpl implements GoalService {
             log.debug("A newGoal parameter was null");
             return false;
         }
-            Goal goal = new Goal(name, description, ad_id);
-            goalRepo.save(goal);
-            log.info("New goal created for Ad with id:{}", ad_id);
-            return true;
+        Goal goal = new Goal(name, description, ad_id);
+        goalRepo.save(goal);
+        log.info("New goal created for Ad with id:{}", ad_id);
+        return true;
     }
 
     /**
@@ -81,11 +81,10 @@ public class GoalServiceImpl implements GoalService {
      * @return Goal that was deleted
      */
     @Override
-    public Goal deleteGoal(Integer id){
-        Goal deletedGoal = goalRepo.getReferenceById(id);
+    public boolean deleteGoal(Integer id){
         goalRepo.deleteById(id);
         log.info("Deleted goal {}", id);
-        return deletedGoal;
+        return true;
     }
 
     /**
@@ -103,5 +102,3 @@ public class GoalServiceImpl implements GoalService {
     }
 
 }
-
-

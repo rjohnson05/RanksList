@@ -12,7 +12,6 @@ import java.util.List;
  */
 public interface AdService {
 
-
     /**
      * Creates a new advertisement and adds it to the database.
      *
