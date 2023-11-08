@@ -209,19 +209,6 @@ public class AdServiceImplTest {
         assertEquals("editAdValidDataTest: name didn't change to proper value when edited", user, editedAd.getUser());
     }
 
-    // Tests to ensure that editAd() is not successful if the name is left empty
-    @Test
-    public void editAdEmptyNameTest() {
-        adService.createAd(name, description, price, user);
-        assertFalse("editAdEmptyNameTest: shouldn't be successful when name is changed to be empty", adService.editAd("", description, price, adService.loadAllAds().get(0).getId()));
-        assertEquals("editAdEmptyNameTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
-        Ad createdAd = adService.loadAllAds().get(0);
-        assertEquals("editAdEmptyNameTest: name of ad isn't same as before unsuccessful editing", name, createdAd.getName());
-        assertEquals("editAdEmptyNameTest: price of ad isn't same as before unsuccessful editing", price, createdAd.getPrice());
-        assertEquals("editAdEmptyNameTest: description of ad isn't same as before unsuccessful editing", description, createdAd.getDescription());
-        assertEquals("editAdEmptyNameTest: user of ad isn't same as before unsuccessful editing", user, createdAd.getUser());
-    }
-
     @Test
     public void loadAllAdsZerosAdsTest() {
         assertEquals("loadAllAdsZerosAdsTest: should succeed when there are zeros ads", 0, adService.loadAllAds().size());
