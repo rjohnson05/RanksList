@@ -1,17 +1,11 @@
 package edu.carroll.ranks_list.service;
 
-import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;

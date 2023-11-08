@@ -168,7 +168,7 @@ public class User {
     public String toString() {
         return "User #" + id + " [" + EOL +
                 TAB + "Username: " + username + EOL +
-                TAB + "Password: ********" + password + EOL +
+                TAB + "Password: ********" + EOL +
                 "]" + EOL;
     }
 }
