@@ -222,77 +222,15 @@ public class AdServiceImplTest {
         assertEquals("editAdEmptyNameTest: user of ad isn't same as before unsuccessful editing", user, createdAd.getUser());
     }
 
-//    @Test
-//    public void loadAllAdsVariedNumberOfAdsTest() {
-//        // Ensure all ads are loaded despite the number of ads
-//        for (int i = 1; i < 10; i++) {
-//            List<Ad> allAds = adService.loadAllAds();
-//            for (Ad allAd : allAds) {
-//                adService.deleteAd(allAd.getId());
-//            }
-//            for (int j = 0; j < i; j++) {
-//                adService.createAd(name, description, price, user);
-//            }
-//            assertEquals("loadAllAdsVariedNumberOfAdsTest: should pass with valid data for any number of ads", i, adService.loadAllAds().size());
-//        }
-//    }
-
     @Test
     public void loadAllAdsZerosAdsTest() {
         assertEquals("loadAllAdsZerosAdsTest: should succeed when there are zeros ads", 0, adService.loadAllAds().size());
     }
 
-//    @Test
-//    public void loadAllAdsDuplicatesTest() {
-//        adService.createAd(name, description, price, user);
-//        adService.createAd(name, description, price, user);
-//
-//        assertEquals("loadAllAdsDuplicatesTest: should successfully load each duplicate ad", 2, adService.loadAllAds().size());
-//    }
-
-//    @Test
-//    public void loadStarredAdsVariedNumberOfAdsTest() {
-//        for (int i = 1; i < 10; i++) {
-//            List<Ad> starredAds = adService.loadStarredAds();
-//            for (Ad allAd : starredAds) {
-//                adService.deleteAd(allAd.getId());
-//            }
-//            for (int j = 0; j < i; j++) {
-//                adService.createAd(name, description, price, user);
-//                int createdAdId = adService.loadAllAds().get(j).getId();
-//                adService.starAd(createdAdId);
-//            }
-//            assertEquals("loadStarredAdsVariedNumberOfAdsTest: should pass with varied number of starred ads", i, adService.loadStarredAds().size());
-//        }
-//    }
-
     @Test
     public void loadStarredAdsZeroAdsTest() {
         assertEquals("loadStarredAdsZeroAdsTest: should pass with zero starred ads to load", 0, adService.loadStarredAds().size());
     }
-
-//    @Test
-//    public void loadStarredAdsNotAllStarredTest() {
-//        for (int i = 0; i < 10; i++) {
-//            adService.createAd(name, description, price, user);
-//            if (i < 5) {
-//                Ad createdAd = adService.loadAllAds().get(i);
-//                adService.starAd(createdAd.getId());
-//            }
-//        }
-//        assertEquals("loadStarredAdsNotAllStarredTest: should pass with several unstarred ads present", 5, adService.loadStarredAds().size());
-//    }
-
-//    @Test
-//    public void deleteAdValidIdTest() {
-//        adService.createAd(name, description, price, user);
-//        adService.createAd(name, description, price, user);
-//        Integer createdAdId = adService.loadAllAds().get(0).getId();
-//        adService.deleteAd(createdAdId);
-//
-//        assertEquals("deleteAdValidIdTest: should pass when ID is present within the database", 1, adService.loadAllAds().size());
-//        assertNotEquals("deleteAdValidIdTest: should pass if none of the remaining ads have the deleted ID", createdAdId, adService.loadAllAds().get(0).getId());
-//    }
 
     @Test
     public void deleteAdInvalidIdTest() {
@@ -302,21 +240,6 @@ public class AdServiceImplTest {
 
         assertEquals("deleteAdInvalidIdTest: ad should not be deleted if not correct ID", 1, adService.loadAllAds().size());
     }
-
-//    @Test
-//    public void deleteAllAdsVariedNumberOfAdsTest() {
-//        // Ensures that all ads in the database are deleted, no matter the number of ads present
-//        for (int i = 0; i < 10; i++) {
-//            for (int j = 0; j < i; j++) {
-//                adService.createAd(name, description, price, user);
-//            }
-//            List<Ad> allAds = adService.loadAllAds();
-//            for (Ad allAd : allAds) {
-//                adService.deleteAd(allAd.getId());
-//            }
-//            assertEquals("deleteAllAdsVariedNumberOfAdsTest: should pass if all ads are deleted", 0, adService.loadAllAds().size());
-//        }
-//    }
 
     @Test
     public void deleteAllAdsZeroAdsTest() {
@@ -334,37 +257,6 @@ public class AdServiceImplTest {
 
         assertEquals("deleteAllAdsZeroAdsTest: should pass if no ads are present to delete", 0, adService.loadAllAds().size());
     }
-
-//    @Test
-//    public void removeStarredAdValidIdTest() {
-//        adService.createAd(name, description, price, user);
-//        adService.createAd(name, description, price, user);
-//        int createdAdId = adService.loadAllAds().get(1).getId();
-//        adService.starAd(createdAdId);
-//        adService.removeStarredAd(createdAdId);
-//
-//        assertEquals("removeStarredAdValidIdTest: should pass if ad is kept on the list of all ads", 2, adService.loadAllAds().size());
-//        assertEquals("removeStarredAdValidIdTest: should pass if ad is removed from starred list", 0, adService.loadStarredAds().size());
-//    }
-
-//    @Test
-//    public void removeStarredAdInvalidIdTest() {
-//        // Ensures that no ad is unstarred if the designated ID is not valid
-//        if (!adService.loadAllAds().isEmpty()) {
-//            List<Ad> allAds = adService.loadAllAds();
-//            for (Ad allAd : allAds) {
-//                adService.deleteAd(allAd.getId());
-//            }
-//        }
-//        adService.createAd(name, description, price, user);
-//        adService.createAd(name, description, price, user);
-//        int createdAdId = adService.loadAllAds().get(1).getId();
-//        adService.starAd(createdAdId);
-//        adService.removeStarredAd(createdAdId + 1);
-//
-//        assertEquals("removeStarredAdInvalidIdTest: should pass if two ads were created", 2, adService.loadAllAds().size());
-//        assertEquals("removeStarredAdInvalidIdTest: should pass if the starred ad was not removed", 1, adService.loadStarredAds().size());
-//    }
 
     @Test
     public void removeAllStarredAdsVariedNumberOfAdsTest() {
@@ -403,21 +295,4 @@ public class AdServiceImplTest {
         assertEquals("starAdValidIdTest: should pass if the designated ad is added to the list of starred ads", 1, adService.loadStarredAds().size());
         assertEquals("starAdValidIdTest: should pass if the starred ad still appears in the list of all ads", 1, adService.loadAllAds().size());
     }
-
-//    @Test
-//    public void starAdInvalidIdTest() {
-//        // Ensures that no ad is starred if an invalid ID is passed
-//        if (!adService.loadAllAds().isEmpty()) {
-//            List<Ad> allAds = adService.loadAllAds();
-//            for (Ad allAd : allAds) {
-//                adService.deleteAd(allAd.getId());
-//            }
-//        }
-//        adService.createAd(name, description, price, user);
-//        int adId = adService.loadAllAds().get(0).getId();
-//        adService.starAd(adId + 1);
-//
-//        assertEquals("starAdInvalidIdTest: should pass if no ads are added to the starred list", 0, adService.loadStarredAds().size());
-//        assertEquals("starAdInvalidIdTest: should pass if all ads are still in the list of all ads", 1, adService.loadAllAds().size());
-//    }
 }
