@@ -38,15 +38,24 @@ public class AdServiceImpl implements AdService {
      * @return True if ad successfully added to the database; False otherwise
      */
     public boolean createAd(String name, String description, Float price, User user) {
+        log.info("Price: " + price);
         // Adds an advertisement to the DB only if all fields have been filled
-        if (name != null && !name.isEmpty() && description != null && price != null) {
-            Ad newAd = new Ad(name, price, description, user);
-            log.info("New Ad: " + newAd);
-            adRepo.save(newAd);
-            return true;
+        if (name == null || name.isEmpty() || description == null || price == null || user == null) {
+            log.debug("Advertisement not created due to invalid data");
+            return false;
         }
+        // Make sure the user hasn't already tried creating this ad
+        for (Ad ad : loadCreatedAds(user.getId())) {
+            if (ad.getName().equals(name) && ad.getDescription().equals(description) && ad.getPrice().equals(price)) {
+                log.debug("User tried creating duplicate advertisement");
+                return false;
+            }
+        }
+        Ad newAd = new Ad(name, price, description, user);
+        log.info("New Ad: " + newAd);
+        adRepo.save(newAd);
         log.info("Invalid credentials used in attempting to create an advertisement");
-        return false;
+        return true;
     }
 
     /**
@@ -59,17 +68,17 @@ public class AdServiceImpl implements AdService {
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
     public boolean editAd(String name, String description, Float price, Integer id) {
-        if (name != null && price != null && description != null && id != null) {
-            Ad changingAd = adRepo.getReferenceById(id);
-            changingAd.setName(name);
-            changingAd.setDescription(description);
-            changingAd.setPrice(price);
-            adRepo.save(changingAd);
-            log.info("Ad #" + id + " edited: " + changingAd);
-            return true;
+        if (name == null || price == null || description == null || id == null) {
+            return false;
         }
+        Ad changingAd = adRepo.getReferenceById(id);
+        changingAd.setName(name);
+        changingAd.setDescription(description);
+        changingAd.setPrice(price);
+        adRepo.save(changingAd);
+        log.info("Ad #" + id + " edited: " + changingAd);
         log.debug("Unsuccessfully attempted to edit Ad #" + id);
-        return false;
+        return true;
     }
 
     /**

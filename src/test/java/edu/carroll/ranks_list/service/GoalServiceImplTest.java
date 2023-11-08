@@ -107,7 +107,6 @@ public class GoalServiceImplTest {
         goalService.newGoal(name, description, adId);
         goalService.deleteAllGoals();
         assertTrue("validateDeleteAllGoals: Should pass with size being 0", goalService.getAllGoals().size() == 0);
-
     }
 
     @Test
@@ -116,7 +115,6 @@ public class GoalServiceImplTest {
         goalService.newGoal(name, description, adId);
         goalService.deleteAllGoals();
         assertTrue("validateDeleteAllGoalsMultiple: Should pass with size being 0", goalService.getAllGoals().size() == 0);
-
     }
 
 
