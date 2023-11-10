@@ -29,7 +29,6 @@ export default function RegisterForm() {
         axios.post('http://localhost:8080/login', formData)
             .then((response) => {setLoginStatus(response.data)})
             .catch((error) => {console.log(error)})
-        navigate('/home');
     }
 
     const handleRegister = (e) => {

@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import {useNavigate} from "react-router-dom";
 import axios from 'axios';
 import NavBar from "../MainPage/NavBar";
 
 // Form for creating a new advertisement that will be added to the public stack of cards on the home page
 export default function CreateAdForm() {
+    const navigate = useNavigate();
     // Initial data list for an empty form
-    // This will values of this list will change as the form is filled out.
+    // The values of this list will change as the form is filled out.
     const [formData, setFormData] = useState({
         name: "",
-        price: 0,
+        price: "",
         image: [],
         description: ""
     });
@@ -18,6 +20,8 @@ export default function CreateAdForm() {
         axios.post('http://localhost:8080/ads', formData)
             .then((response) => {console.log(response.data)})
             .catch((error) => {console.log(error)});
+        navigate('/home');
+
     }
 
     // Contains the form elements that will be rendered to the screen

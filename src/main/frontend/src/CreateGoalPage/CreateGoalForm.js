@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-
 import axios from 'axios';
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import NavBar from "../MainPage/NavBar";
 
 // Form for creating a new goal that will be added to the specific goal
 export default function CreateGoalForm() {
+    const navigate = useNavigate();
     // Initial data list for an empty form
     // This will update values of this list will change as the form is filled out.
     const [formData, setFormData] = useState({
@@ -19,6 +19,9 @@ export default function CreateGoalForm() {
         axios.post('http://localhost:8080/goals', formData)
             .then((response) => {console.log(response.data)})
             .catch((error) => {console.log(error)});
+        navigate('/individual_goals/' + formData.adId);
+
+
     }
 
     // Contains the form elements that will be rendered to the screen

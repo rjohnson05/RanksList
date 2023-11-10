@@ -209,15 +209,6 @@ public class AdServiceImplTest {
         assertEquals("editAdValidDataTest: name didn't change to proper value when edited", user, editedAd.getUser());
     }
 
-    @Test
-    public void loadAllAdsZerosAdsTest() {
-        assertEquals("loadAllAdsZerosAdsTest: should succeed when there are zeros ads", 0, adService.loadAllAds().size());
-    }
-
-    @Test
-    public void loadStarredAdsZeroAdsTest() {
-        assertEquals("loadStarredAdsZeroAdsTest: should pass with zero starred ads to load", 0, adService.loadStarredAds().size());
-    }
 
     @Test
     public void deleteAdInvalidIdTest() {
@@ -282,4 +273,205 @@ public class AdServiceImplTest {
         assertEquals("starAdValidIdTest: should pass if the designated ad is added to the list of starred ads", 1, adService.loadStarredAds().size());
         assertEquals("starAdValidIdTest: should pass if the starred ad still appears in the list of all ads", 1, adService.loadAllAds().size());
     }
+
+
+    @Test
+    public void loadAllAdsZerosAdsTest() {
+        assertEquals("loadAllAdsZerosAdsTest: should succeed when there are zeros ads", 0, adService.loadAllAds().size());
+    }
+
+    @Test
+    public void loadAllAdsTest() {
+        adService.createAd(name, description, price, user);
+        int userId = adService.loadAllAds().get(0).getUser().getId();
+        List<Ad> allAds = adService.loadAllAds();
+
+        assertEquals("loadAllAdsTest: id of ad should be equal to the id it was set to", allAds.get(0).getUser().getId(), userId);
+        assertEquals("loadAllAdsTest: name of ad should be equal to the name it was set to", allAds.get(0).getName(), name);
+        assertEquals("loadAllAdsTest: description of ad should be equal to the description it was set to", allAds.get(0).getDescription(), description);
+        assertEquals("loadAllAdsTest: price of ad should be equal to the price it was set to", allAds.get(0).getPrice(), price);
+        assertEquals("loadAllAdsTest: user of ad should be equal to the user it was set to", allAds.get(0).getUser(), user);
+
+    }
+
+    @Test
+    public void loadAllAdsInvalidTest() {
+        adService.createAd(name, description, price, user);
+        int userId = adService.loadAllAds().get(0).getUser().getId();
+        List<Ad> allAds = adService.loadAllAds();
+
+        assertFalse("loadAllAdsInvalidTest: id plus one of ad should not be equal to the id it was set to", allAds.get(0).getUser().getId() == userId+1);
+        assertFalse("loadAllAdsInvalidTest: a different name of ad should not be equal to the name it was set to", allAds.get(0).getName().equals("ThisIsNotTheName"));
+        assertFalse("loadAllAdsInvalidTest: a different description of ad should not be equal to the description it was set to", allAds.get(0).getDescription().equals("ThisIsNotTheDescription"));
+        assertFalse("loadAllAdsInvalidTest: price plus one of ad should be equal to the price it was set to", allAds.get(0).getPrice() == price+1);
+        assertEquals("loadAllAdsInvalidTest: user of ad should be equal to the user it was set to", allAds.get(0).getUser(), user);
+
+    }
+
+    @Test
+    public void loadAllAdsMultipleAdsTest() {
+        int count = 0;
+        for (int i = 0; i < 10; i++){
+            adService.createAd(name, description, price+i, user);
+            count++;
+        }
+        List<Ad> allAds = adService.loadAllAds();
+        assertEquals("loadAllAdsMultipleAdsTest: size of allAds should be equal to the amount of ads that were added", count, allAds.size());
+    }
+
+    @Test
+    public void loadAllAdsMultipleAdsDifferentSizeTest() {
+        int count = 0;
+        for (int i = 0; i < 10; i++){
+            adService.createAd(name, description, price+i, user);
+            count++;
+        }
+        count++;
+        List<Ad> allAds = adService.loadAllAds();
+        assertFalse("loadAllAdsMultipleAdsDifferentSizeTest: size of allAds should not be equal to the amount of ads plus 1 that were added", count == allAds.size());
+    }
+
+
+    @Test
+    public void loadAllAdsDifferentUserCreatedTest() {
+        User user2 = new User("Username2", "Password2");
+        User user3 = new User("Username3", "Password3");
+
+        int count = 0;
+
+
+        for (int i = 0; i < 10; i++){
+            adService.createAd(name, description, price+i, user2);
+            count++;
+        }
+
+        for (int i = 0; i < 5; i++){
+            adService.createAd(name, description, price+i, user3);
+            count++;
+        }
+
+        int user2Id = adService.loadAllAds().get(0).getUser().getId();
+        int user3Id = adService.loadAllAds().get(12).getUser().getId();
+
+        List<Ad> allAds = adService.loadAllAds();
+
+        assertEquals("loadCreatedAdsDifferentUserCreatedTest: size of allAds should be 15", count, allAds.size());
+        assertFalse("loadCreatedAdsDifferentUserCreatedTest: size of allAds should not be 5", 5 ==  allAds.size());
+
+    }
+
+    @Test
+    public void loadCreatedAdsTest() {
+        adService.createAd(name, description, price, user);
+        int userId = adService.loadAllAds().get(0).getUser().getId();
+        List<Ad> createdAds = adService.loadCreatedAds(userId);
+
+        assertEquals("loadCreatedAdsTest: id of ad should be equal to the id it was set to", createdAds.get(0).getUser().getId(), userId);
+        assertEquals("loadCreatedAdsTest: name of ad should be equal to the name it was set to", createdAds.get(0).getName(), name);
+        assertEquals("loadCreatedAdsTest: description of ad should be equal to the description it was set to", createdAds.get(0).getDescription(), description);
+        assertEquals("loadCreatedAdsTest: price of ad should be equal to the price it was set to", createdAds.get(0).getPrice(), price);
+        assertEquals("loadCreatedAdsTest: user of ad should be equal to the user it was set to", createdAds.get(0).getUser(), user);
+
+    }
+
+    @Test
+    public void loadCreatedAdsInvalidTest() {
+        adService.createAd(name, description, price, user);
+        int userId = adService.loadAllAds().get(0).getUser().getId();
+        List<Ad> createdAds = adService.loadCreatedAds(userId);
+
+        assertFalse("loadCreatedAdsInvalidTest: id plus one of ad should not be equal to the id it was set to", createdAds.get(0).getUser().getId() == userId+1);
+        assertFalse("loadCreatedAdsInvalidTest: a different name of ad should not be equal to the name it was set to", createdAds.get(0).getName().equals("ThisIsNotTheName"));
+        assertFalse("loadCreatedAdsInvalidTest: a different description of ad should not be equal to the description it was set to", createdAds.get(0).getDescription().equals("ThisIsNotTheDescription"));
+        assertFalse("loadCreatedAdsInvalidTest: price plus one of ad should be equal to the price it was set to", createdAds.get(0).getPrice() == price+1);
+        assertEquals("loadCreatedAdsInvalidTest: user of ad should be equal to the user it was set to", createdAds.get(0).getUser(), user);
+
+    }
+
+    @Test
+    public void loadCreatedAdsMultipleAdsTest() {
+        int count = 0;
+        for (int i = 0; i < 10; i++){
+            adService.createAd(name, description, price+i, user);
+            count++;
+        }
+        int userId = adService.loadAllAds().get(0).getUser().getId();
+        List<Ad> createdAds = adService.loadCreatedAds(userId);
+        assertEquals("loadCreatedAdsMultipleAdsTest: size of createdAds should be equal to the amount of ads that were added", count, createdAds.size());
+    }
+
+    @Test
+    public void loadCreatedAdsMultipleAdsDifferentSizeTest() {
+        int count = 0;
+        for (int i = 0; i < 10; i++){
+            adService.createAd(name, description, price+i, user);
+            count++;
+        }
+        count++;
+        int userId = adService.loadAllAds().get(0).getUser().getId();
+        List<Ad> createdAds = adService.loadCreatedAds(userId);
+        assertFalse("loadCreatedAdsMultipleAdsDifferentSizeTest: size of createdAds should not be equal to the amount of ads plus 1 that were added", count == createdAds.size());
+    }
+
+
+    @Test
+    public void loadCreatedAdsDifferentUserCreatedTest() {
+        User user2 = new User("Username2", "Password2");
+        User user3 = new User("Username3", "Password3");
+
+        int countForUser2 = 0;
+        int countForUser3 = 0;
+
+
+        for (int i = 0; i < 10; i++){
+            adService.createAd(name, description, price+i, user2);
+            countForUser2++;
+        }
+
+        for (int i = 0; i < 5; i++){
+            adService.createAd(name, description, price+i, user3);
+            countForUser3++;
+        }
+
+        int user2Id = adService.loadAllAds().get(0).getUser().getId();
+        int user3Id = adService.loadAllAds().get(12).getUser().getId();
+
+        List<Ad> user2createdAds = adService.loadCreatedAds(user2Id);
+        List<Ad> user3createdAds = adService.loadCreatedAds(user3Id);
+
+        assertEquals("loadCreatedAdsDifferentUserCreatedTest: size of user2createdAds should be 10", countForUser2, user2createdAds.size());
+        assertEquals("loadCreatedAdsDifferentUserCreatedTest: size of user3createdAds should be 5", countForUser3, user3createdAds.size());
+        assertFalse("loadCreatedAdsDifferentUserCreatedTest: size of user2createdAds should not be 5", 5 ==  user2createdAds.size());
+        assertFalse("loadCreatedAdsDifferentUserCreatedTest: size of user3createdAds should not be 10", 10 ==  user3createdAds.size());
+
+    }
+
+
+    @Test
+    public void getReferenceByIdValidTest() {
+        adService.createAd(name, description, price, user);
+        int adId = adService.loadAllAds().get(0).getId();
+        Ad newAd = adService.getReferenceById(adId);
+
+        assertEquals("getReferenceByIdTest: id of ad should be equal to the id it was set to", newAd.getId(), adId);
+        assertEquals("getReferenceByIdTest: name of ad should be equal to the name it was set to", newAd.getName(), name);
+        assertEquals("getReferenceByIdTest: description of ad should be equal to the description it was set to", newAd.getDescription(), description);
+        assertEquals("getReferenceByIdTest: price of ad should be equal to the price it was set to", newAd.getPrice(), price);
+        assertEquals("getReferenceByIdTest: user of ad should be equal to the user it was set to", newAd.getUser(), user);
+    }
+
+    @Test
+    public void getReferenceByIdInvalidTest() {
+        adService.createAd(name, description, price, user);
+        int adId = adService.loadAllAds().get(0).getId();
+        Ad newAd = adService.getReferenceById(adId);
+
+        assertFalse("getReferenceByIdTest: id plus 1 of ad should not be equal to the id it was set to", newAd.getId() == adId+1);
+        assertFalse("getReferenceByIdTest: a different name of ad should not be equal to the name it was set to", newAd.getName().equals("NotTheName"));
+        assertFalse("getReferenceByIdTest: a different description of ad should not be equal to the description it was set to", newAd.getDescription().equals("Not the description"));
+        assertFalse("getReferenceByIdTest: price plus 1 should not be equal to the price it was set to", newAd.getPrice().equals(price+1));
+        assertTrue("getReferenceByIdTest: user of ad should be equal to the user it was set to", newAd.getUser().equals(user));
+    }
+
+
 }

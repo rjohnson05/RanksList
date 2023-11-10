@@ -98,6 +98,7 @@ public class AdController {
     @PostMapping("/ads")
     public boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
         HttpSession session = request.getSession();
+        log.info("Session id", session.getAttribute("userID"));
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         User currentUser = userService.getReferenceById(currentUserId);
 
