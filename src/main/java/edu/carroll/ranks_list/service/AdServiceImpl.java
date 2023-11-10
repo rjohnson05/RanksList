@@ -38,8 +38,7 @@ public class AdServiceImpl implements AdService {
      * @return True if ad successfully added to the database; False otherwise
      */
     public boolean createAd(String name, String description, Float price, User user) {
-        log.info("Price: " + price);
-        // Adds an advertisement to the DB only if all fields have been filled
+        // Adds an advertisement to the DB only if the name field has been filled, and there are no null values
         if (name == null || name.isEmpty() || description == null || price == null || user == null) {
             log.debug("Advertisement not created due to invalid data");
             return false;
@@ -52,9 +51,9 @@ public class AdServiceImpl implements AdService {
             }
         }
         Ad newAd = new Ad(name, price, description, user);
-        log.info("New Ad: " + newAd);
         adRepo.save(newAd);
-        log.info("Invalid credentials used in attempting to create an advertisement");
+        log.info("Ad #" + newAd.getId() + " created");
+        log.debug("New Ad: " + newAd);
         return true;
     }
 
@@ -68,16 +67,24 @@ public class AdServiceImpl implements AdService {
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
     public boolean editAd(String name, String description, Float price, Integer id) {
-        if (name == null || price == null || description == null || id == null) {
+        // Edits an advertisement to the DB only if the name field has been filled, and there are no null values
+        if (name == null || name.isEmpty() || price == null || description == null || id == null) {
+            log.debug("Attempt to edit ad unsuccessful due to null field or empty name");
+            return false;
+        }
+        // Makes sure an advertisement with the designated id exits before attempting to edit it
+        if (!adRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to edit ad due to invalid ID");
             return false;
         }
         Ad changingAd = adRepo.getReferenceById(id);
+        log.debug("Changing Ad: " + changingAd);
         changingAd.setName(name);
         changingAd.setDescription(description);
         changingAd.setPrice(price);
         adRepo.save(changingAd);
-        log.info("Ad #" + id + " edited: " + changingAd);
-        log.debug("Unsuccessfully attempted to edit Ad #" + id);
+        log.info("Ad #" + id + " edited");
+        log.debug("Ad edited: " + changingAd);
         return true;
     }
 
@@ -88,15 +95,21 @@ public class AdServiceImpl implements AdService {
      * @return Ad object being added to the list of starred advertisements
      */
     public boolean starAd(Integer id) {
-        Ad changedAd = adRepo.getReferenceById(id);
-        if (changedAd != null) {
-            changedAd.setStarred(true);
-            adRepo.save(changedAd);
-            log.info("Starred Ad #" + id);
-            return true;
+        // Only stars the ad if an ad with the designated id exists
+        if (id == null || !adRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to star ad due to invalid ID");
+            return false;
         }
-        log.debug("Unsuccessfully attempted to star Ad #" + id);
-        return false;
+        // Doesn't star the ad if it is already starred
+        if (adRepo.getReferenceById(id).getStarred()) {
+            log.debug("Unsuccessful attempt to star ad; was already starred");
+            return false;
+        }
+        Ad changedAd = adRepo.getReferenceById(id);
+        changedAd.setStarred(true);
+        adRepo.save(changedAd);
+        log.info("Starred Ad #" + id);
+        return true;
     }
 
     /**
@@ -106,15 +119,19 @@ public class AdServiceImpl implements AdService {
      * @return true if the designated Ad object is successfully removed from the list of starred ads; false otherwise
      */
     public boolean removeStarredAd(Integer id) {
-        Ad changedAd = adRepo.getReferenceById(id);
-        if (changedAd != null) {
-            changedAd.setStarred(false);
-            adRepo.save(changedAd);
-            log.info("Advertisement #{id} was unstarred");
-            return true;
+        if (id == null || !adRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to unstar ad due to invalid ID");
+            return false;
         }
-        log.debug("Attempted to unstar Ad#" + id + " unsuccessfully");
-        return false;
+        if (!adRepo.getReferenceById(id).getStarred()) {
+            log.debug("Unsuccessful attempt to unstar ad; was already unstarred");
+            return false;
+        }
+        Ad changedAd = adRepo.getReferenceById(id);
+        changedAd.setStarred(false);
+        adRepo.save(changedAd);
+        log.info("Advertisement #{id} was unstarred");
+        return true;
     }
 
     /**
@@ -124,14 +141,13 @@ public class AdServiceImpl implements AdService {
      * @return true if the Ad object with the designated ID is removed from the database; false otherwise
      */
     public boolean deleteAd(Integer id) {
-        Ad selectedAd = adRepo.getReferenceById(id);
-        if (selectedAd != null) {
-            adRepo.deleteById(id);
-            log.info("Advertisement #{id} deleted");
-            return true;
+        if (id == null || !adRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to delete ad due to invalid ID");
+            return false;
         }
-        log.info("Attempted Ad Deletion with Invalid ID #" + id);
-        return false;
+        adRepo.deleteById(id);
+        log.info("Advertisement #{id} deleted");
+        return true;
     }
 
     /**

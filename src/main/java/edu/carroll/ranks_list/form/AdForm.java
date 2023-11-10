@@ -9,8 +9,6 @@ public class AdForm {
     @NotNull
     private String description;
 
-    private byte[] image;
-
     private Float price;
 
     public String getName() {
@@ -27,14 +25,6 @@ public class AdForm {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
 
     public Float getPrice() {

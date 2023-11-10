@@ -8,7 +8,7 @@ export default function CreateAdForm() {
     // This will values of this list will change as the form is filled out.
     const [formData, setFormData] = useState({
         name: "",
-        price: 0,
+        price: "",
         image: [],
         description: ""
     });
