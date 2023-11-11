@@ -50,7 +50,7 @@ public class LoginController extends HttpServlet {
     @PostMapping("/login")
     public boolean loginPost(@RequestBody LoginForm loginForm, HttpServletRequest request) {
         if (!userService.validateUser(loginForm.getUsername(), loginForm.getPassword())) {
-            log.debug(loginForm.getUsername(), " attempted to log in");
+            log.debug("Unsuccessful attempt to sign in with (loginForm.getUsername(), loginForm.getPassword())");
             return false;
         }
         Integer currentUserId = userService.findByUsernameIgnoreCase(loginForm.getUsername()).get(0).getId();

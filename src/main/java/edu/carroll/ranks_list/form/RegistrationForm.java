@@ -6,11 +6,11 @@ import jakarta.validation.constraints.Size;
 public class RegistrationForm {
 
     @NotNull
-    @Size(min = 6)
+    @Size(min = 6, max = 32)
     private String username;
 
     @NotNull
-    @Size(min = 8)
+    @Size(min = 8, max = 16)
     @Password
     private String password;
 
