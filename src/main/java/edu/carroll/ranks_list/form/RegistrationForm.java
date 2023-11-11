@@ -1,13 +1,17 @@
 package edu.carroll.ranks_list.form;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class RegistrationForm {
 
     @NotNull
+    @Size(min = 6)
     private String username;
 
     @NotNull
+    @Size(min = 8)
+    @Password
     private String password;
 
     public String getUsername() {
