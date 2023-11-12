@@ -26,12 +26,6 @@ export default function CreatedAds() {
             .catch(error => {console.error(error)});
     }
 
-    const editAd = (adId) => {
-        axios.put("http://localhost:8080/my_ads/" + adId)
-            .then(response => {console.log("Edited Ad #" + adId)})
-            .catch(error => {console.error(error)});
-    }
-
     return (
         <div>
             <NavBar />
@@ -46,7 +40,7 @@ export default function CreatedAds() {
                             <DeleteIcon />
                         </IconButton>
                         <Link to={"/edit_ad/" + ad.id}>
-                            <IconButton aria-label="fa-solid fa-pencil" value={id} onClick={() => editAd(ad.id)}>
+                            <IconButton aria-label="fa-solid fa-pencil" value={id}>
                                 <EditIcon />
                             </IconButton>
                         </Link>
