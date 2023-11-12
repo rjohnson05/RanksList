@@ -15,7 +15,9 @@ export default function CreateAdForm() {
 
     // Posts the entered data onto the main page when the "Submit" button is clicked
     const onSubmit = async (formData) => {
+        console.log(formData);
         const response = await axios.post('http://localhost:8080/ads', formData);
+        console.log(response);
         setAdCreated(response.data);
 
         // Upon successful ad creation, returns to the home page

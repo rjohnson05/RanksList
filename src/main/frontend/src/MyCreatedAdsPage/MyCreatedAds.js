@@ -11,19 +11,20 @@ export default function CreatedAds() {
     const [createdAdsData, setCreatedAdsData] = useState([]);
 
     useEffect(() => {
-        loadAds();
-    });
+        loadAds()
+    }, []);
 
     const loadAds = async () => {
         const ads_data = await axios.get("http://localhost:8080/my_ads");
         setCreatedAdsData(ads_data.data);
     }
 
-    const removeAd = (adId) => {
-        // <Navigate to={"edit_ad" + adId} />
-        axios.delete("http://localhost:8080/my_ads/" + adId)
-            .then(response => {console.log("Deleted ad with ID " + adId)})
-            .catch(error => {console.error(error)});
+    const removeAd = async (adId) => {
+        const response = await axios.delete("http://localhost:8080/my_ads/" + adId);
+
+        if (response.data) {
+            loadAds();
+        }
     }
 
     return (

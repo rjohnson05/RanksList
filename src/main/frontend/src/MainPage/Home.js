@@ -12,23 +12,23 @@ export default function Home() {
 
     useEffect(() => {
         loadAds();
-    });
+    }, []);
 
     const loadAds = async () => {
         const ads_data = await axios.get("http://localhost:8080/ads");
         setAds(ads_data.data);
     }
 
-    const starAd = (adId, selected) => {
+    const starAd = async (adId, selected) => {
         let desiredAd = allAdsData.find((element) => {return element.id === adId});
+        let response = null;
         if (!desiredAd.starred) {
-            axios.put("http://localhost:8080/starred_ads/" + adId)
-                .then(response => {console.log("Starred Ad #" + adId)})
-                .catch(error => {console.log(error.response.data)})
+            response = await axios.put("http://localhost:8080/starred_ads/" + adId);
         } else {
-            axios.delete("http://localhost:8080/starred_ads/" + adId)
-                .then(response => {console.log("Unstarred Ad #" + adId)})
-                .catch(error => {console.log(error.response.data)})
+            response = await axios.delete("http://localhost:8080/starred_ads/" + adId);
+        }
+        if (response.data) {
+            loadAds();
         }
     }
 

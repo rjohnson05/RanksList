@@ -41,7 +41,7 @@ public class AdServiceImpl implements AdService {
      */
     public boolean createAd(String name, String description, Float price, User user) {
         // Adds an advertisement to the DB only if the name field has been filled, and there are no null values
-        if (name == null || name.isEmpty() || description == null || price == null || user == null) {
+        if (name == null || name.isEmpty() || user == null) {
             log.debug("Advertisement not created due to invalid data");
             return false;
         }
@@ -88,7 +88,7 @@ public class AdServiceImpl implements AdService {
         }
         // Make sure the user hasn't already tried creating this ad
         for (Ad ad : loadCreatedAds(user.getId())) {
-            if (ad.getName().equals(name)) {
+            if (ad.getName().equals(name) && ad.getId() != id) {
                 log.debug("User tried creating advertisement with duplicate name");
                 return false;
             }
