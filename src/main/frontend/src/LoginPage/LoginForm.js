@@ -9,10 +9,9 @@ axios.defaults.withCredentials = true;
 export default function RegisterForm() {
     const navigate = useNavigate();
     const [loginStatus, setLoginStatus] = useState(true);
-    const [cookies, setCookie] = useCookies(['user']);
     const {register,
-        handleSubmit, formState
-            : { errors }
+        handleSubmit,
+        formState: { errors }
     } = useForm({mode: "onBlur", reValidateMode: "onBlur"});
 
     const onSubmit = async (formData) => {

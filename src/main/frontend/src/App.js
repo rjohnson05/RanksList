@@ -10,7 +10,7 @@ import IndividualGoals from "./IndividualGoalsPage/IndividualGoals";
 import CreateGoalForm from "./CreateGoalPage/CreateGoalForm";
 import StarredAds from "./StarredAdsPage/StarredAds";
 import MyCreatedAds from "./MyCreatedAdsPage/MyCreatedAds";
-import EditAd from "./MyCreatedAdsPage/EditAd";
+import EditAd from "./MyCreatedAdsPage/EditAdForm";
 
 
 export default function App() {

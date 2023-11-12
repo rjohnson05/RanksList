@@ -45,8 +45,8 @@ public class AdServiceImpl implements AdService {
         }
         // Make sure the user hasn't already tried creating this ad
         for (Ad ad : loadCreatedAds(user.getId())) {
-            if (ad.getName().equals(name) && ad.getDescription().equals(description) && ad.getPrice().equals(price)) {
-                log.debug("User tried creating duplicate advertisement");
+            if (ad.getName().equals(name)) {
+                log.debug("User tried creating advertisement with duplicate name");
                 return false;
             }
         }

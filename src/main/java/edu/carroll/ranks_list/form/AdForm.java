@@ -6,7 +6,6 @@ public class AdForm {
     @NotNull
     private String name;
 
-    @NotNull
     private String description;
 
     private Float price;
