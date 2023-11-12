@@ -110,11 +110,18 @@ public class AdController {
      *
      * @param id      the ID of the advertisement to be edited
      * @param adForm  the new data to be connected with the advertisement
+     * @param request HttpServletRequest object that allows access to parameters of an HTTP request
+     *
      * @return true if the designated ad is successfully edited; false otherwise
      */
     @PutMapping("/edit_ad/{id}")
-    public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm) {
-        return adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id);
+    public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        log.info("Session id", session.getAttribute("userID"));
+        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        User currentUser = userService.getReferenceById(currentUserId);
+
+        return adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id, currentUser);
     }
 
     /**
