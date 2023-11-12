@@ -31,7 +31,7 @@ public interface AdService {
      * @param id          Integer representing the ID of the advertisement to be changed
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
-    boolean editAd(String name, String description, Float price, Integer id);
+    boolean editAd(String name, String description, Float price, Integer id, User user);
 
     /**
      * Places a designated advertisement onto the list of starred advertisements.

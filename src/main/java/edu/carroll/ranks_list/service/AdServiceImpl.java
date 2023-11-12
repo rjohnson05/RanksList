@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Service class for advertisements. Contains all business logic for dealing with advertisements.
@@ -35,6 +36,7 @@ public class AdServiceImpl implements AdService {
      * @param name        name of new ad
      * @param description description of new ad
      * @param price       price of new ad
+     * @param user        User object that created the ad
      * @return True if ad successfully added to the database; False otherwise
      */
     public boolean createAd(String name, String description, Float price, User user) {
@@ -64,13 +66,32 @@ public class AdServiceImpl implements AdService {
      * @param description String representing the desired description of the advertisement
      * @param price       Float representing the desired price for the advertisement
      * @param id          Integer representing the ID of the advertisement to be changed
+     * @paraam user       User object that created the ad
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
-    public boolean editAd(String name, String description, Float price, Integer id) {
+    public boolean editAd(String name, String description, Float price, Integer id, User user) {
         // Edits an advertisement to the DB only if the name field has been filled, and there are no null values
         if (name == null || name.isEmpty() || price == null || description == null || id == null) {
             log.debug("Attempt to edit ad unsuccessful due to null field or empty name");
             return false;
+        }
+        // Make sure the ad data was changed somehow
+        Ad selectedAd = adRepo.getReferenceById(id);
+        if (Objects.equals(selectedAd.getName(), name) && Objects.equals(selectedAd.getPrice(), price) && Objects.equals(selectedAd.getDescription(), description)) {
+            log.debug("Attempt to edit ad unsuccessful due to no changes being made");
+            return false;
+        }
+        // Make sure the editor is the creator of the ad
+        if (!loadCreatedAds(user.getId()).contains(selectedAd)) {
+            log.debug("Attempt to edit ad unsuccessful since would-be editor was not the creator");
+            return false;
+        }
+        // Make sure the user hasn't already tried creating this ad
+        for (Ad ad : loadCreatedAds(user.getId())) {
+            if (ad.getName().equals(name)) {
+                log.debug("User tried creating advertisement with duplicate name");
+                return false;
+            }
         }
         // Makes sure an advertisement with the designated id exits before attempting to edit it
         if (!adRepo.existsById(id)) {
