@@ -21,9 +21,12 @@ public class Goal {
     private String description;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ad_id")
     private Ad ad;
-
 
     /**
      * No argument constructor for the Goal model. Creates a default Gaol object with no information.
@@ -34,25 +37,10 @@ public class Goal {
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
      */
-    public Goal(String description, Ad ad) {
+    public Goal(String description, Ad ad, User user) {
         this.description = description;
         this.ad = ad;
-    }
-
-    /**
-     * @return ad_Id for this goal
-     */
-    public Integer getAd_id() {
-        return ad.getId();
-    }
-
-    /**
-     * Sets ad id for this goal
-     *
-     * @param adId
-     */
-    public void setAd_id(Integer adId) {
-        this.ad.setId(adId);
+        this.user = user;
     }
 
     /**
@@ -81,6 +69,42 @@ public class Goal {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Returns the parent Ad object to the goal.
+     *
+     * @return Ad object the goal is created for
+     */
+    public Ad getAd() {
+        return ad;
+    }
+
+    /**
+     * Sets the Ad object the goal is being created for.
+     *
+     * @param ad Ad object the goal is being created for
+     */
+    public void setAd(Ad ad) {
+        this.ad = ad;
+    }
+
+    /**
+     * Returns the User object creating the goal.
+     *
+     * @return User object creating the goal
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the User object creating the goal.
+     *
+     * @param user User object creating the goal
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public boolean equals(Goal goal) {

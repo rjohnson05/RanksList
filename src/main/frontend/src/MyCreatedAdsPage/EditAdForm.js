@@ -22,7 +22,7 @@ export default function CreateAdForm() {
         getValues,
         setValue,
         formState: {errors}
-    } = useForm();
+    } = useForm({mode: "onBlur", reValidateMode: "onBlur"});
 
     useEffect(() => {
         if (!firstRender) {
@@ -43,7 +43,6 @@ export default function CreateAdForm() {
     const onSubmit = async (formData) => {
         const response = await axios.put('http://localhost:8080/edit_ad/' + originalData.id, formData);
         setAdEdited(response.data);
-        console.log("Successful: ", response.data);
 
         // If ad is edited successfully, navigates back to My Created Ads page
         if (response.data) {

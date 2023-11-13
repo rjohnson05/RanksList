@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,10 +39,8 @@ public class Ad {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "ad",
-    orphanRemoval = true,
-    cascade = CascadeType.ALL)
-    private Set<Goal> goals;
+    @OneToMany(mappedBy = "ad")
+    private List<Goal> goals;
 
     /**
      * Constructor for the Ad model. Creates a default Ad object with no information.

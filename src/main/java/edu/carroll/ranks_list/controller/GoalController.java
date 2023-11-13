@@ -3,10 +3,12 @@ package edu.carroll.ranks_list.controller;
 import edu.carroll.ranks_list.form.GoalForm;
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
+import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.service.AdService;
 import edu.carroll.ranks_list.service.GoalService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import edu.carroll.ranks_list.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class GoalController {
 
     private final GoalService goalService;
     private final AdService adService;
+    private final UserService userService;
 
     /**
      * Constructor for the Goal Controller. Creates a service for the goals business logic.
@@ -29,9 +32,10 @@ public class GoalController {
      * @param goalService contains all business logic related to goal data
      * @param adService
      */
-    public GoalController(GoalService goalService, AdService adService) {
+    public GoalController(GoalService goalService, AdService adService, UserService userService) {
         this.goalService = goalService;
         this.adService = adService;
+        this.userService = userService;
     }
 
     /**
@@ -41,9 +45,13 @@ public class GoalController {
      * @return Goal object that has been successfully added to the database
      */
     @PostMapping("/goals")
-    boolean newGoal(@RequestBody GoalForm goalForm) {
+    boolean newGoal(@RequestBody GoalForm goalForm, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+
+        User attachedUser = userService.getReferenceById(currentUserId);
         Ad attatchedAd = adService.getReferenceById(goalForm.getAdId());
-        return goalService.newGoal(goalForm.getDescription(), attatchedAd);
+        return goalService.newGoal(goalForm.getDescription(), attatchedAd, attachedUser);
     }
 
     /**
@@ -62,8 +70,11 @@ public class GoalController {
      * @return List of all Goal objects in the database
      */
     @GetMapping("/individual_goals/{adId}")
-    List<Goal> getIndividualGoals(@PathVariable("adId") Integer adId) {
-        return goalService.getIndividualGoals(adId);
+    List<Goal> getIndividualGoals(@PathVariable("adId") Integer adId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        int userId = Integer.parseInt((String) session.getAttribute("userID"));
+
+        return goalService.getIndividualGoals(adId, userId);
     }
 
     /**

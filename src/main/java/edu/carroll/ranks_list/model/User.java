@@ -29,10 +29,11 @@ public class User {
     @Column(name = "password", nullable = false)
     String password;
 
-    @OneToMany(mappedBy = "user",
-    orphanRemoval = true,
-    cascade = CascadeType.ALL)
-    private Set<Ad> ads;
+    @OneToMany(mappedBy = "user")
+    private List<Ad> ads;
+
+    @OneToMany(mappedBy = "user")
+    private List<Goal> goals;
 
     /**
      * Constructor for the User model. Creates a default User object with no information.

@@ -30,8 +30,8 @@ public class GoalServiceImplTest {
     @Test
     public void validateNewGoalSuccess(){
         int size = goalService.getAllGoals().size();
-        assertTrue("validateNewGoalSuccess: Should pass with a new goal created returning true", goalService.newGoal(description, ad));
-        List<Goal> individualGoals = goalService.getIndividualGoals(ad.getId());
+        assertTrue("validateNewGoalSuccess: Should pass with a new goal created returning true", goalService.newGoal(description, ad, user));
+        List<Goal> individualGoals = goalService.getIndividualGoals(ad.getId(), ad.getUser().getId());
         assertEquals("validateNewGoalSuccess: Newly added goal did not increase number of goals for ad", individualGoals.size(), size+1);
         if (individualGoals.size() == 1){
             assertTrue("validateNewGoalSuccess: Set description of goal does not match fetched goal", individualGoals.get(0).getDescription().equals(description));
@@ -43,7 +43,7 @@ public class GoalServiceImplTest {
     @Test
     public void validateNewGoalNullDesc(){
         int size = goalService.getAllGoals().size();
-        assertFalse("validateNewGoalNullDesc: Should fail with a new goal not created", goalService.newGoal(null, ad));
+        assertFalse("validateNewGoalNullDesc: Should fail with a new goal not created", goalService.newGoal(null, ad, user));
         assertTrue("validateNewGoalNullDesc: A goal was added to the list when it shouldn't have been", size == goalService.getAllGoals().size());
     }
 
@@ -51,14 +51,14 @@ public class GoalServiceImplTest {
     @Test
     public void validateNewGoalNullId(){
         int size = goalService.getAllGoals().size();
-        assertFalse("validateNewGoalNullId: Should fail with a new goal not created", goalService.newGoal(description, null));
+        assertFalse("validateNewGoalNullId: Should fail with a new goal not created", goalService.newGoal(description, null, user));
         assertTrue("validateNewGoalNullId: A goal was added to the list when it shouldn't have been", size == goalService.getAllGoals().size());
     }
 
     // testing get all goals
     @Test
     public void validateAllGoalsSize(){
-        goalService.newGoal(description, ad);
+        goalService.newGoal(description, ad, user);
         assertTrue("validateAllGoalsSize: Should pass with the size of all goals being 1", goalService.getAllGoals().size() == 1);
     }
 
@@ -66,7 +66,7 @@ public class GoalServiceImplTest {
     @Test
     public void validateAllGoalsSizeMultiple(){
         for (int i = 1; i < 11; i++){
-            goalService.newGoal(description, ad);
+            goalService.newGoal(description, ad, user);
             assertTrue("validateAllGoalsSizeMultiple: The size of the list of goals does not match the amount of goals added", goalService.getAllGoals().size() == i);
         }
         assertTrue("validateAllGoalsSizeMultiple: The size of the list of goals should be 10", goalService.getAllGoals().size() == 10);
@@ -77,7 +77,7 @@ public class GoalServiceImplTest {
     @Test
     public void validateAllGoalsSizeMultipleWithDeletion(){
         for (int i = 1; i < 11; i++){
-            goalService.newGoal(description, ad);
+            goalService.newGoal(description, ad, user);
             assertTrue("validateAllGoalsSizeMultipleWithDeletion: The size of the list of goals does not match the amount of goals added", goalService.getAllGoals().size() == i);
         }
         int size = goalService.getAllGoals().size();
@@ -88,7 +88,7 @@ public class GoalServiceImplTest {
     // testing delete goal
     @Test
     public void deleteSpecificGoal(){
-        goalService.newGoal(description, ad);
+        goalService.newGoal(description, ad, user);
         assertTrue("deleteSpecificGoal: The size of the list of goals should be 1", goalService.getAllGoals().size() == 1);
         goalService.deleteGoal(goalService.getAllGoals().get(0).getId());
         assertTrue("deleteSpecificGoal: The size of the list of goals should be 9", goalService.getAllGoals().isEmpty());
@@ -98,7 +98,7 @@ public class GoalServiceImplTest {
     @Test
     public void validateAllGoalsSizeMultipleWithAllDeleted(){
         for (int i = 1; i < 11; i++){
-            goalService.newGoal(description + i, ad);
+            goalService.newGoal(description + i, ad, user);
             assertTrue("validateAllGoalsSizeMultipleWithDeletion: The size of the list of goals does not match the amount of goals added", goalService.getAllGoals().size() == i);
         }
         goalService.deleteGoal(goalService.getAllGoals().get(0).getId());
@@ -108,7 +108,7 @@ public class GoalServiceImplTest {
     // testing get all goals
     @Test
     public void validateAllGoalsSizeFail(){
-        goalService.newGoal(description, ad);
+        goalService.newGoal(description, ad, user);
         assertFalse("validateAllGoalsSize: Should fail with the size of all goals being 1, not 2", goalService.getAllGoals().size() == 2);
     }
 
@@ -116,7 +116,7 @@ public class GoalServiceImplTest {
     // testing get all goals
     @Test
     public void validateAllGoalsSpecificGoalDesc(){
-        goalService.newGoal(description, ad);
+        goalService.newGoal(description, ad, user);
         assertTrue("validateAllGoalsSpecificGoalDesc: Should pass with the description of the goal being equal to what it was set to", goalService.getAllGoals().get(0).getDescription() == description);
     }
 
@@ -124,43 +124,43 @@ public class GoalServiceImplTest {
     // testing get all goals
     @Test
     public void validateAllGoalsSpecificGoalAdId(){
-        goalService.newGoal(description, ad);
-        assertTrue("validateAllGoalsSpecificGoalAdId: Should pass with the ad id of the goal being equal to what it was set to", goalService.getAllGoals().get(0).getAd_id() == ad.getId());
+        goalService.newGoal(description, ad, user);
+        assertTrue("validateAllGoalsSpecificGoalAdId: Should pass with the ad id of the goal being equal to what it was set to", goalService.getAllGoals().get(0).getAd().getId() == ad.getId());
     }
 
     // testing get all goals
     @Test
     public void validateAllGoalsSpecificGoalAdIdFail(){
-        goalService.newGoal(description, ad);
-        assertFalse("validateAllGoalsSpecificGoalAdId: Should fail with the ad id of the goal not being equal to the 100", goalService.getAllGoals().get(0).getAd_id() == 100);
+        goalService.newGoal(description, ad, user);
+        assertFalse("validateAllGoalsSpecificGoalAdId: Should fail with the ad id of the goal not being equal to the 100", goalService.getAllGoals().get(0).getAd().getId() == 100);
     }
 
     // testing get individual goals
     @Test
     public void validateGetIndividualGoal(){
-        goalService.newGoal(description, ad);
-        assertTrue("validateGetIndividualGoals: Should pass with the individual goal being equal to the goal that was set", goalService.getIndividualGoals(ad.getId()).get(0) == goalService.getAllGoals().get(0));
+        goalService.newGoal(description, ad, user);
+        assertTrue("validateGetIndividualGoals: Should pass with the individual goal being equal to the goal that was set", goalService.getIndividualGoals(ad.getId(), user.getId()).get(0) == goalService.getAllGoals().get(0));
     }
 
     // testing get individual goals
     @Test
     public void validateGetIndividualGoalFail(){
-        goalService.newGoal(description, ad);
-        assertFalse("validateGetIndividualGoalFail: Should fail with the individual goal not being equal to null", goalService.getIndividualGoals(ad.getId()).get(0) == null);
+        goalService.newGoal(description, ad, user);
+        assertFalse("validateGetIndividualGoalFail: Should fail with the individual goal not being equal to null", goalService.getIndividualGoals(ad.getId(), user.getId()).get(0) == null);
     }
 
     // testing new goal
     @Test
     public void validateNewGoalSizeDuplicate(){
-        goalService.newGoal(description, ad);
-        goalService.newGoal(description, ad);
+        goalService.newGoal(description, ad, user);
+        goalService.newGoal(description, ad, user);
         assertTrue("validateAllGoalsSize: Should pass size of goals being 2", goalService.getAllGoals().size() == 2);
     }
 
     // testing delete all goals
     @Test
     public void validateDeleteAllGoals(){
-        goalService.newGoal(description, ad);
+        goalService.newGoal(description, ad, user);
         goalService.deleteAllGoals();
         assertTrue("validateDeleteAllGoals: Should pass with size being 0", goalService.getAllGoals().size() == 0);
     }
@@ -168,8 +168,8 @@ public class GoalServiceImplTest {
     // testing delete all goals
     @Test
     public void validateDeleteAllGoalsMultiple(){
-        goalService.newGoal(description, ad);
-        goalService.newGoal(description, ad);
+        goalService.newGoal(description, ad, user);
+        goalService.newGoal(description, ad, user);
         goalService.deleteAllGoals();
         assertTrue("validateDeleteAllGoalsMultiple: Should pass with size being 0", goalService.getAllGoals().size() == 0);
     }

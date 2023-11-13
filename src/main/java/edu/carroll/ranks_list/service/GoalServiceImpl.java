@@ -2,6 +2,7 @@ package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
+import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.GoalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,12 @@ public class GoalServiceImpl implements GoalService {
      *
      * @param description String representing the main text of the goal
      * @param ad advertisement the goal is being saved to
+     * @param user User object creating the goal
      *
      * @return true if the goal is successfully created; false otherwise
      */
     @Override
-    public boolean newGoal(String description, Ad ad) {
+    public boolean newGoal(String description, Ad ad, User user) {
         // checking to see if the ad should be created
         if (description == null){
             log.debug("Description parameter was null when creating a new goal");
@@ -48,10 +50,16 @@ public class GoalServiceImpl implements GoalService {
             log.debug("ad parameter was null when creating a new goal");
             return false;
         }
-        // creating the add
-        Goal goal = new Goal(description, ad);
+        if (user == null) {
+            log.debug("user parameter was null when creating a new goal");
+            return false;
+        }
+        // creating the goal
+        log.debug("Ad being passed in: {}", ad);
+        log.debug("User being passed in: {}", user);
+        Goal goal = new Goal(description, ad, user);
         goalRepo.save(goal);
-        log.info("New goal created for Ad with id:{}", ad.getId());
+        log.info("Created Goal #{}", goal.getId());
         return true;
     }
 
@@ -73,10 +81,12 @@ public class GoalServiceImpl implements GoalService {
      *
      * @return List of goals belonging to the advertisement with the designated ID
      */
-    @Override
-    public List<Goal> getIndividualGoals(Integer adId) {
-        log.debug("Accessing goal #{}", adId);
-        return goalRepo.findByadId(adId);
+    public List<Goal> getIndividualGoals(Integer adId, Integer userId) {
+        log.debug("Accessing goal for ad#[}", adId);
+        List<Goal> desiredGoals = goalRepo.findByAdId(adId);
+        // Find the goals belonging to both the specified ad and user
+        desiredGoals.retainAll(goalRepo.findByUserId(userId));
+        return desiredGoals;
     }
 
     /**
