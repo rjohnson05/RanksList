@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
 
 import java.util.List;
@@ -14,14 +15,13 @@ public interface GoalService {
     /**
      * Creates a new goal and adds it to the repo
      *
-     * @param name String representing the name/title of the goal
      * @param description String representing the main text of the goal
-     * @param ad_id Integer representing the ID of the advertisement the goal is being saved to
+     * @param ad advertisement the goal is being saved to
      *
      * @return true if the goal is successfully created; false otherwise
      */
     //update
-    boolean newGoal(String name, String description, Integer ad_id);
+    boolean newGoal(String description, Ad ad);
 
     /**
      * Returns all gaols present in the database.

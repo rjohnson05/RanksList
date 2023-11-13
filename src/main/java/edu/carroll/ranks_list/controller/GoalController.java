@@ -1,7 +1,9 @@
 package edu.carroll.ranks_list.controller;
 
 import edu.carroll.ranks_list.form.GoalForm;
+import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
+import edu.carroll.ranks_list.service.AdService;
 import edu.carroll.ranks_list.service.GoalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +22,17 @@ public class GoalController {
 
     private static final Logger log = LoggerFactory.getLogger(GoalController.class);
     private final GoalService goalService;
+    private final AdService adService;
 
     /**
      * Constructor for the Goal Controller. Creates a service for the goals business logic.
      *
      * @param goalService contains all business logic related to goal data
+     * @param adService
      */
-    public GoalController(GoalService goalService) {
+    public GoalController(GoalService goalService, AdService adService) {
         this.goalService = goalService;
+        this.adService = adService;
     }
 
     /**
@@ -39,7 +44,8 @@ public class GoalController {
     @PostMapping("/goals")
     boolean newGoal(@RequestBody GoalForm goalForm) {
         log.info("New goal posted with ad id: {}", goalForm.getAdId());
-        return goalService.newGoal(goalForm.getName(), goalForm.getDescription(), goalForm.getAdId());
+        Ad attatchedAd = adService.getReferenceById(goalForm.getAdId());
+        return goalService.newGoal(goalForm.getDescription(), attatchedAd);
     }
 
     /**
@@ -70,6 +76,5 @@ public class GoalController {
     @DeleteMapping("/individual_goals/{id}")
     public void deleteGoal(@PathVariable("id") Integer id) {
         goalService.deleteGoal(id);
-        log.info("Goal #{id} deleted");
     }
 }

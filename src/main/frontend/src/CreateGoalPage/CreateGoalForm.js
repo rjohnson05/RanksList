@@ -11,7 +11,6 @@ export default function CreateGoalForm() {
     const [formData, setFormData] = useState({
         description: "",
         adId: Number(useLocation().pathname.split('/').pop()),
-        name: ""
     });
 
     // Posts the entered data onto the main page when the "Submit" button is clicked
@@ -36,9 +35,6 @@ export default function CreateGoalForm() {
                 </label>
                 <input type="hidden" name="adId" value = {formData.adId}
                        onChange={(e) => setFormData((prev) => ({ ...prev, adId: e.target.value }))} />
-
-                <input type="hidden" name="name" value = {formData.name}
-                       onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} />
 
                 <input type="submit" value="Submit" />
             </form>

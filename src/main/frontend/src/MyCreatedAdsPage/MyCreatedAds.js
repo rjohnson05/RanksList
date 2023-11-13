@@ -30,7 +30,6 @@ export default function CreatedAds() {
     return (
         <div>
             <NavBar />
-
             <Row xs={3}>
                 {createdAdsData.map((ad, id) => (
                     <div className="col border border-5" key={id}>
