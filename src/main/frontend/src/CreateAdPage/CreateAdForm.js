@@ -43,7 +43,8 @@ export default function CreateAdForm() {
                 <label>Price:
                     <input type="text" name="price"
                            {...register("price",
-                               {validate: {checkIsNumber: (value) => !/[^0-9]/.test(value)}})} />
+                               {required: true, value: 0,
+                                   validate: {checkIsNumber: (value) => !/[^0-9]/.test(value)}})} />
                 </label>
                 <label>Description:
                     <input type="text" name="description"

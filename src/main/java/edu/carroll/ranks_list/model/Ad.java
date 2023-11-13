@@ -24,6 +24,7 @@ public class Ad {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NonNull
     @Column(name = "price")
     private Float price;
 

@@ -148,8 +148,8 @@ public class AdServiceImplTest {
     @Test
     public void createAdNullPriceTest() {
         User user = new User("username", "Password@1");
-        assertTrue("createAdNullPriceTest: should return true when passed null price", adService.createAd(name, description, null, user));
-        assertEquals("createAdNullPriceTest: should pass with null price", 1, adService.loadAllAds().size());
+        assertFalse("createAdNullPriceTest: should return false when passed null price", adService.createAd(name, description, null, user));
+        assertEquals("createAdNullPriceTest: should pass with null price", 0, adService.loadAllAds().size());
     }
 
     // Tests to ensure that createAd() creates an ad when passed a null description
@@ -272,11 +272,11 @@ public class AdServiceImplTest {
     public void editAdNullPriceTest() {
         User user = new User("username", "Password@1");
         adService.createAd(name, description, price, user);
-        assertTrue("editAdNullPriceTest: should be successful when given price is null", adService.editAd(name, description, null, adService.loadAllAds().get(0).getId(), user));
+        assertFalse("editAdNullPriceTest: should be unsuccessful when given price is null", adService.editAd(name, description, null, adService.loadAllAds().get(0).getId(), user));
         assertEquals("editAdNullPriceTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
         Ad createdAd = adService.loadAllAds().get(0);
         assertEquals("editAdNullPriceTest: name of ad isn't same as before unsuccessful editing", name, createdAd.getName());
-        assertEquals("editAdNullPriceTest: price of ad isn't same as before unsuccessful editing", null, createdAd.getPrice());
+        assertEquals("editAdNullPriceTest: price of ad isn't same as before unsuccessful editing", price, createdAd.getPrice());
         assertEquals("editAdNullPriceTest: description of ad wasn't changed correctly", description, createdAd.getDescription());
         assertEquals("editAdNullPriceTest: user of ad isn't same as before unsuccessful editing", user, createdAd.getUser());
     }

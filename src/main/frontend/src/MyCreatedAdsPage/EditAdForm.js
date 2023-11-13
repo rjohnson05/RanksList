@@ -70,7 +70,9 @@ export default function CreateAdForm() {
                     })} />
                 </label>
                 <label>Price:
-                    <input type="text" name="price" {...register("price")} />
+                    <input type="text" name="price" {...register("price", {
+                        required: true
+                    })} />
                 </label>
                 <label>Description:
                     <input type="text" name="description" {...register("description")} />

@@ -41,7 +41,7 @@ public class AdServiceImpl implements AdService {
      */
     public boolean createAd(String name, String description, Float price, User user) {
         // Adds an advertisement to the DB only if the name field has been filled, and there are no null values
-        if (name == null || name.isEmpty() || user == null) {
+        if (name == null || name.isEmpty() || price == null || user == null) {
             log.debug("Advertisement not created due to invalid data");
             return false;
         }
@@ -71,8 +71,8 @@ public class AdServiceImpl implements AdService {
      */
     public boolean editAd(String name, String description, Float price, Integer id, User user) {
         // Edits an advertisement to the DB only if the name field has been filled, and there are no null values
-        if (name == null || name.isEmpty() || id == null) {
-            log.debug("Attempt to edit ad unsuccessful due to empty name");
+        if (name == null || name.isEmpty() || price == null || id == null) {
+            log.debug("Attempt to edit ad unsuccessful due to invalid credentials");
             return false;
         }
         // Makes sure an advertisement with the designated id exits before attempting to edit it
@@ -178,7 +178,7 @@ public class AdServiceImpl implements AdService {
      */
     public List<Ad> loadAllAds() {
         List<Ad> allAds = adRepo.findAll();
-        log.debug("Loading all Ads: " + allAds.size() + "ads loaded");
+        log.debug("Loading all Ads: " + allAds.size() + " ad(s) loaded");
         return allAds;
     }
 
@@ -189,7 +189,7 @@ public class AdServiceImpl implements AdService {
      */
     public List<Ad> loadStarredAds() {
         List<Ad> starredAds = adRepo.findByStarred(true);
-        log.debug("Loading all Starred Ads: " + starredAds.size() + "ads loaded");
+        log.debug("Loading all Starred Ads: " + starredAds.size() + " ad(s) loaded");
         return starredAds;
     }
 
@@ -200,7 +200,7 @@ public class AdServiceImpl implements AdService {
      */
     public List<Ad> loadCreatedAds(Integer id) {
         List<Ad> createdAds = adRepo.findByUserId(id);
-        log.debug("Loading all Ads Created by User #" + id + ": " + createdAds + "ads loaded");
+        log.debug("Loading all Ads Created by User #" + id + ": " + createdAds.size() + " ad(s) loaded");
         return createdAds;
     }
 

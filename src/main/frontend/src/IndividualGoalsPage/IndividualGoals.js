@@ -16,14 +16,13 @@ export default function Home() {
     let ad_id = Number(useLocation().pathname.split('/').pop());
     const ad = axios.get("http://localhost:8080/ads/" + ad_id);
 
-
     function createGoal(adId) {
         CreateGoalForm.adId = adId
     }
 
     useEffect(() => {
         loadGoalsAds();
-    });
+    }, []);
 
     let loadGoalsAds = async () => {
         const goals_data = await axios.get("http://localhost:8080/individual_goals/" + ad_id);
@@ -32,10 +31,12 @@ export default function Home() {
         setGoals(goals_data.data);
     }
 
-    const deleteGoal = (goalId) => {
-        axios.delete("http://localhost:8080/individual_goals/" + goalId)
-            .then(response => {console.log("Deleted goal with ID " + goalId)})
-            .catch(error => {console.error(error)});
+    const deleteGoal = async (goalId) => {
+        const response = await axios.delete("http://localhost:8080/individual_goals/" + goalId);
+
+        if (response.data) {
+            loadGoalsAds();
+        }
     }
 
     return (
