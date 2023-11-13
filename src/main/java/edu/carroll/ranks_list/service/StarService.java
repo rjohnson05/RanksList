@@ -1,6 +1,7 @@
 package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
+import edu.carroll.ranks_list.model.Star;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface StarService {
      * @param adId Integer representing the ID of the ad being starred/unstarred
      * @param userId Integer representing the ID of the current user starring/unstarring the advertisement
      *
-     * @return true if the starred status of the star is successfully toggled; false otherwise
+     * @return Star object that was changed; empty Star obect if failed
      */
     boolean changeStarStatus(Integer adId, Integer userId);
 

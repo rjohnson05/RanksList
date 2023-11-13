@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * API for HTTP requests regarding advertisements. Specifies how to handle HTTP requests that involve advertisement data.
@@ -70,6 +71,7 @@ public class AdController {
     public List<Ad> getStarredAds(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        log.debug("Final Starred Ads: " + starService.loadStarredAds(currentUserId));
         return starService.loadStarredAds(currentUserId);
     }
 
@@ -147,7 +149,6 @@ public class AdController {
      */
     @PutMapping("/starred_ads/{id}")
     public boolean changeAdStatus(@PathVariable("id") Integer id, HttpServletRequest request) {
-        log.info("Entered controller method");
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         return starService.changeStarStatus(id, currentUserId);

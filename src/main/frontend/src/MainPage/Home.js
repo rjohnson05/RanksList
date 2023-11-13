@@ -9,6 +9,7 @@ import NavBar from "./NavBar";
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
+    const [starredStatus, setStarredStatus] = useState(false);
 
     useEffect(() => {
         loadAds();
@@ -20,11 +21,10 @@ export default function Home() {
     }
 
     const loadStarredStatus = async (adId) => {
-        console.log("Running loadStarredStatus()");
-        const starred_status = await axios.get("http://localhost:8080/ad_starred/" + adId)
-        if (starred_status.data) {
-            console.log("Starred Status: " + starred_status.data);
-            return starred_status.data
+        const starred_status = await axios.get("http://localhost:8080/ad_starred/" + adId);
+        if (starred_status.data != null) {
+            return starred_status.data;
+            // setStarredStatus(starred_status.data);
         }
     }
 
@@ -49,9 +49,10 @@ export default function Home() {
                             <p>Name: {ad.name}</p>
                             <p>Price: {ad.price}</p>
                             <p>Description: {ad.description}</p>
+                            {/*<p>{loadStarredStatus(ad.id)}</p>*/}
                         </Link>
                             <IconButton value={ad.id} onClick={() => {starAd(ad.id)}}>
-                                {!loadStarredStatus(ad.id) ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
+                                {true ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
                             </IconButton>
                         </div>
                     ))}

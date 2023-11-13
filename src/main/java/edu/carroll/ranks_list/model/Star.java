@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 /**
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
  */
 @Entity
 @Table(name = "star")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Star {
 
     @Id
@@ -104,8 +106,7 @@ public class Star {
     public String toString() {
         return "Star #" + id + " [" + EOL +
                 TAB + "Status: " + starred + EOL +
-                TAB + "Describing Ad " + starred + EOL +
-                TAB + "Belonging to " + user + EOL +
+                TAB + "Describing Ad " + ad + EOL +
                 "]" + EOL;
     }
 }

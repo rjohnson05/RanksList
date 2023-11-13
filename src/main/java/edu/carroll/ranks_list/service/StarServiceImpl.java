@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
 @Service
 public class StarServiceImpl implements StarService {
 
-    private static final Logger log = LoggerFactory.getLogger(AdServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(StarServiceImpl.class);
     private final StarRepository starRepo;
     private final AdRepository adRepo;
     private final UserRepository userRepo;
@@ -50,7 +51,7 @@ public class StarServiceImpl implements StarService {
         List<Star> userStars = starRepo.getReferenceByUser(userRepo.getReferenceById(userId));
         userStars.retainAll(adStars);
         if (userStars.isEmpty()) {
-            log.debug("Star has not been created for Ad #" + adId + " and User #" + userId + "combination");
+            log.debug("Star has not been created for Ad #" + adId + " and User #" + userId + " combination");
             return false;
         }
         log.debug("Star for Ad #" + adId + " and User#" + userId + " has status of " + userStars.get(0).getStarred());
@@ -63,10 +64,9 @@ public class StarServiceImpl implements StarService {
      * @param adId Integer representing the ID of the ad being starred
      * @param userId Integer representing the ID of the current user starring the advertisement
      *
-     * @return true if the ad is successfully starred; false otherwise
+     * @return true if the ad is successfully starred; false if unstarred or unsuccessful
      */
     public boolean changeStarStatus(Integer adId, Integer userId) {
-        log.debug("Enters starring method");
         // Only checks the starred status if an ad with the designated id exists
         if (adId == null || !adRepo.existsById(adId)) {
             log.debug("Unsuccessful attempt to star ad due to invalid ID");
@@ -88,10 +88,12 @@ public class StarServiceImpl implements StarService {
             }
             if (userStars.get(0).getStarred()) {
                 userStars.get(0).setStarred(false);
+                starRepo.save(userStars.get(0));
                 log.debug("Star Unstarred for Ad #" + adId + " and User #" + userId);
-                return true;
+                return false;
             }
             userStars.get(0).setStarred(true);
+            starRepo.save(userStars.get(0));
             log.debug("Star Starred for Ad #" + adId + " and User #" + userId);
             return true;
         }
@@ -113,10 +115,12 @@ public class StarServiceImpl implements StarService {
             return null;
         }
         List<Star> userStars = starRepo.getReferenceByUser(userRepo.getReferenceById(userId));
-        List<Ad> starredAds = null;
+        log.debug("userStars: " + userStars);
+        List<Ad> starredAds = new ArrayList<>();
         for (Star star : userStars) {
             if (star.getStarred()) {
                 starredAds.add(star.getAd());
+                log.debug("starredAds: " + starredAds);
             }
         }
         log.debug("Loading all Starred Ads: " + starredAds.size() + " ad(s) loaded");

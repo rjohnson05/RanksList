@@ -37,6 +37,7 @@ public class Ad {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
     @OneToMany(mappedBy = "ad")
@@ -172,6 +173,22 @@ public class Ad {
      */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Goal> getGoals() {
+        return goals;
+    }
+
+    public void setGoals(List<Goal> goals) {
+        this.goals = goals;
+    }
+
+    public List<Star> getStars() {
+        return stars;
+    }
+
+    public void setStars(List<Star> stars) {
+        this.stars = stars;
     }
 
     public int hashCode() {
