@@ -33,8 +33,8 @@ public class Ad {
     @Column(name = "starred")
     private Boolean starred = Boolean.FALSE;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "ad",

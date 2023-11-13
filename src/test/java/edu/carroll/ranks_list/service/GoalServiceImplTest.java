@@ -4,7 +4,6 @@ import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.model.User;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,11 +25,6 @@ public class GoalServiceImplTest {
 
     @Autowired
     private GoalService goalService;
-
-    @BeforeEach
-    public void beforeTest() {
-        goalService.deleteAllGoals();
-    }
 
     // testing new goal method
     @Test
@@ -97,7 +91,7 @@ public class GoalServiceImplTest {
         goalService.newGoal(description, ad);
         assertTrue("deleteSpecificGoal: The size of the list of goals should be 1", goalService.getAllGoals().size() == 1);
         goalService.deleteGoal(goalService.getAllGoals().get(0).getId());
-        assertTrue("deleteSpecificGoal: The size of the list of goals should be 9", goalService.getAllGoals().size() == 0);
+        assertTrue("deleteSpecificGoal: The size of the list of goals should be 9", goalService.getAllGoals().isEmpty());
     }
 
     // testing delete goal

@@ -46,7 +46,6 @@ public class AdServiceImpl implements AdService {
             return false;
         }
         // Make sure the user hasn't already tried creating this ad
-        log.info("All Created Ads: " + loadCreatedAds(user.getId()));
         for (Ad ad : loadCreatedAds(user.getId())) {
             if (ad.getName().equals(name)) {
                 log.debug("User tried creating advertisement with duplicate name");
@@ -72,8 +71,8 @@ public class AdServiceImpl implements AdService {
      */
     public boolean editAd(String name, String description, Float price, Integer id, User user) {
         // Edits an advertisement to the DB only if the name field has been filled, and there are no null values
-        if (name == null || name.isEmpty() || price == null || description == null || id == null) {
-            log.debug("Attempt to edit ad unsuccessful due to null field or empty name");
+        if (name == null || name.isEmpty() || id == null) {
+            log.debug("Attempt to edit ad unsuccessful due to empty name");
             return false;
         }
         // Makes sure an advertisement with the designated id exits before attempting to edit it
