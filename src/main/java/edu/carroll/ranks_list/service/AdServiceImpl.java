@@ -151,7 +151,7 @@ public class AdServiceImpl implements AdService {
         Ad changedAd = adRepo.getReferenceById(id);
         changedAd.setStarred(false);
         adRepo.save(changedAd);
-        log.info("Advertisement #{id} was unstarred");
+        log.info("Unstarred Ad #" + id);
         return true;
     }
 
@@ -177,7 +177,9 @@ public class AdServiceImpl implements AdService {
      * @return List of every Ad object in the database
      */
     public List<Ad> loadAllAds() {
-        return adRepo.findAll();
+        List<Ad> allAds = adRepo.findAll();
+        log.debug("Loading all Ads: " + allAds.size() + "ads loaded");
+        return allAds;
     }
 
     /**
@@ -186,7 +188,9 @@ public class AdServiceImpl implements AdService {
      * @return List of all Ad objects with a "starred" status of True
      */
     public List<Ad> loadStarredAds() {
-        return adRepo.findByStarred(true);
+        List<Ad> starredAds = adRepo.findByStarred(true);
+        log.debug("Loading all Starred Ads: " + starredAds.size() + "ads loaded");
+        return starredAds;
     }
 
     /**
@@ -195,7 +199,9 @@ public class AdServiceImpl implements AdService {
      * @return List of Ads created by the current user
      */
     public List<Ad> loadCreatedAds(Integer id) {
-        return adRepo.findByUserId(id);
+        List<Ad> createdAds = adRepo.findByUserId(id);
+        log.debug("Loading all Ads Created by User #" + id + ": " + createdAds + "ads loaded");
+        return createdAds;
     }
 
     /**
@@ -206,6 +212,8 @@ public class AdServiceImpl implements AdService {
      */
     @Override
     public Ad getReferenceById(Integer id) {
-        return adRepo.getReferenceById(id);
+        Ad selectedAd = adRepo.getReferenceById(id);
+        log.debug("Getting Ad #" + id + ": " + selectedAd);
+        return selectedAd;
     }
 }

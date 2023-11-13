@@ -22,7 +22,6 @@ import java.util.List;
 @CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class AdController {
 
-    private static final Logger log = LoggerFactory.getLogger(AdController.class);
     private final AdService adService;
     private final UserService userService;
 
@@ -43,9 +42,7 @@ public class AdController {
      */
     @GetMapping("/ads")
     public List<Ad> getAllAds() {
-        List<Ad> allAds = adService.loadAllAds();
-        log.debug("Number of Ads: " + allAds.size());
-        return allAds;
+        return adService.loadAllAds();
     }
 
     /**
@@ -66,9 +63,7 @@ public class AdController {
      */
     @GetMapping("/starred_ads")
     public List<Ad> getStarredAds() {
-        List<Ad> starredAds = adService.loadStarredAds();
-        log.debug("Number of Starred Ads: " + starredAds.size());
-        return starredAds;
+        return adService.loadStarredAds();
     }
 
     /**
@@ -81,11 +76,8 @@ public class AdController {
         // Get the ID number of the current user from the list of cookies
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-        log.debug("Current UserID: " + currentUserId);
 
-        List<Ad> createdAds = adService.loadCreatedAds(currentUserId);
-        log.debug("Number of Ads Created by User #" + currentUserId + ": " + createdAds.size());
-        return createdAds;
+        return adService.loadCreatedAds(currentUserId);
     }
 
     /**
@@ -98,7 +90,6 @@ public class AdController {
     @PostMapping("/ads")
     public boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        log.info("Session id", session.getAttribute("userID"));
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         User currentUser = userService.getReferenceById(currentUserId);
 
@@ -117,7 +108,6 @@ public class AdController {
     @PutMapping("/edit_ad/{id}")
     public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        log.info("Session id", session.getAttribute("userID"));
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         User currentUser = userService.getReferenceById(currentUserId);
 

@@ -75,7 +75,7 @@ public class GoalServiceImpl implements GoalService {
      */
     @Override
     public List<Goal> getIndividualGoals(Integer adId) {
-        log.debug("Accessing goal :{}", adId);
+        log.debug("Accessing goal #{}", adId);
         return goalRepo.findByadId(adId);
     }
 
@@ -89,7 +89,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public boolean deleteGoal(Integer id){
         goalRepo.deleteById(id);
-        log.info("Deleted goal {}", id);
+        log.info("Deleted goal #{}", id);
         return true;
     }
 

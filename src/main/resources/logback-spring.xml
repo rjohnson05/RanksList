@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <property name="LOG_PATH" value="./logs" />
-    <property name="LOG_FILE_NAME" value="application_logback" />
 
     <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>C://Users/ryanj/Desktop/College/CS-389/ranks_list/logs/currentLogs.log</file>
+    <file>${LOG_PATH}/currentLogs.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
@@ -37,6 +36,6 @@
 
     <!-- Default level is INFO -->
     <root level="INFO">
-        <appender-ref ref="File"/>
+        <appender-ref ref="File" />
     </root>
 </configuration>

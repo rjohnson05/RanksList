@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
 
         User user = users.get(0);
         byte[] hash = Base64.getDecoder().decode(user.getPassword());
-        log.info("Fetched hash: " + Arrays.toString(hash));
         byte[] salt = Arrays.copyOfRange(hash, 0, 20);
 
         // Create a temporary user that stores the password with the same salted hash algorithm as the real user to

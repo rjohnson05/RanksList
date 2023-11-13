@@ -20,7 +20,6 @@ import java.util.List;
 @CrossOrigin(value="http://localhost:3000", allowCredentials = "true")
 public class GoalController {
 
-    private static final Logger log = LoggerFactory.getLogger(GoalController.class);
     private final GoalService goalService;
     private final AdService adService;
 
@@ -43,7 +42,6 @@ public class GoalController {
      */
     @PostMapping("/goals")
     boolean newGoal(@RequestBody GoalForm goalForm) {
-        log.info("New goal posted with ad id: {}", goalForm.getAdId());
         Ad attatchedAd = adService.getReferenceById(goalForm.getAdId());
         return goalService.newGoal(goalForm.getDescription(), attatchedAd);
     }
