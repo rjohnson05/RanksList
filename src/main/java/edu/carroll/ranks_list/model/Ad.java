@@ -31,7 +31,7 @@ public class Ad {
     @Column(name = "starred")
     private Boolean starred = Boolean.FALSE;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

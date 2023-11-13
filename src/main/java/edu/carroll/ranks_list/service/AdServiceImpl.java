@@ -46,6 +46,7 @@ public class AdServiceImpl implements AdService {
             return false;
         }
         // Make sure the user hasn't already tried creating this ad
+        log.info("All Created Ads: " + loadCreatedAds(user.getId()));
         for (Ad ad : loadCreatedAds(user.getId())) {
             if (ad.getName().equals(name)) {
                 log.debug("User tried creating advertisement with duplicate name");
@@ -75,6 +76,11 @@ public class AdServiceImpl implements AdService {
             log.debug("Attempt to edit ad unsuccessful due to null field or empty name");
             return false;
         }
+        // Makes sure an advertisement with the designated id exits before attempting to edit it
+        if (!adRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to edit ad due to invalid ID");
+            return false;
+        }
         // Make sure the ad data was changed somehow
         Ad selectedAd = adRepo.getReferenceById(id);
         if (Objects.equals(selectedAd.getName(), name) && Objects.equals(selectedAd.getPrice(), price) && Objects.equals(selectedAd.getDescription(), description)) {
@@ -92,11 +98,6 @@ public class AdServiceImpl implements AdService {
                 log.debug("User tried creating advertisement with duplicate name");
                 return false;
             }
-        }
-        // Makes sure an advertisement with the designated id exits before attempting to edit it
-        if (!adRepo.existsById(id)) {
-            log.debug("Unsuccessful attempt to edit ad due to invalid ID");
-            return false;
         }
         Ad changingAd = adRepo.getReferenceById(id);
         log.debug("Changing Ad: " + changingAd);
