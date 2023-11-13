@@ -29,7 +29,9 @@ public class User {
     @Column(name = "password", nullable = false)
     String password;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",
+    orphanRemoval = true,
+    cascade = CascadeType.ALL)
     private Set<Ad> ads;
 
     /**

@@ -20,7 +20,6 @@ export default function CreatedAds() {
     }
 
     const removeAd = (adId) => {
-        // <Navigate to={"edit_ad" + adId} />
         axios.delete("http://localhost:8080/my_ads/" + adId)
             .then(response => {console.log("Deleted ad with ID " + adId)})
             .catch(error => {console.error(error)});
@@ -35,7 +34,6 @@ export default function CreatedAds() {
     return (
         <div>
             <NavBar />
-
             <Row xs={3}>
                 {createdAdsData.map((ad, id) => (
                     <div className="col border border-5" key={id}>

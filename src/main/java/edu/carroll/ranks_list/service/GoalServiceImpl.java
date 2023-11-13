@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.service;
 
+import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.repository.GoalRepository;
 import org.slf4j.Logger;
@@ -38,14 +39,14 @@ public class GoalServiceImpl implements GoalService {
      * @return true if the goal is successfully created; false otherwise
      */
     @Override
-    public boolean newGoal(String name, String description, Integer ad_id) {
-        if (name == null || description == null || ad_id == null){
+    public boolean newGoal(String name, String description, Ad ad) {
+        if (name == null || description == null || ad == null){
             log.debug("A newGoal parameter was null");
             return false;
         }
-        Goal goal = new Goal(name, description, ad_id);
+        Goal goal = new Goal(name, description, ad);
         goalRepo.save(goal);
-        log.info("New goal created for Ad with id:{}", ad_id);
+        log.info("New goal created for Ad with id:{}", ad.getId());
         return true;
     }
 

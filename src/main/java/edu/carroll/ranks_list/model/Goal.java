@@ -23,24 +23,10 @@ public class Goal {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "adId", nullable = false)
-    private Integer adId;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "ad_id")
+    private Ad ad;
 
-    /**
-     * @return ad_Id for this goal
-     */
-    public Integer getAd_id() {
-        return adId;
-    }
-
-    /**
-     * Sets ad id for this goal
-     *
-     * @param adId
-     */
-    public void setAd_id(Integer adId) {
-        this.adId = adId;
-    }
 
     /**
      * No argument constructor for the Goal model. Creates a default Gaol object with no information.
@@ -51,10 +37,26 @@ public class Goal {
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
      */
-    public Goal(String name, String description, Integer adId) {
+    public Goal(String name, String description, Ad ad) {
         this.description = description;
         this.name = name;
-        this.adId = adId;
+        this.ad = ad;
+    }
+
+    /**
+     * @return ad_Id for this goal
+     */
+    public Integer getAd_id() {
+        return ad.getId();
+    }
+
+    /**
+     * Sets ad id for this goal
+     *
+     * @param adId
+     */
+    public void setAd_id(Integer adId) {
+        this.ad.setId(adId);
     }
 
     /**

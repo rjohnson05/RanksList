@@ -11,7 +11,6 @@ export default function CreateAdForm() {
     const [formData, setFormData] = useState({
         name: "",
         price: "",
-        image: [],
         description: ""
     });
 
