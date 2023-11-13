@@ -34,22 +34,6 @@ public interface AdService {
     boolean editAd(String name, String description, Float price, Integer id, User user);
 
     /**
-     * Places a designated advertisement onto the list of starred advertisements.
-     *
-     * @param id Integer representing the ID of the Ad object to be added to the list of starred advertisements
-     * @return Ad object being added to the list of starred advertisements
-     */
-    boolean starAd(Integer id);
-
-    /**
-     * Removes a designated advertisement from the list of starred ads.
-     *
-     * @param id Integer representing the ID of the Ad object to be removed from the list of saved ads
-     * @return true if the designated Ad object is successfully removed from the list of starred ads; false otherwise
-     */
-    boolean removeStarredAd(Integer id);
-
-    /**
      * Removes a designated advertisement from the database.
      *
      * @param id Integer representing the ID of the Ad object to be removed from the database
@@ -63,13 +47,6 @@ public interface AdService {
      * @return List of every Ad object in the database
      */
     List<Ad> loadAllAds();
-
-    /**
-     * Returns a list of all starred advertisements.
-     *
-     * @return List of all Ad objects with a "starred" status of True
-     */
-    List<Ad> loadStarredAds();
 
     /**
      * Loads all the ads created by the specified user ID.

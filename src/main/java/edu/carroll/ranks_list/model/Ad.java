@@ -42,6 +42,9 @@ public class Ad {
     @OneToMany(mappedBy = "ad")
     private List<Goal> goals;
 
+    @OneToMany(mappedBy = "ad")
+    private List<Star> stars;
+
     /**
      * Constructor for the Ad model. Creates a default Ad object with no information.
      */

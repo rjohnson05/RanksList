@@ -110,52 +110,6 @@ public class AdServiceImpl implements AdService {
     }
 
     /**
-     * Places a designated advertisement onto the list of starred advertisements.
-     *
-     * @param id Integer representing the ID of the Ad object to be added to the list of starred advertisements
-     * @return Ad object being added to the list of starred advertisements
-     */
-    public boolean starAd(Integer id) {
-        // Only stars the ad if an ad with the designated id exists
-        if (id == null || !adRepo.existsById(id)) {
-            log.debug("Unsuccessful attempt to star ad due to invalid ID");
-            return false;
-        }
-        // Doesn't star the ad if it is already starred
-        if (adRepo.getReferenceById(id).getStarred()) {
-            log.debug("Unsuccessful attempt to star ad; was already starred");
-            return false;
-        }
-        Ad changedAd = adRepo.getReferenceById(id);
-        changedAd.setStarred(true);
-        adRepo.save(changedAd);
-        log.info("Starred Ad #" + id);
-        return true;
-    }
-
-    /**
-     * Removes a designated advertisement from the list of starred ads.
-     *
-     * @param id Integer representing the ID of the Ad object to be removed from the list of saved ads
-     * @return true if the designated Ad object is successfully removed from the list of starred ads; false otherwise
-     */
-    public boolean removeStarredAd(Integer id) {
-        if (id == null || !adRepo.existsById(id)) {
-            log.debug("Unsuccessful attempt to unstar ad due to invalid ID");
-            return false;
-        }
-        if (!adRepo.getReferenceById(id).getStarred()) {
-            log.debug("Unsuccessful attempt to unstar ad; was already unstarred");
-            return false;
-        }
-        Ad changedAd = adRepo.getReferenceById(id);
-        changedAd.setStarred(false);
-        adRepo.save(changedAd);
-        log.info("Unstarred Ad #" + id);
-        return true;
-    }
-
-    /**
      * Removes a designated advertisement from the database.
      *
      * @param id Integer representing the ID of the Ad object to be removed from the database
@@ -180,17 +134,6 @@ public class AdServiceImpl implements AdService {
         List<Ad> allAds = adRepo.findAll();
         log.debug("Loading all Ads: " + allAds.size() + " ad(s) loaded");
         return allAds;
-    }
-
-    /**
-     * Returns a list of all starred advertisements.
-     *
-     * @return List of all Ad objects with a "starred" status of True
-     */
-    public List<Ad> loadStarredAds() {
-        List<Ad> starredAds = adRepo.findByStarred(true);
-        log.debug("Loading all Starred Ads: " + starredAds.size() + " ad(s) loaded");
-        return starredAds;
     }
 
     /**

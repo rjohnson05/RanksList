@@ -19,16 +19,21 @@ export default function Home() {
         setAds(ads_data.data);
     }
 
-    const starAd = async (adId, selected) => {
-        let desiredAd = allAdsData.find((element) => {return element.id === adId});
-        let response = null;
-        if (!desiredAd.starred) {
-            response = await axios.put("http://localhost:8080/starred_ads/" + adId);
-        } else {
-            response = await axios.delete("http://localhost:8080/starred_ads/" + adId);
+    const loadStarredStatus = async (adId) => {
+        console.log("Running loadStarredStatus()");
+        const starred_status = await axios.get("http://localhost:8080/ad_starred/" + adId)
+        if (starred_status.data) {
+            console.log("Starred Status: " + starred_status.data);
+            return starred_status.data
         }
+    }
+
+    const starAd = async (adId) => {
+        const response = await axios.put("http://localhost:8080/starred_ads/" + adId);
         if (response.data) {
+            console.log("Starred: " + response.data);
             loadAds();
+            loadStarredStatus(adId);
         }
     }
 
@@ -46,7 +51,7 @@ export default function Home() {
                             <p>Description: {ad.description}</p>
                         </Link>
                             <IconButton value={ad.id} onClick={() => {starAd(ad.id)}}>
-                                {ad.starred ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
+                                {!loadStarredStatus(ad.id) ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
                             </IconButton>
                         </div>
                     ))}

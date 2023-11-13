@@ -35,6 +35,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Goal> goals;
 
+    @OneToMany(mappedBy = "user")
+    private List<Star> stars;
+
     /**
      * Constructor for the User model. Creates a default User object with no information.
      */
