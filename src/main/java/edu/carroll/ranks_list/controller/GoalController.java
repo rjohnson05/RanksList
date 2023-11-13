@@ -45,7 +45,7 @@ public class GoalController {
     boolean newGoal(@RequestBody GoalForm goalForm) {
         log.info("New goal posted with ad id: {}", goalForm.getAdId());
         Ad attatchedAd = adService.getReferenceById(goalForm.getAdId());
-        return goalService.newGoal(goalForm.getName(), goalForm.getDescription(), attatchedAd);
+        return goalService.newGoal(goalForm.getDescription(), attatchedAd);
     }
 
     /**

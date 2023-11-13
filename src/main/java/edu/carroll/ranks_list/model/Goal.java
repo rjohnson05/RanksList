@@ -20,9 +20,6 @@ public class Goal {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ad_id")
     private Ad ad;
@@ -37,9 +34,8 @@ public class Goal {
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
      */
-    public Goal(String name, String description, Ad ad) {
+    public Goal(String description, Ad ad) {
         this.description = description;
-        this.name = name;
         this.ad = ad;
     }
 
@@ -76,24 +72,6 @@ public class Goal {
      */
     public String getDescription() {
         return description;
-    }
-
-    /**
-     * Getter for the name of the goal
-     *
-     * @return name of goal
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Setter for name of goal
-     *
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
