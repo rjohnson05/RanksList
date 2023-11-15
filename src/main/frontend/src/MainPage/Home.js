@@ -6,6 +6,7 @@ import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import NavBar from "./NavBar";
+import {ListItem} from "@mui/material";
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
@@ -20,12 +21,20 @@ export default function Home() {
         setAds(ads_data.data);
     }
 
-    const loadStarredStatus = async (adId) => {
-        const starred_status = await axios.get("http://localhost:8080/ad_starred/" + adId);
-        if (starred_status.data != null) {
-            return starred_status.data;
-            // setStarredStatus(starred_status.data);
+    const loadStarredStatus = () => {
+        const starredData = allAdsData.map(async (ad) => (
+            <ListItem key={ad.id} value={await axios.get("http://localhost:8080/ad_starred/" + ad.id)}/>
+        ));
+
+        if (starredData.data != null) {
+            setStarredStatus(starredData.data);
         }
+
+        // const starred_status = await axios.get("http://localhost:8080/ad_starred/" + adId);
+        // if (starred_status.data != null) {
+        //     return starred_status.data;
+        //     // setStarredStatus(starred_status.data);
+        // }
     }
 
     const starAd = async (adId) => {
@@ -49,7 +58,7 @@ export default function Home() {
                             <p>Name: {ad.name}</p>
                             <p>Price: {ad.price}</p>
                             <p>Description: {ad.description}</p>
-                            {/*<p>{loadStarredStatus(ad.id)}</p>*/}
+                            {/*<p>Starred Status: {starredStatus[ad.id]}</p>*/}
                         </Link>
                             <IconButton value={ad.id} onClick={() => {starAd(ad.id)}}>
                                 {true ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
