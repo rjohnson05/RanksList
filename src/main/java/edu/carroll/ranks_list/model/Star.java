@@ -1,5 +1,6 @@
 package edu.carroll.ranks_list.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
@@ -22,10 +23,12 @@ public class Star {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "ad_id")
+    @JsonIgnore
     private Ad ad;
 
     /**

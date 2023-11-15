@@ -15,13 +15,12 @@ export default function StarredAds() {
     const loadAds = async () => {
         const ads_data = await axios.get("http://localhost:8080/starred_ads");
         setStarredAds(ads_data.data);
-        console.log("Starred Ads: " + ads_data.data);
     }
 
     const removeAd = async (adId) => {
-        const response = await axios.delete("http://localhost:8080/starred_ads/" + adId);
+        const response = await axios.put("http://localhost:8080/starred_ads/" + adId);
 
-        if (response.data) {
+        if (response.data != null) {
             loadAds();
         }
     }
