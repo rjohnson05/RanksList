@@ -20,14 +20,16 @@ public class GoalServiceImpl implements GoalService {
 
     private static final Logger log = LoggerFactory.getLogger(GoalServiceImpl.class);
     private final GoalRepository goalRepo;
-
+    private final UserService userService;
     /**
      * Constructor for the Goal Service, creating an Ad service.
      *
-     * @param goalRepo Goal repository that contains the database
+     * @param goalRepo    Goal repository that contains the database
+     * @param userService
      */
-    public GoalServiceImpl(GoalRepository goalRepo) {
+    public GoalServiceImpl(GoalRepository goalRepo, UserService userService) {
         this.goalRepo = goalRepo;
+        this.userService = userService;
     }
 
     /**
@@ -35,12 +37,12 @@ public class GoalServiceImpl implements GoalService {
      *
      * @param description String representing the main text of the goal
      * @param ad advertisement the goal is being saved to
-     * @param user User object creating the goal
+     * @param user_id user_id object creating the goal
      *
      * @return true if the goal is successfully created; false otherwise
      */
     @Override
-    public boolean newGoal(String description, Ad ad, User user) {
+    public boolean newGoal(String description, Ad ad, int user_id) {
         // checking to see if the ad should be created
         if (description == null){
             log.debug("Description parameter was null when creating a new goal");
@@ -50,11 +52,9 @@ public class GoalServiceImpl implements GoalService {
             log.debug("ad parameter was null when creating a new goal");
             return false;
         }
-        if (user == null) {
-            log.debug("user parameter was null when creating a new goal");
-            return false;
-        }
+
         // creating the goal
+        User user = userService.getReferenceById(user_id);
         log.debug("Ad being passed in: {}", ad);
         log.debug("User being passed in: {}", user);
         Goal goal = new Goal(description, ad, user);
@@ -82,7 +82,7 @@ public class GoalServiceImpl implements GoalService {
      * @return List of goals belonging to the advertisement with the designated ID
      */
     public List<Goal> getIndividualGoals(Integer adId, Integer userId) {
-        log.debug("Accessing goal for ad#[}", adId);
+        log.debug("Accessing goal for ad#{}", adId);
         List<Goal> desiredGoals = goalRepo.findByAdId(adId);
         // Find the goals belonging to both the specified ad and user
         desiredGoals.retainAll(goalRepo.findByUserId(userId));

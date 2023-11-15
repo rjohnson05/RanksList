@@ -2,13 +2,10 @@ package edu.carroll.ranks_list.controller;
 
 import edu.carroll.ranks_list.form.AdForm;
 import edu.carroll.ranks_list.model.Ad;
-import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.service.AdService;
 import edu.carroll.ranks_list.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -91,9 +88,7 @@ public class AdController {
     public boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-        User currentUser = userService.getReferenceById(currentUserId);
-
-        return adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), currentUser);
+        return adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), currentUserId);
     }
 
     /**
@@ -109,9 +104,8 @@ public class AdController {
     public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-        User currentUser = userService.getReferenceById(currentUserId);
 
-        return adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id, currentUser);
+        return adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id, currentUserId);
     }
 
     /**

@@ -2,7 +2,6 @@ package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
-import edu.carroll.ranks_list.model.User;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public interface GoalService {
      *
      * @return true if the goal is successfully created; false otherwise
      */
-    boolean newGoal(String description, Ad ad, User user);
+    boolean newGoal(String description, Ad ad, int user_id);
 
     /**
      * Returns all gaols present in the database.
