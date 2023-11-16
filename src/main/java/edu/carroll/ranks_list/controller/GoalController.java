@@ -19,7 +19,7 @@ import java.util.List;
  * @author Hank Rugg, Ryan Johnson
  */
 @RestController
-@CrossOrigin(value="http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class GoalController {
 
     private final GoalService goalService;
@@ -30,7 +30,8 @@ public class GoalController {
      * Constructor for the Goal Controller. Creates a service for the goals business logic.
      *
      * @param goalService contains all business logic related to goal data
-     * @param adService
+     * @param adService   contains all business logic related to ad data
+     * @param userService contains all business logic related to user data
      */
     public GoalController(GoalService goalService, AdService adService, UserService userService) {
         this.goalService = goalService;
@@ -42,6 +43,7 @@ public class GoalController {
      * Creates a new Goal and adds it to the database.
      *
      * @param goalForm Goal data to be added to the database
+     * @param request  HttpServletRequest object that allows access to parameters of an HTTP request
      * @return Goal object that has been successfully added to the database
      */
     @PostMapping("/goals")
@@ -67,6 +69,8 @@ public class GoalController {
     /**
      * Gets all the current goals.
      *
+     * @param adId    Integer object containing the ID of the advertisement the goal is being saved to
+     * @param request HttpServletRequest object that allows access to parameters of an HTTP request
      * @return List of all Goal objects in the database
      */
     @GetMapping("/individual_goals/{adId}")

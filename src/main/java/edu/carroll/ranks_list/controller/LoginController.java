@@ -35,7 +35,9 @@ public class LoginController extends HttpServlet {
     /**
      * Registers a new user and adds their credentials to the database.
      *
-     * @return true if the credentials do not match credentials from another user; false otherwise
+     * @param registrationForm contains the data to be used to create a new user
+     * @return true if the user is successfully created, having no matching credentials already present in the DB;
+     * false otherwise
      */
     @PostMapping("/register")
     public boolean createUser(@RequestBody RegistrationForm registrationForm) {
@@ -44,7 +46,9 @@ public class LoginController extends HttpServlet {
 
     /**
      * Determines if the login credential information matches a current user in the database.
+     *
      * @param loginForm Contains the data to used for login verification
+     * @param request   HttpServletRequest object that allows access to parameters of an HTTP request
      * @return true if the credentials match a user in the database; false otherwise
      */
     @PostMapping("/login")

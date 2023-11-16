@@ -23,13 +23,13 @@ public class Goal {
     private String description;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "ad_id")
+    @JsonIgnore
+    private Ad ad;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "ad_id")
-    private Ad ad;
 
     /**
      * No argument constructor for the Goal model. Creates a default Gaol object with no information.
@@ -39,6 +39,10 @@ public class Goal {
 
     /**
      * Constructor for the Goal model. Creates a default Gaol object with no information.
+     *
+     * @param description String representing the text of the goal
+     * @param ad          Ad object representing the advertisement the goal is connected to
+     * @param user        User object representing the user creating the goal
      */
     public Goal(String description, Ad ad, User user) {
         this.description = description;
@@ -51,9 +55,17 @@ public class Goal {
      *
      * @return Integer object representing the ID of the goal
      */
-
     public Integer getId() {
         return id;
+    }
+
+    /**
+     * Sets the ID of the goal
+     *
+     * @param id integer representing the ID of the goal
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**

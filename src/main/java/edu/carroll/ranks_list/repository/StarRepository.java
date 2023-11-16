@@ -1,7 +1,6 @@
 package edu.carroll.ranks_list.repository;
 
 import edu.carroll.ranks_list.model.Ad;
-import edu.carroll.ranks_list.model.Goal;
 import edu.carroll.ranks_list.model.Star;
 import edu.carroll.ranks_list.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

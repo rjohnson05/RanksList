@@ -37,11 +37,11 @@ public class AdServiceImpl implements AdService {
      * @param description description of new ad
      * @param price       price of new ad
      * @param user        User object that created the ad
-     * @return True if ad successfully added to the database; False otherwise
+     * @return true if ad successfully added to the database; false otherwise
      */
-    public boolean createAd(String name, String description, Float price, User user) {
+    public boolean createAd(String name, String description, float price, User user) {
         // Adds an advertisement to the DB only if the name field has been filled, and there are no null values
-        if (name == null || name.isEmpty() || price == null || user == null) {
+        if (name == null || name.isEmpty() || user == null) {
             log.debug("Advertisement not created due to invalid data");
             return false;
         }
@@ -66,12 +66,12 @@ public class AdServiceImpl implements AdService {
      * @param description String representing the desired description of the advertisement
      * @param price       Float representing the desired price for the advertisement
      * @param id          Integer representing the ID of the advertisement to be changed
-     * @paraam user       User object that created the ad
+     * @param user        User object that created the ad
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
-    public boolean editAd(String name, String description, Float price, Integer id, User user) {
+    public boolean editAd(String name, String description, float price, int id, User user) {
         // Edits an advertisement to the DB only if the name field has been filled, and there are no null values
-        if (name == null || name.isEmpty() || price == null || id == null) {
+        if (name == null || name.isEmpty()) {
             log.debug("Attempt to edit ad unsuccessful due to invalid credentials");
             return false;
         }
@@ -112,11 +112,11 @@ public class AdServiceImpl implements AdService {
     /**
      * Removes a designated advertisement from the database.
      *
-     * @param id Integer representing the ID of the Ad object to be removed from the database
+     * @param id int representing the ID of the Ad object to be removed from the database
      * @return true if the Ad object with the designated ID is removed from the database; false otherwise
      */
-    public boolean deleteAd(Integer id) {
-        if (id == null || !adRepo.existsById(id)) {
+    public boolean deleteAd(int id) {
+        if (!adRepo.existsById(id)) {
             log.debug("Unsuccessful attempt to delete ad due to invalid ID");
             return false;
         }
@@ -141,7 +141,7 @@ public class AdServiceImpl implements AdService {
      *
      * @return List of Ads created by the current user
      */
-    public List<Ad> loadCreatedAds(Integer id) {
+    public List<Ad> loadCreatedAds(int id) {
         List<Ad> createdAds = adRepo.findByUserId(id);
         log.debug("Loading all Ads Created by User #" + id + ": " + createdAds.size() + " ad(s) loaded");
         return createdAds;
@@ -150,11 +150,11 @@ public class AdServiceImpl implements AdService {
     /**
      * Returns the Ad object with the specified ID
      *
-     * @param id Integer representing the ID number of the desired Ad object
+     * @param id int representing the ID number of the desired Ad object
      * @return Ad object with the specified ID
      */
     @Override
-    public Ad getReferenceById(Integer id) {
+    public Ad getReferenceById(int id) {
         Ad selectedAd = adRepo.getReferenceById(id);
         log.debug("Getting Ad #" + id + ": " + selectedAd);
         return selectedAd;

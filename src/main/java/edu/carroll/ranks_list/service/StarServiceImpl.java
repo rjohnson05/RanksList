@@ -29,6 +29,8 @@ public class StarServiceImpl implements StarService {
      * Constructor for the Star Service, creating the service with a Star Repo.
      *
      * @param starRepo Repository for stars
+     * @param adRepo   Repository for advertisement
+     * @param userRepo Repository for users
      */
     public StarServiceImpl(StarRepository starRepo, AdRepository adRepo, UserRepository userRepo) {
         this.starRepo = starRepo;
@@ -36,14 +38,21 @@ public class StarServiceImpl implements StarService {
         this.userRepo = userRepo;
     }
 
-    public boolean isAdStarred(Integer adId, Integer userId) {
+    /**
+     * Determines if a designated advertisement is starred by a given user.
+     *
+     * @param adId   int representing the ID of the advertisement to be checked
+     * @param userId int representing the ID of the current user
+     * @return true if the ad is starred by the current user; false otherwise
+     */
+    public boolean isAdStarred(int adId, int userId) {
         // Only checks the starred status if an ad with the designated id exists
-        if (adId == null || !adRepo.existsById(adId)) {
+        if (!adRepo.existsById(adId)) {
             log.debug("Unsuccessful attempt to star ad due to invalid ID");
             return false;
         }
         // Only checks the starred status if a user with the designated id exists
-        if (userId == null || !userRepo.existsById(userId)) {
+        if (!userRepo.existsById(userId)) {
             log.debug("Unsuccessful attempt to star ad due to invalid ID");
             return false;
         }
@@ -59,21 +68,20 @@ public class StarServiceImpl implements StarService {
     }
 
     /**
-     * Places a designated advertisement onto the list of starred advertisements.
+     * Toggles the status of whether a star is starred.
      *
-     * @param adId Integer representing the ID of the ad being starred
-     * @param userId Integer representing the ID of the current user starring the advertisement
-     *
-     * @return true if the ad is successfully starred; false if unstarred or unsuccessful
+     * @param adId   int representing the ID of the ad being starred/unstarred
+     * @param userId int representing the ID of the current user starring/unstarring the advertisement
+     * @return true if the starred status for the specified ad is successfully changed; false otherwise
      */
-    public boolean changeStarStatus(Integer adId, Integer userId) {
+    public boolean changeStarStatus(int adId, int userId) {
         // Only checks the starred status if an ad with the designated id exists
-        if (adId == null || !adRepo.existsById(adId)) {
+        if (!adRepo.existsById(adId)) {
             log.debug("Unsuccessful attempt to star ad due to invalid ID");
             return false;
         }
         // Only checks the starred status if a user with the designated id exists
-        if (userId == null || !userRepo.existsById(userId)) {
+        if (!userRepo.existsById(userId)) {
             log.debug("Unsuccessful attempt to star ad due to invalid ID");
             return false;
         }
@@ -106,11 +114,12 @@ public class StarServiceImpl implements StarService {
     /**
      * Returns a list of all starred advertisements.
      *
+     * @param userId int representing the ID of the current user starring/unstarring the advertisement
      * @return List of all Ad objects with a "starred" status of True
      */
-    public List<Ad> loadStarredAds(Integer userId) {
+    public List<Ad> loadStarredAds(int userId) {
         // Checks the starred status if a user with the designated id exists
-        if (userId == null || !userRepo.existsById(userId)) {
+        if (!userRepo.existsById(userId)) {
             log.debug("Unsuccessful attempt to unstar ad due to invalid ID");
             return null;
         }

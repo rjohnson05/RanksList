@@ -22,14 +22,14 @@ public class Star {
     private Boolean starred = Boolean.TRUE;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "ad_id")
     @JsonIgnore
     private Ad ad;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private User user;
 
     /**
      * Constructor for the Star model. Creates a default Star object that is not starred.
@@ -39,10 +39,31 @@ public class Star {
 
     /**
      * Constructor for the Star model. Creates a Star object assigned to the designated advertisement and user.
+     *
+     * @param ad   Ad object representing the advertisement the star is connected to
+     * @param user User object representing the user that created the star
      */
     public Star(Ad ad, User user) {
         this.ad = ad;
         this.user = user;
+    }
+
+    /**
+     * Returns the ID of the star.
+     *
+     * @return int representing the ID of the star
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Sets the ID of the star.
+     *
+     * @param id int representing the ID of the star
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -64,24 +85,6 @@ public class Star {
     }
 
     /**
-     * Returns the user changing the star for an ad.
-     *
-     * @return User object changing the star for an ad
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * Sets the user that is changing the star for an ad.
-     *
-     * @param user User object changing the star for an ad
-     */
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    /**
      * Returns the ad the star is assigned to.
      *
      * @return Ad object the star is assigned to
@@ -97,6 +100,24 @@ public class Star {
      */
     public void setAd(Ad ad) {
         this.ad = ad;
+    }
+
+    /**
+     * Returns the user changing the star for an ad.
+     *
+     * @return User object changing the star for an ad
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the user that is changing the star for an ad.
+     *
+     * @param user User object changing the star for an ad
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public int hashCode() {

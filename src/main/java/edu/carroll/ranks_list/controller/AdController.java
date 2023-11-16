@@ -2,17 +2,13 @@ package edu.carroll.ranks_list.controller;
 
 import edu.carroll.ranks_list.form.AdForm;
 import edu.carroll.ranks_list.model.Ad;
-import edu.carroll.ranks_list.model.Star;
 import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * API for HTTP requests regarding advertisements. Specifies how to handle HTTP requests that involve advertisement data.
@@ -22,7 +18,6 @@ import java.util.Objects;
 @RestController
 @CrossOrigin(value = "http://localhost:3000", allowCredentials = "true")
 public class AdController {
-    private static final Logger log = LoggerFactory.getLogger(AdServiceImpl.class);
 
     private final AdService adService;
     private final UserService userService;
@@ -31,7 +26,9 @@ public class AdController {
     /**
      * Constructor for the Ad Controller. Creates a service for the advertisements business logic.
      *
-     * @param adService contains all logic related to advertisement data
+     * @param adService   contains all logic related to advertisement data
+     * @param userService contains all logic related to user data
+     * @param starService contains all logic related to star data
      */
     public AdController(AdService adService, UserService userService, StarService starService) {
         this.adService = adService;
@@ -50,7 +47,7 @@ public class AdController {
     }
 
     /**
-     * Returns the Ad object with the designated ID
+     * Returns the Ad object with the designated ID.
      *
      * @param id the ID number of the desired advertisement
      * @return Ad object with the designated ID number
@@ -64,14 +61,14 @@ public class AdController {
      * Gets all advertisements starred by the current user.
      *
      * @param request HttpServletRequest object that allows access to parameters of an HTTP request
-     *
-     * @return list of all user's starred advertisements
+     * @return list of all of a user's starred advertisements
      */
     @GetMapping("/starred_ads")
     public List<Ad> getStarredAds(HttpServletRequest request) {
+        // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-        log.debug("Final Starred Ads: " + starService.loadStarredAds(currentUserId));
+
         return starService.loadStarredAds(currentUserId);
     }
 
@@ -79,12 +76,11 @@ public class AdController {
      * Gets all advertisements created by the current user.
      *
      * @param request HttpServletRequest object that allows access to parameters of an HTTP request
-     *
      * @return list of all advertisements created by the current user
      */
     @GetMapping("/my_ads")
     public List<Ad> getCreatedAds(HttpServletRequest request) {
-        // Get the ID number of the current user from the list of cookies
+        // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
 
@@ -92,15 +88,15 @@ public class AdController {
     }
 
     /**
-     * Queries to determine if an ad is starred for the current user.
+     * Determines if the designated ad is starred for the current user.
      *
-     * @param adId Integer representing the ID of the desired advertisement
+     * @param adId    Integer representing the ID of the desired advertisement
      * @param request HttpServletRequest object that allows access to parameters of an HTTP request
-     *
      * @return true if the designated ad is starred; false otherwise
      */
     @GetMapping("/ad_starred/{id}")
     public boolean isAdStarred(@PathVariable("id") Integer adId, HttpServletRequest request) {
+        // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
 
@@ -110,12 +106,13 @@ public class AdController {
     /**
      * Creates a new advertisement and adds it to the database.
      *
-     * @param adForm  Contains the data to used for the created ad
+     * @param adForm  contains the data to be used for the created ad
      * @param request HttpServletRequest object that allows access to parameters of an HTTP request
      * @return true if the ad is successfully added to the database; false otherwise
      */
     @PostMapping("/ads")
     public boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
+        // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         User currentUser = userService.getReferenceById(currentUserId);
@@ -124,16 +121,16 @@ public class AdController {
     }
 
     /**
-     * Edits an advertisement using the information provided.
+     * Edits an advertisement to the provided information.
      *
      * @param id      the ID of the advertisement to be edited
-     * @param adForm  the new data to be connected with the advertisement
+     * @param adForm  the new data to be used for the advertisement
      * @param request HttpServletRequest object that allows access to parameters of an HTTP request
-     *
      * @return true if the designated ad is successfully edited; false otherwise
      */
     @PutMapping("/edit_ad/{id}")
     public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm, HttpServletRequest request) {
+        // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         User currentUser = userService.getReferenceById(currentUserId);
@@ -142,15 +139,19 @@ public class AdController {
     }
 
     /**
-     * Stars the advertisement for the current user. Changes the advertisement status from "unstarred" to "starred".
+     * Toggles the status of whether an advertisement is starred. If the starred status for the current user for an
+     * advertisement is currently "true", it will be changed to "false", and vice versa.
      *
-     * @param id the ID number of the selected advertisement, as given by the database
+     * @param id      the ID number of the selected advertisement, as given by the database
+     * @param request HttpServletRequest object that allows access to parameters of an HTTP request
      * @return true if the advertisement with the designated ID is successfully starred
      */
     @PutMapping("/starred_ads/{id}")
     public boolean changeAdStatus(@PathVariable("id") Integer id, HttpServletRequest request) {
+        // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+
         return starService.changeStarStatus(id, currentUserId);
     }
 

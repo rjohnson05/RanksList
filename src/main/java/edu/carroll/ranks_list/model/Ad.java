@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Model for advertisements. Contains all information regarding any given ad.
@@ -25,15 +24,11 @@ public class Ad {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NonNull
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Float price;
 
     @Column(name = "description")
     private String description;
-
-    @Column(name = "starred")
-    private Boolean starred = Boolean.FALSE;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
@@ -58,6 +53,7 @@ public class Ad {
      * @param name        String representing the name of the advertisement
      * @param price       Float representing the price of the advertisement
      * @param description String representing the description of the advertisement
+     * @param user        User object representing the user that created the advertisement
      */
     public Ad(String name, Float price, String description, User user) {
         this.name = name;
@@ -140,24 +136,6 @@ public class Ad {
     }
 
     /**
-     * Returns the status of the advertisement.
-     *
-     * @return True if the advertisement is starred; False otherwise
-     */
-    public Boolean getStarred() {
-        return starred;
-    }
-
-    /**
-     * Sets the status of the advertisement.
-     *
-     * @param starred True if the advertisement is being starred; False otherwise
-     */
-    public void setStarred(Boolean starred) {
-        this.starred = starred;
-    }
-
-    /**
      * Returns the user that created the advertisement.
      *
      * @return User object specifying the creator of the advertisement
@@ -175,18 +153,38 @@ public class Ad {
         this.user = user;
     }
 
+    /**
+     * Returns the goals that were created by a user for a specific ad.
+     *
+     * @return List of goals created by a specific user for the ad
+     */
     public List<Goal> getGoals() {
         return goals;
     }
 
+    /**
+     * Sets the list of goals for the advertisement.
+     *
+     * @param goals List of Goal objects for the advertisement
+     */
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
     }
 
+    /**
+     * Returns all the stars for the advertimsement, acrosss all users.
+     *
+     * @return List of Star objects containing the starred status for the advertisement for a particular user
+     */
     public List<Star> getStars() {
         return stars;
     }
 
+    /**
+     * Sets the list of stars for the advertisement.
+     *
+     * @param stars List of star objects containing the starred status for the advertisement for a particular state
+     */
     public void setStars(List<Star> stars) {
         this.stars = stars;
     }
@@ -203,7 +201,6 @@ public class Ad {
                 TAB + "Name: " + name + EOL +
                 TAB + "Price: " + price + EOL +
                 TAB + "Description: " + description + EOL +
-                TAB + "Starred Status: " + starred + EOL +
                 TAB + "Created by " + user + EOL +
                 "]" + EOL;
     }

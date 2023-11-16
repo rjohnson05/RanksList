@@ -66,7 +66,6 @@ public class User {
      */
     public User(String username, String rawPassword) {
         this.username = username;
-
         // Generates a salt for the hash
         SecureRandom secureRandom = new SecureRandom();
         byte[] salt = new byte[20];
@@ -132,7 +131,7 @@ public class User {
     }
 
     /**
-     * Sets the hashed password to the password.
+     * Hashes the password and resets the password to this newly hashed password.
      *
      * @param rawPassword String object containing the password directly supplied by the user, without any manipulation
      * @param salt        list of bytes containing the salt to be used for hashing the password
