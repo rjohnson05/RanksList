@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -142,6 +143,10 @@ public class AdServiceImpl implements AdService {
      * @return List of Ads created by the current user
      */
     public List<Ad> loadCreatedAds(int id) {
+        if (!adRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to delete ad due to invalid ID");
+            return new ArrayList<>();
+        }
         List<Ad> createdAds = adRepo.findByUserId(id);
         log.debug("Loading all Ads Created by User #" + id + ": " + createdAds.size() + " ad(s) loaded");
         return createdAds;
@@ -155,6 +160,10 @@ public class AdServiceImpl implements AdService {
      */
     @Override
     public Ad getReferenceById(int id) {
+        if (!adRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to delete ad due to invalid ID");
+            return new Ad();
+        }
         Ad selectedAd = adRepo.getReferenceById(id);
         log.debug("Getting Ad #" + id + ": " + selectedAd);
         return selectedAd;
