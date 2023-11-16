@@ -67,7 +67,7 @@ public class AdController {
     public List<Ad> getStarredAds(HttpServletRequest request) {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
-        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
 
         return starService.loadStarredAds(currentUserId);
     }
@@ -82,7 +82,7 @@ public class AdController {
     public List<Ad> getCreatedAds(HttpServletRequest request) {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
-        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
 
         return adService.loadCreatedAds(currentUserId);
     }
@@ -98,7 +98,7 @@ public class AdController {
     public boolean isAdStarred(@PathVariable("id") Integer adId, HttpServletRequest request) {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
-        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
 
         return starService.isAdStarred(adId, currentUserId);
     }
@@ -114,7 +114,7 @@ public class AdController {
     public boolean newAd(@RequestBody AdForm adForm, HttpServletRequest request) {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
-        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         User currentUser = userService.getReferenceById(currentUserId);
 
         return adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), currentUser);
@@ -132,7 +132,7 @@ public class AdController {
     public boolean editAd(@PathVariable("id") Integer id, @RequestBody AdForm adForm, HttpServletRequest request) {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
-        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
         User currentUser = userService.getReferenceById(currentUserId);
 
         return adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id, currentUser);
@@ -150,7 +150,7 @@ public class AdController {
     public boolean changeAdStatus(@PathVariable("id") Integer id, HttpServletRequest request) {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
-        Integer currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
 
         return starService.changeStarStatus(id, currentUserId);
     }

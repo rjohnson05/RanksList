@@ -3,6 +3,7 @@ package edu.carroll.ranks_list.service;
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.AdRepository;
+import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,17 @@ public class AdServiceImpl implements AdService {
 
     private static final Logger log = LoggerFactory.getLogger(AdServiceImpl.class);
     private final AdRepository adRepo;
+    private final UserRepository userRepo;
 
     /**
      * Constructor for the Ad Service, creating the service with an Ad Repo.
      *
-     * @param adRepo Repository for advertisements
+     * @param adRepo   Repository for advertisements
+     * @param userRepo Repository for users
      */
-    public AdServiceImpl(AdRepository adRepo) {
+    public AdServiceImpl(AdRepository adRepo, UserRepository userRepo) {
         this.adRepo = adRepo;
+        this.userRepo = userRepo;
     }
 
     /**
@@ -143,8 +147,8 @@ public class AdServiceImpl implements AdService {
      * @return List of Ads created by the current user
      */
     public List<Ad> loadCreatedAds(int id) {
-        if (!adRepo.existsById(id)) {
-            log.debug("Unsuccessful attempt to delete ad due to invalid ID");
+        if (!userRepo.existsById(id)) {
+            log.debug("Unsuccessful attempt to load created ads due to invalid ID");
             return new ArrayList<>();
         }
         List<Ad> createdAds = adRepo.findByUserId(id);
