@@ -19,7 +19,7 @@ public class AdServiceImplTest {
     private final String name = "testname";
     private final Float price = 5.0F;
     private final String description = "testdescription";
-
+    private User user;
 
     @Autowired
     private AdService adService;
@@ -27,13 +27,11 @@ public class AdServiceImplTest {
     @Autowired
     private UserService userService;
 
-
     @BeforeEach
     public void beforeTest() {
         userService.createUser("Username1", "Password@1");
         userService.createUser("Username2", "Password@1");
         userService.createUser("Username3", "Password@1");
-
     }
 
     // Tests to ensure createAd() method creates and stores a single advertisement correctly when passed valid data
@@ -41,7 +39,7 @@ public class AdServiceImplTest {
     public void createAdValidDataTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("createAdValidDataTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         List<Ad> allCreatedAds = adService.loadAllAds();
 
         assertEquals("createAdValidDataTest: should create a single ad with valid data", 1, allCreatedAds.size());
@@ -58,11 +56,11 @@ public class AdServiceImplTest {
     public void createMultipleAdsValidDataTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("createMultipleAdsValidDataTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
 
         User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
         int user2_id = user2.getId();
-        adService.createAd(name + "1", description + "1", price + 1, user2_id);
+        assertTrue("createMultipleAdsValidDataTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user2_id));
 
         List<Ad> allCreatedAds = adService.loadAllAds();
         assertEquals("createMultipleAdsValidDataTest: should contain two ads with valid data", 2, allCreatedAds.size());
@@ -86,17 +84,20 @@ public class AdServiceImplTest {
     public void createAdDuplicateAdDifferentUserIdTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        List<Ad> allCreatedAds = adService.loadAllAds();
-        assertEquals("createAdDuplicateAdDifferentUserIdTest: should create a single ad with valid data", 1, allCreatedAds.size());
 
         User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
         int user2_id = user2.getId();
-        adService.createAd(name , description , price , user2_id);
+
+
+        assertTrue("createAdDuplicateAdDifferentUserIdTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        List<Ad> allCreatedAds = adService.loadAllAds();
+        assertEquals("createAdDuplicateAdDifferentUserIdTest: should create a single ad with valid data", 1, allCreatedAds.size());
+
+        assertTrue("createAdDuplicateAdDifferentUserIdTest: createAd() should return true with valid data", adService.createAd(name, description, price, user2_id));
         allCreatedAds = adService.loadAllAds();
         assertEquals("createAdDuplicateAdDifferentUserIdTest: should create a single duplicate ad with different user ID", 2, allCreatedAds.size());
 
-        List<Ad> duplicateAds = adService.loadCreatedAds(user2.getId());
+        List<Ad> duplicateAds = adService.loadCreatedAds(user.getId());
         assertEquals("createAdDuplicateAdDifferentUserIdTest: should create a single ad with this user ID", 1, duplicateAds.size());
         Ad duplicateAd = duplicateAds.get(0);
         assertEquals("createAdDuplicateAdDifferentUserIdTest: duplicate ad should have the same name as previous ad", name, duplicateAd.getName());
@@ -110,7 +111,7 @@ public class AdServiceImplTest {
     public void createAdDuplicateAdSameUserIdTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("createAdDuplicateAdSameUserIdTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertFalse("createAdDuplicateAdSameUserIdTest: attempted duplicate ad should fail when having the same user ID", adService.createAd(name, description, price, user_id));
     }
 
@@ -142,9 +143,8 @@ public class AdServiceImplTest {
     ///XXXXXXXXXXXXXXX question on this
     // Tests to ensure that createAd() will fail if the provided user is not in the DB
     @Test
-    public void createAdNoUserTest() {
-
-        assertFalse("createAdNoUserTest: should not create successfully when no valid user is supplied", adService.createAd("", description, price, 0));
+    public void createAdInvalidUserTest() {
+        assertFalse("createAdNoUserTest: should not create successfully when no valid user is supplied", adService.createAd("", description, price, -1));
         assertEquals("createAdNoUserTest: should not create an ad when no user is supplied", 0, adService.loadAllAds().size());
     }
 
@@ -153,13 +153,22 @@ public class AdServiceImplTest {
     public void createAdPriceZeroTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, (float) 0, user_id);
+        assertTrue("createAdPriceZeroTest: createAd() should return true with valid data", adService.createAd(name, description, (float) 0, user_id));
         assertEquals("createAdPriceZeroTest: should pass with a price of $0.00", 1, adService.loadAllAds().size());
         Ad createdAd = adService.loadAllAds().get(0);
         assertEquals("createAdPriceZeroTest: name not stored correctly for ad with price of $0.00", name, createdAd.getName());
         assertEquals("createAdPriceZeroTest: description not stored correctly for ad with price of $0.00", description, createdAd.getDescription());
         assertEquals("createAdPriceZeroTest: price not stored correctly for ad with price of $0.00", (float) 0, createdAd.getPrice());
         assertEquals("createAdPriceZeroTest: user not stored correctly for ad with price of $0.00", user_id, createdAd.getUser().getId());
+    }
+
+    // Tests to ensure that createAd() creates an ad correctly with a price of 0
+    @Test
+    public void createAdNegativePriceTest() {
+        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
+        int user_id = user.getId();
+        assertFalse("createAdNegativePriceTest: createAd() should return false with negative price", adService.createAd(name, description, (float) -1, user_id));
+        assertEquals("createAdNegativePriceTest: shouldn't pass with a price of -$1.00", 0, adService.loadAllAds().size());
     }
 
     // Tests to ensure that createAd() doesn't create an ad when passed a null name
@@ -186,8 +195,9 @@ public class AdServiceImplTest {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
         assertTrue("createAdNullDescriptionTest: should return true when passed null description", adService.createAd(name, null, price, user_id));
-        assertEquals("createAdNullDescriptionTest: should pass with null description", 1, adService.loadAllAds().size());
+        assertEquals("createAdNullNameTest: should pass with null name", 1, adService.loadAllAds().size());
     }
+
 
     // Tests to ensure that createAd() doesn't create an ad when all parameters are null
     @Test
@@ -203,7 +213,7 @@ public class AdServiceImplTest {
     public void editAdValidDataAllChangeTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdValidDataAllChangeTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertTrue("editAdValidDataTest: should return true when valid data is given", adService.editAd(name + "1", description + "1", price + 1, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdValidDataTest: number of ads not the same as before editing ad", 1, adService.loadAllAds().size());
         Ad editedAd = adService.loadAllAds().get(0);
@@ -218,7 +228,7 @@ public class AdServiceImplTest {
     public void editAdValidDataNameChangeTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdValidDataNameChangeTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertTrue("editAdValidDataTest: should return true when name is changed to valid name", adService.editAd(name + "1", description, price, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdValidDataTest: number of ads not the same as before editing ad", 1, adService.loadAllAds().size());
         Ad editedAd = adService.loadAllAds().get(0);
@@ -233,14 +243,14 @@ public class AdServiceImplTest {
     public void editAdValidDataPriceChangeTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdValidDataPriceChangeTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertTrue("editAdValidDataTest: should return true when name is changed to valid name", adService.editAd(name, description, price + 1, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdValidDataTest: number of ads not the same as before editing ad", 1, adService.loadAllAds().size());
         Ad editedAd = adService.loadAllAds().get(0);
         assertEquals("editAdValidDataTest: name didn't change to proper value when edited", name, editedAd.getName());
         assertEquals("editAdValidDataTest: price didn't change to proper value when edited", price + 1, editedAd.getPrice());
         assertEquals("editAdValidDataTest: description didn't change to proper value when edited", description, editedAd.getDescription());
-        assertEquals("editAdValidDataTest: name didn't change to proper value when edited", user, editedAd.getUser());
+        assertEquals("editAdValidDataTest: user was changed when the ad was edited when it the user should have remained the same", user, editedAd.getUser());
     }
 
     // Tests to ensure that editAd() correctly changes just the description of an advertisement if given valid data
@@ -248,7 +258,7 @@ public class AdServiceImplTest {
     public void editAdValidDataDescriptionChangeTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdValidDataDescriptionChangeTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertTrue("editAdValidDataTest: should return true when name is changed to valid name", adService.editAd(name, description + "1", price, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdValidDataTest: number of ads not the same as before editing ad", 1, adService.loadAllAds().size());
         Ad editedAd = adService.loadAllAds().get(0);
@@ -258,13 +268,12 @@ public class AdServiceImplTest {
         assertEquals("editAdValidDataTest: name didn't change to proper value when edited", user, editedAd.getUser());
     }
 
-
     // Tests to ensure that editAd() is not successful if the name is left empty
     @Test
     public void editAdEmptyNameTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdEmptyNameTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertFalse("editAdEmptyNameTest: shouldn't be successful when name is changed to be empty", adService.editAd("", description, price, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdEmptyNameTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
         Ad createdAd = adService.loadAllAds().get(0);
@@ -279,7 +288,7 @@ public class AdServiceImplTest {
     public void editAdEmptyDescriptionTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdEmptyNameTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertTrue("editAdEmptyDescriptionTest: should be successful when description is changed to be empty", adService.editAd(name, "", price, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdEmptyDescriptionTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
         Ad createdAd = adService.loadAllAds().get(0);
@@ -294,7 +303,7 @@ public class AdServiceImplTest {
     public void editAdNullNameTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdNullNameTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertFalse("editAdNullNameTest: shouldn't be successful when given name is null", adService.editAd(null, description, price, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdNullNameTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
         Ad createdAd = adService.loadAllAds().get(0);
@@ -309,7 +318,7 @@ public class AdServiceImplTest {
     public void editAdNullPriceTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdNullPriceTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertFalse("editAdNullPriceTest: should be unsuccessful when given price is null", adService.editAd(name, description, null, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdNullPriceTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
         Ad createdAd = adService.loadAllAds().get(0);
@@ -324,7 +333,7 @@ public class AdServiceImplTest {
     public void editAdNullDescriptionTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("editAdNullDescriptionTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         assertTrue("editAdNullDescriptionTest: should be successful when given description is null", adService.editAd(name, null, price, adService.loadAllAds().get(0).getId(), user_id));
         assertEquals("editAdNullDescriptionTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
         Ad createdAd = adService.loadAllAds().get(0);
@@ -334,20 +343,7 @@ public class AdServiceImplTest {
         assertEquals("editAdNullDescriptionTest: user of ad isn't same as before unsuccessful editing", user, createdAd.getUser());
     }
 
-    // Tests to ensure that editAd() is unsuccessful if the supplied ID is null
-    @Test
-    public void editAdNullIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        assertFalse("editAdNullIdTest: shouldn't be successful when given description is null", adService.editAd(name, description, price, null, user_id));
-        assertEquals("editAdNullIdTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
-        Ad createdAd = adService.loadAllAds().get(0);
-        assertEquals("editAdNullIdTest: name of ad isn't same as before unsuccessful editing", name, createdAd.getName());
-        assertEquals("editAdNullIdTest: price of ad isn't same as before unsuccessful editing", price, createdAd.getPrice());
-        assertEquals("editAdNullIdTest: description of ad wasn't changed correctly", description, createdAd.getDescription());
-        assertEquals("editAdNullIdTest: user of ad isn't same as before unsuccessful editing", user, createdAd.getUser());
-    }
+
 
     // Tests to ensure that editAd() is unsuccessful if all supplied parameters are null
     @Test
@@ -356,21 +352,16 @@ public class AdServiceImplTest {
         int user_id = user.getId();
         adService.createAd(name, description, price, user_id);
         assertFalse("editAdNullAllTest: shouldn't be successful when given description is null", adService.editAd(null, null, null, null, user_id));
-        assertEquals("editAdNullAllTest: number of ads isn't equal to before an ad was edited", 1, adService.loadAllAds().size());
-        Ad createdAd = adService.loadAllAds().get(0);
-        assertEquals("editAdNullAllTest: name of ad isn't same as before unsuccessful editing", name, createdAd.getName());
-        assertEquals("editAdNullAllTest: price of ad isn't same as before unsuccessful editing", price, createdAd.getPrice());
-        assertEquals("editAdNullAllTest: description of ad wasn't changed correctly", description, createdAd.getDescription());
-        assertEquals("editAdNullAllTest: user of ad isn't same as before unsuccessful editing", user, createdAd.getUser());
     }
+
 
     // Tests to ensure that editAd() is unsuccessful if given an ID that is doesn't map to an advertisement
     @Test
     public void editAdInvalidIdTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        adService.createAd(name + "1", description, price, user_id);
+        assertTrue("editAdInvalidIdTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        assertTrue("editAdInvalidIdTest: createAd() should return true with valid data", adService.createAd(name+"1", description, price, user_id));
         int deletedAdId = 0;
         for (Ad ad : adService.loadAllAds()) {
             if (ad.getName().equals(name + "1")) {
@@ -387,338 +378,13 @@ public class AdServiceImplTest {
         assertEquals("editAdInvalidIdTest: user of ad isn't same as before unsuccessful editing", user, remainingAd.getUser());
     }
 
-    // Tests to ensure that starAd() is successful with a valid ID
-    @Test
-    public void starAdValidIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int firstAdId = adService.loadAllAds().get(0).getId();
-
-        // Makes sure the single ad is moved to list of starred ads
-        assertTrue("starAdValidIdTest: should pass if the designated ad has a valid ID", adService.starAd(firstAdId));
-        assertEquals("starAdValidIdTest: should pass if the designated ad is added to the list of starred ads", 1, adService.loadStarredAds().size());
-        Ad starredAd = adService.loadStarredAds().get(0);
-        assertEquals("starAdValidIdTest: should pass if the starred ad still appears in the list of all ads", 1, adService.loadAllAds().size());
-
-        // Makes sure the data of the starred ad matches that of the original ad
-        assertEquals("starAdValidIdTest: name of starred ad is not same as unstarred ad", name, starredAd.getName());
-        assertEquals("starAdValidIdTest: price of starred ad is not same as unstarred ad", price, starredAd.getPrice());
-        assertEquals("starAdValidIdTest: description of starred ad is not same as unstarred ad", description, starredAd.getDescription());
-        assertEquals("starAdValidIdTest: starred status of starred ad should be true", true, starredAd.getStarred());
-    }
-
-    // Tests to ensure that starAd() is successful when starring multiple valid ads
-    @Test
-    public void starAdValidIdMultipleTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        List<Ad> allAds = adService.loadAllAds();
-        int firstAdId = allAds.get(0).getId();
-
-        User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
-        int user2_id = user2.getId();
-        adService.createAd(name + "1", description + "1", price + 1, user2_id);
-        allAds = adService.loadAllAds();
-        int secondAdId = allAds.get(1).getId();
-        // Order not guaranteed in the DB, so double-checking that ID for correct ad is being stored
-        if (secondAdId == firstAdId) {
-            secondAdId = allAds.get(0).getId();
-        }
-
-        adService.starAd(firstAdId);
-        // Makes sure only the single ad is moved to list of starred ads
-        assertEquals("starAdValidIdMultipleTest: should pass if only the designated ad is added to the list of starred ads", 1, adService.loadStarredAds().size());
-        Ad starredAd = adService.loadStarredAds().get(0);
-        assertEquals("starAdValidIdMultipleTest: should pass if the starred ad still appears in the list of all ads", 2, adService.loadAllAds().size());
-        // Makes sure the data of the starred ad matches that of the original ad
-        assertEquals("starAdValidIdMultipleTest: name of starred ad is not same as equivalent unstarred ad", name, starredAd.getName());
-        assertEquals("starAdValidIdMultipleTest: price of starred ad is not same as equivalent unstarred ad", price, starredAd.getPrice());
-        assertEquals("starAdValidIdMultipleTest: description of starred ad is not same as equivalent unstarred ad", description, starredAd.getDescription());
-        assertEquals("starAdValidIdMultipleTest: starred status of starred ad should be true", true, starredAd.getStarred());
-        assertEquals("starAdValidIdMultipleTest: user of starred ad is not same as equivalent unstarred ad", user, starredAd.getUser());
-        // Makes sure the data of the unstarred ad have not changed
-        Ad unstarredAd = adService.getReferenceById(secondAdId);
-        assertEquals("starAdValidIdMultipleTest: name of unstarred ad is not same as originally", name + "1", unstarredAd.getName());
-        assertEquals("starAdValidIdMultipleTest: price of starred ad is not same as originally", price + 1, unstarredAd.getPrice());
-        assertEquals("starAdValidIdMultipleTest: description of starred ad is not same as originally", description + "1", unstarredAd.getDescription());
-        assertEquals("starAdValidIdMultipleTest: starred status of unstarred ad should be false", false, unstarredAd.getStarred());
-        assertEquals("starAdValidIdMultipleTest: user of starred ad is not same as originally", user2, unstarredAd.getUser());
-
-        // Storing the thirdly created ad
-        User user3 = userService.findByUsernameIgnoreCase("Username3").get(0);
-        int user3_id = user3.getId();
-        adService.createAd(name + "2", description + "2", price + 2, user3_id);
-        allAds = adService.loadAllAds();
-        int thirdAdId = allAds.get(2).getId();
-        if (thirdAdId == firstAdId || thirdAdId == secondAdId) {
-            thirdAdId = allAds.get(1).getId();
-            if (thirdAdId == firstAdId || thirdAdId == secondAdId) {
-                thirdAdId = allAds.get(0).getId();
-            }
-        }
-
-        // Ensures having multiple starred ads is successful
-        adService.starAd(secondAdId);
-        // Makes sure only the single ad is moved to list of starred ads
-        assertEquals("starAdValidIdMultipleTest: should pass if only the second ad is added to the list of starred ads", 2, adService.loadStarredAds().size());
-        assertEquals("starAdValidIdMultipleTest: should pass if the starred ad still appears in the list of all ads", 3, adService.loadAllAds().size());
-        // Makes sure the data of the starred ad matches that of the original ad
-        starredAd = adService.getReferenceById(secondAdId);
-        assertEquals("starAdValidIdMultipleTest: name of starred ad is not same as equivalent unstarred ad", name + "1", starredAd.getName());
-        assertEquals("starAdValidIdMultipleTest: price of starred ad is not same as equivalent unstarred ad", price + 1, starredAd.getPrice());
-        assertEquals("starAdValidIdMultipleTest: description of starred ad is not same as equivalent unstarred ad", description + "1", starredAd.getDescription());
-        assertEquals("starAdValidIdMultipleTest: starred status of starred ad should be true", true, starredAd.getStarred());
-        assertEquals("starAdValidIdMultipleTest: user of starred ad is not same as equivalent unstarred ad", user2, starredAd.getUser());
-        // Makes sure the data of the unstarred ad have not changed
-        unstarredAd = adService.getReferenceById(thirdAdId);
-        assertEquals("starAdValidIdMultipleTest: name of unstarred ad is not same as originally", name + "2", unstarredAd.getName());
-        assertEquals("starAdValidIdMultipleTest: price of starred ad is not same as originally", price + 2, unstarredAd.getPrice());
-        assertEquals("starAdValidIdMultipleTest: description of starred ad is not same as originally", description + "2", unstarredAd.getDescription());
-        assertEquals("starAdValidIdMultipleTest: starred status of unstarred ad should be false", false, unstarredAd.getStarred());
-        assertEquals("starAdValidIdMultipleTest: user of starred ad is not same as originally", user3, unstarredAd.getUser());
-    }
-
-    // Ensures that starAd() is unsuccessful if an invalid ID is passed
-    @Test
-    public void starAdInvalidIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int adId = adService.loadAllAds().get(0).getId();
-        // Delete this ad and star its ID to ensure the ID is invalid
-        adService.deleteAd(adId);
-
-        assertFalse("starAdInvalidIdTest: didn't fail when passed an invalid ID", adService.starAd(adId));
-        assertEquals("starAdInvalidIdTest: starred ad is present after starring invalid ID", 0, adService.loadStarredAds().size());
-        assertEquals("starAdInvalidIdTest: ad is present after starring invalid ID", 0, adService.loadAllAds().size());
-    }
-
-    // Ensures that starAd() is unsuccessful if the designated ad is already starred
-    @Test
-    public void starAdAlreadyStarredIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int firstAdId = adService.loadAllAds().get(0).getId();
-        adService.starAd(firstAdId);
-
-        assertFalse("starAdAlreadyStarredIdTest: shouldn't pass successfully for an ad that is already starred", adService.starAd(firstAdId));
-        assertEquals("starAdAlreadyStarredIdTest: should be one ad in list of starred ads", 1, adService.loadStarredAds().size());
-        assertEquals("starAdAlreadyStarredIdTest: number of ads shouldn't change after unsuccessful starring", 1, adService.loadAllAds().size());
-
-        // Ensures that the data of the ad hasn't changed
-        Ad ad = adService.getReferenceById(firstAdId);
-        assertEquals("starAdAlreadyStarredIdTest: name of ad isn't same as originally", name, ad.getName());
-        assertEquals("starAdAlreadyStarredIdTest: price of ad isn't same as originally", price, ad.getPrice());
-        assertEquals("starAdAlreadyStarredIdTest: description of ad isn't same as originally", description, ad.getDescription());
-        assertEquals("starAdAlreadyStarredIdTest: starred status of ad shouldn't be true", true, ad.getStarred());
-        assertEquals("starAdAlreadyStarredIdTest: user of ad isn't same as originally", user, ad.getUser());
-
-    }
-
-    // Ensures that starAd() is unsuccessful if an invalid ID is passed, even if other ads are still present in the DB
-    @Test
-    public void starAdMultipleInvalidIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int firstAdId = adService.loadAllAds().get(0).getId();
-        // Delete this ad and star its ID to ensure the ID is invalid
-        adService.deleteAd(firstAdId);
-        assertEquals("starAdMultipleInvalidIdTest: number of ads isn't 0 after deleting", 0, adService.loadAllAds().size());
-
-        User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
-        int user2_id = user2.getId();
-        adService.createAd(name + "1", description + "1", price + 1, user2_id);
-        int secondAdId = adService.loadAllAds().get(0).getId();
-        adService.starAd(secondAdId);
-
-        assertFalse("starAdMultipleInvalidIdTest: didn't fail when passed an invalid ID", adService.starAd(firstAdId));
-        assertEquals("starAdMultipleInvalidIdTest: starred ad is present after starring invalid ID", 1, adService.loadStarredAds().size());
-        assertEquals("starAdMultipleInvalidIdTest: ad is present after starring invalid ID", 1, adService.loadAllAds().size());
-        // Ensure data in remaining ad is same as before trying to star the invalid ID
-        Ad remainingAd = adService.loadAllAds().get(0);
-        assertEquals("starAdMultipleInvalidIdTest: name of remaining ad isn't same as originally", name + "1", remainingAd.getName());
-        assertEquals("starAdMultipleInvalidIdTest: price of remaining ad isn't same as originally", price + 1, remainingAd.getPrice());
-        assertEquals("starAdMultipleInvalidIdTest: description of remaining ad isn't same as originally", description + "1", remainingAd.getDescription());
-        assertEquals("starAdMultipleInvalidIdTest: starred status of remaining ad should be true", true, remainingAd.getStarred());
-    }
-
-    // Ensures that starAd() is unsuccessful if given a null ID
-    @Test
-    public void starAdNullIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-
-        int adId = adService.loadAllAds().get(0).getId();
-        assertFalse("starAdNullIdTest: shouldn't be successful when given a null ID", adService.starAd(null));
-        assertEquals("starAdNullIdTest: size of ad list isn't same as before unsuccessful attempt to star ad", 1, adService.loadAllAds().size());
-
-        Ad createdAd = adService.getReferenceById(adId);
-        assertEquals("starAdNullIdTest: name of ad isn't same as before trying to star ad", name, createdAd.getName());
-        assertEquals("starAdNullIdTest: description of ad isn't same as before trying to star ad", description, createdAd.getDescription());
-        assertEquals("starAdNullIdTest: price of ad isn't same as before trying to star ad", price, createdAd.getPrice());
-        assertEquals("starAdNullIdTest: starred status of remaining ad should be false", false, createdAd.getStarred());
-        assertEquals("starAdNullIdTest: user of ad isn't same as before trying to star ad", user, createdAd.getUser());
-    }
-
-    // Tests to ensure that removeStarredAd() is successful with a valid ID
-    @Test
-    public void removeStarredAdValidIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();        adService.createAd(name, description, price, user_id);
-        int firstAdId = adService.loadAllAds().get(0).getId();
-        adService.starAd(firstAdId);
-
-        // Makes sure the single ad is removed from list of starred ads
-        assertTrue("removeStarredAdValidIdTest: should be successful if given a valid ID", adService.removeStarredAd(firstAdId));
-        assertEquals("removeStarredAdValidIdTest: list of starred ads should be empty", 0, adService.loadStarredAds().size());
-        assertEquals("removeStarredAdValidIdTest: should pass if the ad still appears in the list of all ads", 1, adService.loadAllAds().size());
-
-        // Ensures the data for the unstarred ad is still same as it was originally
-        Ad unstarredAd = adService.getReferenceById(firstAdId);
-        assertEquals("removeStarredAdValidIdTest: name of ad isn't same as before trying to star ad", name, unstarredAd.getName());
-        assertEquals("removeStarredAdValidIdTest: description of ad isn't same as before trying to star ad", description, unstarredAd.getDescription());
-        assertEquals("removeStarredAdValidIdTest: price of ad isn't same as before trying to star ad", price, unstarredAd.getPrice());
-        assertEquals("removeStarredAdValidIdTest: starred status of unstarred ad should be false", false, unstarredAd.getStarred());
-        assertEquals("removeStarredAdValidIdTest: user of ad isn't same as before trying to star ad", user, unstarredAd.getUser());
-    }
-
-    // Tests to ensure that removeStarredAd() is successful when unstarring multiple valid ads
-    @Test
-    public void removeStarredAdValidIdMultipleTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        List<Ad> allAds = adService.loadAllAds();
-        int firstAdId = allAds.get(0).getId();
-        adService.starAd(firstAdId);
-
-        User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
-        int user2_id = user2.getId();
-        adService.createAd(name + "1", description + "1", price + 1, user2_id);
-        allAds = adService.loadAllAds();
-        int secondAdId = allAds.get(1).getId();
-        // Order not guaranteed in the DB, so double-checking that ID for correct ad is being stored
-        if (secondAdId == firstAdId) {
-            secondAdId = allAds.get(0).getId();
-        }
-        adService.starAd(secondAdId);
-
-        assertTrue("removeStarredAdValidIdMultipleTest: should pass successfully if ID is valid", adService.removeStarredAd(firstAdId));
-        // Makes sure only the designated ad is removed from the list of starred ads
-        assertEquals("removeStarredAdValidIdMultipleTest: should pass if only the designated ad is removed from the list of starred ads", 1, adService.loadStarredAds().size());
-        assertEquals("removeStarredAdValidIdMultipleTest: wrong ad was removed from the list of starred ads", secondAdId, adService.loadStarredAds().get(0).getId());
-        assertEquals("removeStarredAdValidIdMultipleTest: should pass if the unstarred ad still appears in the list of all ads", 2, adService.loadAllAds().size());
-
-        // Makes sure the data of the unstarred ad matches that of the original ad
-        Ad unstarredAd = adService.getReferenceById(firstAdId);
-        assertEquals("removeStarredAdValidIdMultipleTest: name of unstarred ad is not same as originally", name, unstarredAd.getName());
-        assertEquals("removeStarredAdValidIdMultipleTest: price of unstarred ad is not same as originally", price, unstarredAd.getPrice());
-        assertEquals("removeStarredAdValidIdMultipleTest: description of unstarred ad is not same as originally", description, unstarredAd.getDescription());
-        assertEquals("removeStarredAdValidIdMultipleTest: starred status of unstarred ad should not be true", false, unstarredAd.getStarred());
-        assertEquals("removeStarredAdValidIdMultipleTest: user of unstarred ad is not same as originally", user, unstarredAd.getUser());
-        // Makes sure the data of the starred ad have not changed
-        Ad starredAd = adService.getReferenceById(secondAdId);
-        assertEquals("removeStarredAdValidIdMultipleTest: name of starred ad is not same as originally", name + "1", starredAd.getName());
-        assertEquals("removeStarredAdValidIdMultipleTest: price of starred ad is not same as originally", price + 1, starredAd.getPrice());
-        assertEquals("removeStarredAdValidIdMultipleTest: description of starred ad is not same as originally", description + "1", starredAd.getDescription());
-        assertEquals("removeStarredAdValidIdMultipleTest: starred status of starred ad should not be false", true, starredAd.getStarred());
-        assertEquals("removeStarredAdValidIdMultipleTest: user of starred ad is not same as originally", user2, starredAd.getUser());
-    }
-
-    // Ensures that removeStarred() is unsuccessful if an invalid ID is passed
-    @Test
-    public void removeStarredAdInvalidIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int adId = adService.loadAllAds().get(0).getId();
-        // Delete this ad and star its ID to ensure the ID is invalid
-        adService.deleteAd(adId);
-
-        assertFalse("removeStarredAdInvalidIdTest: didn't fail when passed an invalid ID", adService.removeStarredAd(adId));
-        assertEquals("removeStarredAdInvalidIdTest: ad shouldn't be present in list of starred ads after unstarring invalid ID", 0, adService.loadStarredAds().size());
-        assertEquals("removeStarredAdInvalidIdTest: ad is present after starring invalid ID", 0, adService.loadAllAds().size());
-    }
-
-    // Ensures that removeStarredAd() is unsuccessful if the designated ad is already unstarred
-    @Test
-    public void removeStarredAdAlreadyUnstarredTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int adId = adService.loadAllAds().get(0).getId();
-
-        assertFalse("removeStarredAdAlreadyUnstarredTest: shouldn't pass successfully if ad is already unstarred", adService.removeStarredAd(adId));
-        assertEquals("removeStarredAdAlreadyUnstarredTest: shouldn't be any ads in list of starred ads", 0, adService.loadStarredAds().size());
-        assertEquals("removeStarredAdAlreadyUnstarredTest: number of total ads shouldn't have changed", 1, adService.loadAllAds().size());
-
-        // Ensure that the data of the ad hasn't changed
-        Ad ad = adService.getReferenceById(adId);
-        assertEquals("removeStarredAdAlreadyUnstarredTest: name of ad isn't same as originally", name, ad.getName());
-        assertEquals("removeStarredAdAlreadyUnstarredTest: price of ad isn't same as originally", price, ad.getPrice());
-        assertEquals("removeStarredAdAlreadyUnstarredTest: description of ad isn't same as originally", description, ad.getDescription());
-        assertEquals("removeStarredAdAlreadyUnstarredTest: starred status of ad isn't same as originally", false, ad.getStarred());
-        assertEquals("removeStarredAdAlreadyUnstarredTest: user of ad isn't same as originally", user, ad.getUser());
-    }
-
-    // Ensures that removeStarredAd() is unsuccessful if an invalid ID is passed, even if other ads are still present in the DB
-    @Test
-    public void removeStarredAdMultipleInvalidIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int firstAdId = adService.loadAllAds().get(0).getId();
-        // Delete this ad and star its ID to ensure the ID is invalid
-        adService.deleteAd(firstAdId);
-
-        User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
-        int user2_id = user2.getId();
-        adService.createAd(name + "1", description + "1", price + 1, user2_id);
-        int secondAdId = adService.loadAllAds().get(0).getId();
-        adService.starAd(secondAdId);
-
-        assertFalse("starAdMultipleInvalidIdTest: didn't fail when passed an invalid ID", adService.removeStarredAd(firstAdId));
-        assertEquals("starAdMultipleInvalidIdTest: starred ad is present after starring invalid ID", 1, adService.loadStarredAds().size());
-        assertEquals("starAdMultipleInvalidIdTest: ad is present after starring invalid ID", 1, adService.loadAllAds().size());
-        // Ensure data in remaining ad is same as before trying to star the invalid ID
-        Ad remainingAd = adService.loadAllAds().get(0);
-        assertEquals("starAdMultipleInvalidIdTest: name of remaining ad isn't same as originally", name + "1", remainingAd.getName());
-        assertEquals("starAdMultipleInvalidIdTest: price of remaining ad isn't same as originally", price + 1, remainingAd.getPrice());
-        assertEquals("starAdMultipleInvalidIdTest: description of remaining ad isn't same as originally", description + "1", remainingAd.getDescription());
-        assertEquals("starAdMultipleInvalidIdTest: starred status of remaining ad isn't same as before attempted unstarring", true, remainingAd.getStarred());
-    }
-
-    // Ensures that removeStarredAd() is unsuccessful if given a null ID
-    @Test
-    public void removeStarredAdNullIdTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int adId = adService.loadAllAds().get(0).getId();
-        assertFalse("removeStarredAdNullIdTest: shouldn't be successful when given a null ID", adService.removeStarredAd(null));
-        assertEquals("removeStarredAdNullIdTest: size of ad list isn't same as before unsuccessful attempt to star ad", 1, adService.loadAllAds().size());
-
-        Ad createdAd = adService.getReferenceById(adId);
-        assertEquals("removeStarredAdNullIdTest: name of ad isn't same as before trying to star ad", name, createdAd.getName());
-        assertEquals("removeStarredAdNullIdTest: description of ad isn't same as before trying to star ad", description, createdAd.getDescription());
-        assertEquals("removeStarredAdNullIdTest: price of ad isn't same as before trying to star ad", price, createdAd.getPrice());
-        assertEquals("removeStarredAdNullIdTest: starred status of remaining ad should be false", false, createdAd.getStarred());
-        assertEquals("removeStarredAdNullIdTest: user of ad isn't same as before trying to star ad", user, createdAd.getUser());
-    }
-
     // Ensures that deleteAd() is successful for a valid ID
     @Test
     public void deleteAdValidIdTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("deleteAdValidIdTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         int adId = adService.loadAllAds().get(0).getId();
-
         assertTrue("deleteAdValidIdTest: should pass successfully with a valid ID", adService.deleteAd(adId));
         assertEquals("deleteAdValidIdTest: list of all ads should be empty", 0, adService.loadAllAds().size());
     }
@@ -728,12 +394,12 @@ public class AdServiceImplTest {
     public void deleteAdValidIdMultipleTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("deleteAdValidIdMultipleTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         int adId = adService.loadAllAds().get(0).getId();
 
         User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
         int user2_id = user2.getId();
-        adService.createAd(name + "1", description + "1", price + 1, user2_id);
+        assertTrue("deleteAdValidIdMultipleTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user2_id));
 
         assertTrue("deleteAdValidIdMultipleTest: should pass successfully when given a valid ID", adService.deleteAd(adId));
         assertEquals("deleteAdValidIdMultipleTest: number of total ads should be 1 after deletion", 1, adService.loadAllAds().size());
@@ -759,13 +425,13 @@ public class AdServiceImplTest {
     public void deleteAdInvalidIdMultipleTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("deleteAdInvalidIdMultipleTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         int adId = adService.loadAllAds().get(0).getId();
 
         User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
         int user2_id = user2.getId();
-        adService.createAd(name + "1", description + "1", price + 1, user2_id);
-        adService.deleteAd(adId);
+        assertTrue("deleteAdInvalidIdMultipleTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user2_id));
+        assertTrue("deleteAdInvalidIdMultipleTest: deleteAd() should return true with valid ID", adService.deleteAd(adId));
 
         assertFalse("deleteAdInvalidIdMultipleTest: shouldn't pass successfully when given an invalid ID", adService.deleteAd(adId));
         assertEquals("deleteAdInvalidIdMultipleTest: number of ads shouldn't change with unsuccessful deletion", 1, adService.loadAllAds().size());
@@ -783,9 +449,10 @@ public class AdServiceImplTest {
     public void deleteAdJustDeletedTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
+        assertTrue("deleteAdJustDeletedTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+
         int adId = adService.loadAllAds().get(0).getId();
-        adService.deleteAd(adId);
+        assertTrue("deleteAdJustDeletedTest: deleteAd() should return true with valid ID", adService.deleteAd(adId));
 
         assertFalse("deleteAdJustDeletedTest: shouldn't pass successfully when given an ad that was just deleted", adService.deleteAd(adId));
         assertEquals("deleteAdJustDeletedTest: list of all ads should be empty", 0, adService.loadAllAds().size());
@@ -798,7 +465,7 @@ public class AdServiceImplTest {
         int user_id = user.getId();
         adService.createAd(name, description, price, user_id);
 
-        assertFalse("deleteAdNullIdTest: shouldn't pass successfully when given a null ID", adService.deleteAd(null));
+        assertFalse("deleteAdNullIdTest: shouldn't pass successfully when given a null ID", adService.deleteAd(-1));
         assertEquals("deleteAdNullIdTest: list of all ads should be same as before null deletion", 1, adService.loadAllAds().size());
 
         // Ensure the data of the remaining ad hasn't changed
@@ -807,12 +474,6 @@ public class AdServiceImplTest {
         assertEquals("deleteAdNullIdTest: price of ad is not the same as originally", price, remainingAd.getPrice());
         assertEquals("deleteAdNullIdTest: description of ad is not the same as originally", description, remainingAd.getDescription());
         assertEquals("deleteAdNullIdTest: user of ad is not the same as originally", user, remainingAd.getUser());
-    }
-
-    // Ensure that loadStarredAds() returns the correct number of ads when there are no ads in the DB
-    @Test
-    public void loadStarredAdsZeroAdsTest() {
-        assertEquals("loadStarredAdsZeroAdsTest: should pass with zero starred ads to load", 0, adService.loadStarredAds().size());
     }
 
     // Ensure that deleteAllAds() correctly deletes all advertisements in the DB
@@ -833,169 +494,206 @@ public class AdServiceImplTest {
         assertEquals("deleteAllAdsZeroAdsTest: should pass if no ads are present to delete", 0, adService.loadAllAds().size());
     }
 
-    // Ensure that removeAllStarredAds() successfully unstars all starred ads in the DB
-    @Test
-    public void removeAllStarredAdsVariedNumberOfAdsTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < i; j++) {
-                adService.createAd(name, description, price, user_id);
-                int adId = adService.loadAllAds().get(adService.loadAllAds().size() - 1).getId();
-                adService.starAd(adId);
-            }
-        }
-        List<Ad> starredAds = adService.loadStarredAds();
-        for (Ad allAd : starredAds) {
-            adService.deleteAd(allAd.getId());
-        }
-
-        assertEquals("removeAllStarredAdsVariedNumberOfAdsTest: should pass if all starred ads were removed", 0, adService.loadStarredAds().size());
-    }
-
-    // Ensure that removeAllStarredAds() makes no changes when no starred ads are in the DB
-    @Test
-    public void removeAllStarredAdsNoAdsTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        List<Ad> starredAds = adService.loadStarredAds();
-        for (Ad allAd : starredAds) {
-            adService.deleteAd(allAd.getId());
-        }
-
-        assertEquals("removeAllStarredAdsNoAdsTest: should pass if there are no starred ads", 0, adService.loadStarredAds().size());
-    }
-
     // Ensure that loadAllAds() returns no ads when there are no ads in the DB
     @Test
     public void loadAllAdsZerosAdsTest() {
         assertEquals("loadAllAdsZerosAdsTest: should succeed when there are zeros ads", 0, adService.loadAllAds().size());
     }
 
-    // Ensure that loadAllAds() returns all ads in the DB
+    // Ensure that loadAllAds() returns a single ad in the DB
     @Test
-    public void loadAllAdsTest() {
+    public void loadAllAdsOneAdTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
-        adService.createAd(name, description, price, user_id);
-        int userId = adService.loadAllAds().get(0).getUser().getId();
+        assertTrue("loadAllAdsOneAdTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
         List<Ad> allAds = adService.loadAllAds();
+        assertEquals("loadAllAdsOneAdTest: should be 1 ad in the DB", 1, allAds.size());
+        Ad ad = allAds.get(0);
 
-        assertEquals("loadAllAdsTest: id of ad should be equal to the id it was set to", allAds.get(0).getUser().getId(), userId);
-        assertEquals("loadAllAdsTest: name of ad should be equal to the name it was set to", allAds.get(0).getName(), name);
-        assertEquals("loadAllAdsTest: description of ad should be equal to the description it was set to", allAds.get(0).getDescription(), description);
-        assertEquals("loadAllAdsTest: price of ad should be equal to the price it was set to", allAds.get(0).getPrice(), price);
-        assertEquals("loadAllAdsTest: user of ad should be equal to the user it was set to", allAds.get(0).getUser(), user);
+        assertEquals("loadAllAdsOneAdTest: name of ad should be equal to the name it was set to", ad.getName(), name);
+        assertEquals("loadAllAdsOneAdTest: description of ad should be equal to the description it was set to", ad.getDescription(), description);
+        assertEquals("loadAllAdsOneAdTest: price of ad should be equal to the price it was set to", ad.getPrice(), price);
+        assertEquals("loadAllAdsOneAdTest: user of ad should be equal to the user it was set to", ad.getUser(), user);
 
     }
 
-    // Ensures that loadAllAds() returns the correct number of ads when several ads are present
+    // Ensures that loadAllAds() returns all ads when several ads are present, created by the same user
     @Test
-    public void loadAllAdsMultipleAdsTest() {
+    public void loadAllAdsMultipleAdsSameUserTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
 
-        User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
-        int user2_id = user2.getId();
+        assertTrue("loadAllAdsMultipleAdsTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        assertTrue("loadAllAdsMultipleAdsTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user_id));
 
-        adService.createAd(name, description, price, user_id);
-        adService.createAd(name + "1", description, price, user2_id);
-
-        assertEquals("loadAllAdsMultipleAdsTest: size of allAds should be equal to the amount of ads that were added", 2, adService.loadAllAds().size());
-    }
-
-    // Ensure that loadAllAds() returns the correct number of ads when there are several ads in the DB
-    @Test
-    public void loadAllAdsMultipleAdsDifferentSizeTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-        int count = 0;
-        for (int i = 0; i < 10; i++){
-            adService.createAd(name, description, price+i, user_id);
-            count++;
+        List<Ad> allAds = adService.loadAllAds();
+        assertEquals("loadAllAdsMultipleAdsTest: size of allAds should be equal to the amount of ads that were added", 2, allAds.size());
+        for (Ad ad : allAds) {
+            assertTrue("loadAllAdsMultipleAdsTest: name of ad in list of all ads is different than either of the names of the created ads", ad.getName().equals(name) | ad.getName().equals(name + "1"));
+            if (ad.getName().equals(name)) {
+                assertEquals("loadAllAdsMultipleAdsTest: first ad doesn't contain correct description", description, ad.getDescription());
+                assertEquals("loadAllAdsMultipleAdsTest: first ad doesn't contain correct price", price, ad.getPrice());
+                assertEquals("loadAllAdsMultipleAdsTest: first ad doesn't contain correct user", user, ad.getUser());
+            } else if (ad.getName().equals(name + "1")) {
+                assertEquals("loadAllAdsMultipleAdsTest: second ad doesn't contain correct description", description + "1", ad.getDescription());
+                assertEquals("loadAllAdsMultipleAdsTest: second ad doesn't contain correct price", price + 1, ad.getPrice());
+                assertEquals("loadAllAdsMultipleAdsTest: second ad doesn't contain correct user", user, ad.getUser());
+            }
         }
-        count++;
+    }
+
+    // Ensures that loadAllAds() returns all ads when several ads are present, created by the same user
+    @Test
+    public void loadAllAdsMultipleAdsDifferentUserTest() {
+        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
+        int user_id = user.getId();
+
+        User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
+        int user2_id = user2.getId();
+
+        assertTrue("loadAllAdsMultipleAdsTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        assertTrue("loadAllAdsMultipleAdsTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user2_id));
+
         List<Ad> allAds = adService.loadAllAds();
-        assertFalse("loadAllAdsMultipleAdsDifferentSizeTest: size of allAds should not be equal to the amount of ads plus 1 that were added", count == allAds.size());
+        assertEquals("loadAllAdsMultipleAdsTest: size of allAds should be equal to the amount of ads that were added", 2, allAds.size());
+        for (Ad ad : allAds) {
+            assertTrue("loadAllAdsMultipleAdsTest: name of ad in list of all ads is different than either of the names of the created ads", ad.getName().equals(name) | ad.getName().equals(name + "1"));
+            if (ad.getName().equals(name)) {
+                assertEquals("loadAllAdsMultipleAdsTest: first ad doesn't contain correct description", description, ad.getDescription());
+                assertEquals("loadAllAdsMultipleAdsTest: first ad doesn't contain correct price", price, ad.getPrice());
+                assertEquals("loadAllAdsMultipleAdsTest: first ad doesn't contain correct user", user, ad.getUser());
+            } else if (ad.getName().equals(name + "1")) {
+                assertEquals("loadAllAdsMultipleAdsTest: second ad doesn't contain correct description", description + "1", ad.getDescription());
+                assertEquals("loadAllAdsMultipleAdsTest: second ad doesn't contain correct price", price + 1, ad.getPrice());
+                assertEquals("loadAllAdsMultipleAdsTest: second ad doesn't contain correct user", user2, ad.getUser());
+            }
+        }
     }
 
-    // Ensures that loadAllAds() returns the correct number of ads when ads have differing users
+
+    // Ensures that loadCreatedAds() returns all ads created by a user, when multiple are present
     @Test
-    public void loadAllAdsDifferentUserCreatedTest() {
+    public void loadCreatedAdsMultipleAdsSameUserTest() {
+        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
+        int user_id = user.getId();
+
+        assertTrue("loadCreatedAdsMultipleAdsSameUserTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        assertTrue("loadCreatedAdsMultipleAdsSameUserTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user_id));
+
+        List<Ad> allAds = adService.loadCreatedAds(user.getId());
+        assertEquals("loadCreatedAdsMultipleAdsSameUserTest: size of createdAds should be equal to the amount of ads that were added", 2, allAds.size());
+        for (Ad ad : allAds) {
+            assertTrue("loadCreatedAdsMultipleAdsSameUserTest: name of ad in list of all ads is different than either of the names of the created ads", ad.getName().equals(name) | ad.getName().equals(name + "1"));
+            if (ad.getName().equals(name)) {
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: first ad doesn't contain correct description", description, ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: first ad doesn't contain correct price", price, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: first ad doesn't contain correct user", user, ad.getUser());
+            } else if (ad.getName().equals(name + "1")) {
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct description", description + "1", ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct price", price + 1, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct user", user, ad.getUser());
+            }
+        }
+    }
+
+    // Ensures that loadCreatedAds() returns all ads created by a user, when multiple users have both created a single ad
+    @Test
+    public void loadCreatedAdsOneAdsDifferentUsersTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
 
         User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
         int user2_id = user2.getId();
 
-        User user3 = userService.findByUsernameIgnoreCase("Username3").get(0);
-        int user3_id = user3.getId();
 
-        adService.createAd(name, description, price, user_id);
-        adService.createAd(name + "1", description, price, user2_id);
-        adService.createAd(name + "2", description, price, user3_id);
+        assertTrue("loadCreatedAdsOneAdsDifferentUsersTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        assertTrue("loadCreatedAdsOneAdsDifferentUsersTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user2_id));
 
-        assertEquals("loadCreatedAdsDifferentUserCreatedTest: size of allAds should be 3", 3, adService.loadAllAds().size());
+        List<Ad> createdAds = adService.loadCreatedAds(user.getId());
+        assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: size of createdAds should be equal to 1", 1, createdAds.size());
+        Ad createdAd = createdAds.get(0);
+        assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: name of ad in list of all ads is different than either of the names of the created ads", name, createdAd.getName());
+        assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: loaded ad doesn't contain same description as when created", description, createdAd.getDescription());
+        assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: loaded ad doesn't contain same price as when created", price, createdAd.getPrice());
+        assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: loaded ad doesn't contain same user as when created", user, createdAd.getUser());
+
+        // Ensure both created ads are still present in the DB
+        List<Ad> allAds = adService.loadAllAds();
+        assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: size of allAds should be equal to 2", 2, allAds.size());
+        for (Ad ad : allAds) {
+            assertTrue("loadCreatedAdsOneAdsDifferentUsersTest: name of ad in list of all ads is different than either of the names of the created ads", ad.getName().equals(name) | ad.getName().equals(name + "1"));
+            if (ad.getName().equals(name)) {
+                assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: first ad doesn't contain correct description", description, ad.getDescription());
+                assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: first ad doesn't contain correct price", price, ad.getPrice());
+                assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: first ad doesn't contain correct user", user, ad.getUser());
+            } else if (ad.getName().equals(name + "1")) {
+                assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: second ad doesn't contain correct description", description + "1", ad.getDescription());
+                assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: second ad doesn't contain correct price", price + 1, ad.getPrice());
+                assertEquals("loadCreatedAdsOneAdsDifferentUsersTest: second ad doesn't contain correct user", user2, ad.getUser());
+            }
+        }
     }
 
-    // Ensure that loadCreatedAds() returns all ads created by the current user
+    // Ensures that loadCreatedAds() returns all ads created by a user, when multiple users have created multiple ads
     @Test
-    public void loadCreatedAdsTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-
-        adService.createAd(name, description, price, user_id);
-        int userId = adService.loadAllAds().get(0).getUser().getId();
-        List<Ad> createdAds = adService.loadCreatedAds(userId);
-
-        assertEquals("loadCreatedAdsTest: id of ad should be equal to the id it was set to", createdAds.get(0).getUser().getId(), userId);
-        assertEquals("loadCreatedAdsTest: name of ad should be equal to the name it was set to", createdAds.get(0).getName(), name);
-        assertEquals("loadCreatedAdsTest: description of ad should be equal to the description it was set to", createdAds.get(0).getDescription(), description);
-        assertEquals("loadCreatedAdsTest: price of ad should be equal to the price it was set to", createdAds.get(0).getPrice(), price);
-        assertEquals("loadCreatedAdsTest: user of ad should be equal to the user it was set to", createdAds.get(0).getUser(), user);
-
-    }
-
-    // Ensure that loadCreatedAds() returns all ads created by the current user when there are several ads in the DB
-    @Test
-    public void loadCreatedAdsMultipleAdsTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
-
-        User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
-        int user2_id = user2.getId();
-
-        adService.createAd(name, description, price, user_id);
-        adService.createAd(name + "1", description, price, user_id);
-
-        int userId = adService.loadAllAds().get(0).getUser().getId();
-        assertEquals("loadCreatedAdsMultipleAdsTest: size of createdAds should be equal to the amount of ads that were added", 2, adService.loadCreatedAds(userId).size());
-    }
-
-    // Ensure loadCreatedAds() returns the ads created by the current user when ads have different creators
-    @Test
-    public void loadCreatedAdsDifferentUserCreatedTest() {
+    public void loadCreatedAdsMultipleAdsDifferentUsersTest() {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
 
         User user2 = userService.findByUsernameIgnoreCase("Username2").get(0);
         int user2_id = user2.getId();
 
-        User user3 = userService.findByUsernameIgnoreCase("Username3").get(0);
-        int user3_id = user3.getId();
+        assertTrue("loadCreatedAdsMultipleAdsDifferentUsersTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        assertTrue("loadCreatedAdsMultipleAdsDifferentUsersTest: createAd() should return true with valid data", adService.createAd(name + "1", description + "1", price + 1, user_id));
+        assertTrue("loadCreatedAdsMultipleAdsDifferentUsersTest: createAd() should return true with valid data", adService.createAd(name + "2", description + "2", price + 2, user2_id));
+        assertTrue("loadCreatedAdsMultipleAdsDifferentUsersTest: createAd() should return true with valid data", adService.createAd(name + "3", description + "3", price + 3, user2_id));
 
-        adService.createAd(name + "1", description, price, user2_id);
-        adService.createAd(name + "3", description, price, user2_id);
-        adService.createAd(name + "2", description, price, user3_id);
+        List<Ad> createdAds = adService.loadCreatedAds(user.getId());
+        assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: size of createdAds should be equal to 2", 2, createdAds.size());
+        for (Ad ad : createdAds) {
+            assertTrue("loadCreatedAdsMultipleAdsDifferentUsersTest: name of ad in list of all ads is different than either of the names of the created ads", ad.getName().equals(name) | ad.getName().equals(name + "1"));
+            if (ad.getName().equals(name)) {
+                assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: first ad doesn't contain correct description", description, ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: first ad doesn't contain correct price", price, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: first ad doesn't contain correct user", user, ad.getUser());
+            } else if (ad.getName().equals(name + "1")) {
+                assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: second ad doesn't contain correct description", description + "1", ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: second ad doesn't contain correct price", price + 1, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: second ad doesn't contain correct user", user, ad.getUser());
+            }
+        }
+        // Ensure both created ads are still present in the DB
+        List<Ad> allAds = adService.loadAllAds();
+        assertEquals("loadCreatedAdsMultipleAdsDifferentUsersTest: size of allAds should be equal to 2", 4, allAds.size());
+        for (Ad ad : allAds) {
+            assertTrue("loadCreatedAdsMultipleAdsSameUserTest: name of ad in list of all ads is different than either of the names of the created ads", ad.getName().equals(name) | ad.getName().equals(name + "1") | ad.getName().equals(name + "2") | ad.getName().equals(name + "3"));
+            if (ad.getName().equals(name)) {
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: first ad doesn't contain correct description", description, ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: first ad doesn't contain correct price", price, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: first ad doesn't contain correct user", user, ad.getUser());
+            } else if (ad.getName().equals(name + "1")) {
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct description", description + "1", ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct price", price + 1, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct user", user, ad.getUser());
+            } else if (ad.getName().equals(name + "2")) {
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct description", description + "2", ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct price", price + 2, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct user", user2, ad.getUser());
+            } else if (ad.getName().equals(name + "3")) {
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct description", description + "3", ad.getDescription());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct price", price + 3, ad.getPrice());
+                assertEquals("loadCreatedAdsMultipleAdsSameUserTest: second ad doesn't contain correct user", user2, ad.getUser());
+            }
+        }
+    }
 
-        List<Ad> user2createdAds = adService.loadCreatedAds(user2.getId());
-        List<Ad> user3createdAds = adService.loadCreatedAds(user3.getId());
-
-        assertEquals("loadCreatedAdsDifferentUserCreatedTest: size of user2createdAds should be 10", 2, user2createdAds.size());
-        assertEquals("loadCreatedAdsDifferentUserCreatedTest: size of user3createdAds should be 5", 1, user3createdAds.size());
-        assertFalse("loadCreatedAdsDifferentUserCreatedTest: size of user2createdAds should not be 5", 5 ==  user2createdAds.size());
-        assertFalse("loadCreatedAdsDifferentUserCreatedTest: size of user3createdAds should not be 10", 10 ==  user3createdAds.size());
+    // Ensure that loadCreatedAds() is unsuccessful when passed an invalid user ID within an empty DB
+    @Test
+    public void loadCreatedAdsInvalidId() {
+        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
+        // Using any user ID except for this single ID will be an invalid ID number
+        int validId = user.getId();
+        assertEquals("loadCreatedAdsInvalidId: shouldn't return any ads when passed an invalid ID", 0, adService.loadCreatedAds(validId + 1).size());
     }
 
     // Ensure that getReferenceById() returns the correct ad when passed a valid ID
@@ -1004,11 +702,12 @@ public class AdServiceImplTest {
         User user = userService.findByUsernameIgnoreCase("Username1").get(0);
         int user_id = user.getId();
 
-        adService.createAd(name, description, price, user_id);
+        assertTrue("getReferenceByIdValidTest: createAd() should return true with valid data", adService.createAd(name, description, price, user_id));
+        List<Ad> allAds = adService.loadAllAds();
+        assertEquals("getReferenceByIdValidTest: should only contain 1 ad in the DB", 1, allAds.size());
         int adId = adService.loadAllAds().get(0).getId();
         Ad newAd = adService.getReferenceById(adId);
 
-        assertEquals("getReferenceByIdTest: id of ad should be equal to the id it was set to", newAd.getId(), adId);
         assertEquals("getReferenceByIdTest: name of ad should be equal to the name it was set to", newAd.getName(), name);
         assertEquals("getReferenceByIdTest: description of ad should be equal to the description it was set to", newAd.getDescription(), description);
         assertEquals("getReferenceByIdTest: price of ad should be equal to the price it was set to", newAd.getPrice(), price);
@@ -1018,17 +717,11 @@ public class AdServiceImplTest {
     // Ensure that getReferenceById returns fails when an invalid ID is passed
     @Test
     public void getReferenceByIdInvalidTest() {
-        User user = userService.findByUsernameIgnoreCase("Username1").get(0);
-        int user_id = user.getId();
+        Ad invalidAd = adService.getReferenceById(1);
 
-        adService.createAd(name, description, price, user_id);
-        int adId = adService.loadAllAds().get(0).getId();
-        Ad newAd = adService.getReferenceById(adId);
-
-        assertFalse("getReferenceByIdTest: id plus 1 of ad should not be equal to the id it was set to", newAd.getId() == adId+1);
-        assertFalse("getReferenceByIdTest: a different name of ad should not be equal to the name it was set to", newAd.getName().equals("NotTheName"));
-        assertFalse("getReferenceByIdTest: a different description of ad should not be equal to the description it was set to", newAd.getDescription().equals("Not the description"));
-        assertFalse("getReferenceByIdTest: price plus 1 should not be equal to the price it was set to", newAd.getPrice().equals(price+1));
-        assertTrue("getReferenceByIdTest: user of ad should be equal to the user it was set to", newAd.getUser().equals(user));
+        assertEquals("getReferenceByIdTest: name should be null when passed an invalid ad ID", invalidAd.getName(), null);
+        assertEquals("getReferenceByIdTest: name should be null when passed an invalid ad ID", invalidAd.getDescription(), null);
+        assertEquals("getReferenceByIdTest: price should be null when passed an invalid ad ID", invalidAd.getPrice(), null);
+        assertEquals("getReferenceByIdTest: user of ad should null", invalidAd.getUser(),null);
     }
 }

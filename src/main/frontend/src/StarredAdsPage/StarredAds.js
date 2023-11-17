@@ -18,9 +18,9 @@ export default function StarredAds() {
     }
 
     const removeAd = async (adId) => {
-        const response = await axios.delete("http://localhost:8080/starred_ads/" + adId);
+        const response = await axios.put("http://localhost:8080/starred_ads/" + adId);
 
-        if (response.data) {
+        if (response.data != null) {
             loadAds();
         }
     }

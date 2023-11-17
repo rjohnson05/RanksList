@@ -9,6 +9,7 @@ import NavBar from "./NavBar";
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
+    const [starredStatus, setStarredStatus] = useState({});
 
     useEffect(() => {
         loadAds();
@@ -17,17 +18,17 @@ export default function Home() {
     const loadAds = async () => {
         const ads_data = await axios.get("http://localhost:8080/ads");
         setAds(ads_data.data);
+        // Loading the star data for these ads
+        for (let i = 0; i < ads_data.data.length; i++) {
+            const adId = ads_data.data[i].id;
+            const starStatus = await axios.get("http://localhost:8080/ad_starred/" + adId);
+            setStarredStatus(prevState => ({...prevState, [adId]: starStatus.data}))
+        }
     }
 
-    const starAd = async (adId, selected) => {
-        let desiredAd = allAdsData.find((element) => {return element.id === adId});
-        let response = null;
-        if (!desiredAd.starred) {
-            response = await axios.put("http://localhost:8080/starred_ads/" + adId);
-        } else {
-            response = await axios.delete("http://localhost:8080/starred_ads/" + adId);
-        }
-        if (response.data) {
+    const changeStarStatus = async (adId) => {
+        const response = await axios.put("http://localhost:8080/starred_ads/" + adId);
+        if (response.data != null) {
             loadAds();
         }
     }
@@ -38,15 +39,15 @@ export default function Home() {
             <NavBar />
             <div className="col py-3">
                 <Row xs={3}>
-                    {allAdsData.map((ad, index) => (
-                            <div className="col border border-5" key={ad.id}>
-                        <Link to={"/individual_goals/" + ad.id}>
-                            <p>Name: {ad.name}</p>
-                            <p>Price: {ad.price}</p>
-                            <p>Description: {ad.description}</p>
-                        </Link>
-                            <IconButton value={ad.id} onClick={() => {starAd(ad.id)}}>
-                                {ad.starred ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
+                    {allAdsData.map((ad) => (
+                        <div className="col border border-5" key={ad.id}>
+                            <Link to={"/individual_goals/" + ad.id}>
+                                <p>Name: {ad.name}</p>
+                                <p>Price: {ad.price}</p>
+                                <p>Description: {ad.description}</p>
+                            </Link>
+                            <IconButton value={ad.id} onClick={() => {changeStarStatus(ad.id)}}>
+                                {starredStatus[ad.id] ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
                             </IconButton>
                         </div>
                     ))}

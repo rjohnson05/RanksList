@@ -14,6 +14,8 @@ public interface UserService {
     /**
      * Given a loginForm, determine if the information provided is valid, and the user exists in the system.
      *
+     * @param username String containing the username supplied for verification
+     * @param password String containing the password supplied for verification
      * @return true if data exists and matches what is on record; false otherwise
      */
     boolean validateUser(String username, String password);
@@ -23,7 +25,6 @@ public interface UserService {
      *
      * @param username String representing the desired username for the new User object
      * @param password String representing the desired password for the new User object
-     *
      * @return true if a new User is successfully created and saved to the database; false otherwise
      */
     boolean createUser(String username, String password);
@@ -32,7 +33,6 @@ public interface UserService {
      * Returns a list of User object with the specified username.
      *
      * @param username String representing the desired username of the user
-     *
      * @return list of Users with the specified username
      */
     List<User> findByUsernameIgnoreCase(String username);

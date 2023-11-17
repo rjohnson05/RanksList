@@ -25,7 +25,7 @@ public class GoalServiceImpl implements GoalService {
      * Constructor for the Goal Service, creating an Ad service.
      *
      * @param goalRepo    Goal repository that contains the database
-     * @param userService
+     * @param userService User service that contains business logic methods for users
      */
     public GoalServiceImpl(GoalRepository goalRepo, UserService userService) {
         this.goalRepo = goalRepo;
@@ -44,7 +44,7 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public boolean newGoal(String description, Ad ad, int user_id) {
         // checking to see if the ad should be created
-        if (description == null){
+        if (description == null) {
             log.debug("Description parameter was null when creating a new goal");
             return false;
         }
@@ -77,12 +77,12 @@ public class GoalServiceImpl implements GoalService {
     /**
      * Finds goals that are related to the specific ad.
      *
-     * @param adId Integer representing the ID of the advertisement the goals is being saved to
-     *
+     * @param adId   int representing the ID of the advertisement the goals is being saved to
+     * @param userId int representing the ID of the current user creating the goal
      * @return List of goals belonging to the advertisement with the designated ID
      */
-    public List<Goal> getIndividualGoals(Integer adId, Integer userId) {
-        log.debug("Accessing goal for ad#{}", adId);
+    public List<Goal> getIndividualGoals(int adId, int userId) {
+        log.debug("Accessing goal for ad #{}", adId);
         List<Goal> desiredGoals = goalRepo.findByAdId(adId);
         // Find the goals belonging to both the specified ad and user
         desiredGoals.retainAll(goalRepo.findByUserId(userId));
@@ -93,11 +93,9 @@ public class GoalServiceImpl implements GoalService {
      * Deletes the specified goal from the database.
      *
      * @param id Integer representing the ID of the goal to be deleted
-     *
      * @return Goal that was deleted
      */
-    @Override
-    public boolean deleteGoal(Integer id){
+    public boolean deleteGoal(int id) {
         goalRepo.deleteById(id);
         log.info("Deleted goal #{}", id);
         return true;
@@ -108,14 +106,12 @@ public class GoalServiceImpl implements GoalService {
      *
      * @return true if all goals are successfully deleted from the database; false otherwise
      */
-    @Override
-    public boolean deleteAllGoals(){
+    public boolean deleteAllGoals() {
         // get all goals and delete them singularly
-        for(Goal g : getAllGoals()){
+        for (Goal g : getAllGoals()) {
             deleteGoal(g.getId());
         }
         log.info("Deleted all goals.");
         return true;
     }
-
 }
