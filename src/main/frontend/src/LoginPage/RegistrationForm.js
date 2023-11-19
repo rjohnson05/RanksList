@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import axios from "axios";
@@ -37,10 +37,11 @@ export default function RegistrationForm() {
                         })} />
             </label><br />
             {errors.password?.type === "required" && <p className="errorMsg">Password is required</p>}
-            {errors.password?.type === "checkLength" && <p className="errorMsg">Password must be between 8-16 characters</p>}
-            {errors.password?.type === "checkCapitalPresence" && <p className="errorMsg">Password must contain at least one capital letter</p>}
-            {errors.password?.type === "checkNumberPresence" && <p className="errorMsg">Password must contain at least one number</p>}
-            {errors.password?.type === "checkSpecialPresence" && <p className="errorMsg">Password must contain at least one special character</p>}
+            {errors.password?.type === "checkLength" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.password?.type === "checkCapitalPresence" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.password?.type === "checkNumberPresence" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.password?.type === "checkSpecialPresence" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+
             <label>Password
                 <input type="password" {...register("password",
                     {required: true,

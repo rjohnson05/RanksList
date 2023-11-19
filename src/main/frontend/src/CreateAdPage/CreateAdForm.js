@@ -39,12 +39,15 @@ export default function CreateAdForm() {
                            {...register("name",
                                {required: true})} />
                 </label>
+                {errors.price?.type === "required" && <p className="errorMsg">A price is required</p>}
                 {errors.price?.type === "checkIsNumber" && <p className="errorMsg">Price must be a number</p>}
+                {errors.price?.type === "checkNoCommas" && <p className="errorMsg">Price cannot contain commas</p>}
                 <label>Price:
                     <input type="text" name="price"
                            {...register("price",
                                {required: true, value: 0,
-                                   validate: {checkIsNumber: (value) => !/[^0-9]/.test(value)}})} />
+                                   validate: {checkIsNumber: (value) => !/[^0-9,.]/.test(value),
+                                   checkNoCommas: (value) => !value.includes(',')}})} />
                 </label>
                 <label>Description:
                     <input type="text" name="description"

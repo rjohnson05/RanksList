@@ -42,7 +42,7 @@ export default function RegisterForm() {
                         }})} />
             </label><br />
             {errors.password?.type === "required" && <p className="errorMsg">Password is required</p>}
-            {errors.password?.type === "checkLength" && <p className="errorMsg">Password must be between 6-32 characters</p>}
+            {errors.password?.type === "checkLength" && <p className="errorMsg">Password must be between 8-16 characters</p>}
             <label>Password
                 <input type="password" {...register("password",
                     {required: true,
