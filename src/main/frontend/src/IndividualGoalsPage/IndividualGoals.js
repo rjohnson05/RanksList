@@ -8,7 +8,8 @@ import NavBar from "../MainPage/NavBar";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import CreateIcon from "@mui/icons-material/Create";
 import CreateGoalForm from "../CreateGoalPage/CreateGoalForm";
-
+import {Button} from "rsuite";
+import './IndividualGoals.css'
 
 export default function Home() {
     const [allGoalsData, setGoals] = useState([]);
@@ -65,11 +66,10 @@ export default function Home() {
                         </div>
                     ))}
                 </Row>
-                <IconButton value={ad_id} onClick={() => createGoal(ad_id)}>
-                    <Link to={'create_goal/' + ad_id}>
-                        <CreateIcon />
-                    </Link>
-                </IconButton>
+
+                <Link to={'create_goal/' + ad_id}>
+                    <Button className="add-goal-button" value={ad_id} onClick={() => createGoal(ad_id)}>Add New Goal</Button>
+                </Link>
             </div>
         </div>
     );

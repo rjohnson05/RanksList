@@ -59,7 +59,7 @@ export default function CreateAdForm() {
                 <h1>Edit Advertisement</h1>
 
                 {errors.name?.type === "required" && <p className="errorMsg">A name is required</p>}
-                {!adEdited && getValues("name") === originalData.name && getValues("price") === originalData.price && getValues("description") === originalData.description &&
+                {!adEdited && getValues("name") === originalData.name && parseFloat(getValues("price")) === originalData.price && getValues("description") === originalData.description &&
                     <p className="errorMsg">Changes must be made for the ad to be edited</p>}
                 {!adEdited && getValues("name") !== originalData.name &&
                     <p className="errorMsg">You already have an advertisement with this name</p>}
@@ -67,15 +67,20 @@ export default function CreateAdForm() {
                     <input type="text" name="name" {...register("name", {
                         required: true
                     })} />
-                </label>
+                </label><br/>
+                {errors.price?.type === "required" && <p className="errorMsg">A price is required</p>}
+                {errors.price?.type === "checkIsNumber" && <p className="errorMsg">Price must be a number</p>}
+                {errors.price?.type === "checkNoCommas" && <p className="errorMsg">Price cannot contain commas</p>}
                 <label>Price:
                     <input type="text" name="price" {...register("price", {
-                        required: true
+                        required: true,
+                        validate: {checkIsNumber: (value) => !/[^0-9,.]/.test(value),
+                            checkNoCommas: (value) => !value.toString().includes(',')}
                     })} />
-                </label>
+                </label><br/>
                 <label>Description:
-                    <input type="text" name="description" {...register("description")} />
-                </label>
+                    <textarea rows="5" cols="40" name="description" {...register("description")} />
+                </label><br/>
                 <input type="submit" value="Submit" />
             </form>
         </div>
