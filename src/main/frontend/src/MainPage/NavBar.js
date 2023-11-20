@@ -28,6 +28,7 @@ export default function NavBar() {
                                 Profile
                             </a>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><Link to={"/edit_password"} className="dropdown-item">Change Password</Link></li>
                                 <li><Link to={"/login"} className="dropdown-item">Sign Out</Link></li>
                             </ul>
                         </li>

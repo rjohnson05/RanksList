@@ -85,6 +85,20 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Updates the password for the user
+     *
+     * @param newPassword the unhashed password to set
+     * @param username the username of the user to set
+     */
+    public boolean updatePassword(String username, String newPassword){
+        User user = userRepo.findByUsernameIgnoreCase(username).get(0);
+        log.info("Setting new password for user {}", username);
+        user.setPassword(newPassword);
+        userRepo.save(user);
+        return true;
+    }
+
+    /**
      * Returns a list of User object with the specified username.
      *
      * @param username String representing the desired username of the user
