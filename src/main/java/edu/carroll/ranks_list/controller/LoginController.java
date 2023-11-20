@@ -76,7 +76,7 @@ public class LoginController extends HttpServlet {
             return false;
         }
         userService.updatePassword(loginForm.getUsername(), loginForm.getNewPassword());
-        log.info("Updated password for user:{}, {}", loginForm.getUsername() , loginForm.getNewPassword());
+        log.info("Updated password for user:{}", loginForm.getUsername());
         return true;
     }
 }

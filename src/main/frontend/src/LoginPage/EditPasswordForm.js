@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useLocation, useNavigate} from "react-router-dom"
 import { useForm } from "react-hook-form"
 import axios from "axios";
+import NavBar from "../MainPage/NavBar";
 
 export default function EditPasswordForm() {
     const navigate = useNavigate();
@@ -22,11 +23,13 @@ export default function EditPasswordForm() {
 
         // If password is edited successfully, navigates back to My Created Ads page
         if (response.data) {
-            navigate('/my_ads');
+            navigate('/home');
         }
     }
 
     return (
+        <div>
+        <NavBar />
         <form onSubmit={handleSubmit(onSubmit)}>
             <h1>Edit Password</h1>
             {errors.username?.type === "required" && <p className="errorMsg">Username is required</p>}
@@ -71,6 +74,7 @@ export default function EditPasswordForm() {
             {errors.newPassword?.type === "checkSpecialPresence" && <p className="errorMsg">New password must contain at least one special character</p>}
             <input type="submit" name="submit"/>
         </form>
+        </div>
     );
 
 }
