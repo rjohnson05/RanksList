@@ -50,6 +50,6 @@ Now that the database has been set up with MySQL, the application can be started
    *Windows: ./gradlew bootRun  
    MacOS: ./grade bootRun*
 
-4. Navigate to http://localhost:8080 in your Internet browser to use the application
+4. **Navigate to http://localhost:8080 in your Internet browser to use the application**
 
 ## Usage
