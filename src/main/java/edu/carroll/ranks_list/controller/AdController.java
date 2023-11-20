@@ -68,7 +68,6 @@ public class AdController {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-
         return starService.loadStarredAds(currentUserId);
     }
 
@@ -83,7 +82,6 @@ public class AdController {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-
         return adService.loadCreatedAds(currentUserId);
     }
 
@@ -99,7 +97,6 @@ public class AdController {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-
         return starService.isAdStarred(adId, currentUserId);
     }
 
@@ -115,9 +112,7 @@ public class AdController {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-        User currentUser = userService.getReferenceById(currentUserId);
-
-        return adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), currentUser);
+        return adService.createAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), currentUserId);
     }
 
     /**
@@ -133,9 +128,7 @@ public class AdController {
         // Get the ID number of the current user from the session
         HttpSession session = request.getSession();
         int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
-        User currentUser = userService.getReferenceById(currentUserId);
-
-        return adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id, currentUser);
+        return adService.editAd(adForm.getName(), adForm.getDescription(), adForm.getPrice(), id, currentUserId);
     }
 
     /**

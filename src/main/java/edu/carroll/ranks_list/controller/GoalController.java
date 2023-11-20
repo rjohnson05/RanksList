@@ -3,7 +3,6 @@ package edu.carroll.ranks_list.controller;
 import edu.carroll.ranks_list.form.GoalForm;
 import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.Goal;
-import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.service.AdService;
 import edu.carroll.ranks_list.service.GoalService;
 import edu.carroll.ranks_list.service.UserService;
@@ -51,9 +50,8 @@ public class GoalController {
         HttpSession session = request.getSession();
         int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
 
-        User attachedUser = userService.getReferenceById(currentUserId);
         Ad attatchedAd = adService.getReferenceById(goalForm.getAdId());
-        return goalService.newGoal(goalForm.getDescription(), attatchedAd, attachedUser);
+        return goalService.newGoal(goalForm.getDescription(), attatchedAd, currentUserId);
     }
 
     /**

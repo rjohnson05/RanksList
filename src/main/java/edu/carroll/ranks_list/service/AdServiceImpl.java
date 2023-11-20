@@ -22,16 +22,19 @@ public class AdServiceImpl implements AdService {
 
     private static final Logger log = LoggerFactory.getLogger(AdServiceImpl.class);
     private final AdRepository adRepo;
+    private final UserService userService;
     private final UserRepository userRepo;
 
     /**
      * Constructor for the Ad Service, creating the service with an Ad Repo.
      *
-     * @param adRepo   Repository for advertisements
-     * @param userRepo Repository for users
+     * @param adRepo      Repository for advertisements
+     * @param userService Service for users
+     * @param userRepo    Repository for users
      */
-    public AdServiceImpl(AdRepository adRepo, UserRepository userRepo) {
+    public AdServiceImpl(AdRepository adRepo, UserService userService, UserRepository userRepo) {
         this.adRepo = adRepo;
+        this.userService = userService;
         this.userRepo = userRepo;
     }
 
@@ -41,22 +44,23 @@ public class AdServiceImpl implements AdService {
      * @param name        name of new ad
      * @param description description of new ad
      * @param price       price of new ad
-     * @param user        User object that created the ad
-     * @return true if ad successfully added to the database; false otherwise
+     * @param user_id     user_id object that created the ad
+     * @return True if ad successfully added to the database; False otherwise
      */
-    public boolean createAd(String name, String description, float price, User user) {
+    public boolean createAd(String name, String description, Float price, int user_id) {
         // Adds an advertisement to the DB only if the name field has been filled, and there are no null values
-        if (name == null || name.isEmpty() || user == null) {
+        if (name == null || name.isEmpty() || price == null || price < 0) {
             log.debug("Advertisement not created due to invalid data");
             return false;
         }
         // Make sure the user hasn't already tried creating this ad
-        for (Ad ad : loadCreatedAds(user.getId())) {
+        for (Ad ad : loadCreatedAds(user_id)) {
             if (ad.getName().equals(name)) {
                 log.debug("User tried creating advertisement with duplicate name");
                 return false;
             }
         }
+        User user = userService.getReferenceById(user_id);
         Ad newAd = new Ad(name, price, description, user);
         adRepo.save(newAd);
         log.info("Ad #" + newAd.getId() + " created");
@@ -71,13 +75,17 @@ public class AdServiceImpl implements AdService {
      * @param description String representing the desired description of the advertisement
      * @param price       Float representing the desired price for the advertisement
      * @param id          Integer representing the ID of the advertisement to be changed
-     * @param user        User object that created the ad
+     * @param user_id        User object that created the ad
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
-    public boolean editAd(String name, String description, float price, int id, User user) {
+    public boolean editAd(String name, String description, Float price, Integer id, int user_id) {
         // Edits an advertisement to the DB only if the name field has been filled, and there are no null values
         if (name == null || name.isEmpty()) {
             log.debug("Attempt to edit ad unsuccessful due to invalid credentials");
+            return false;
+        }
+        if (price == null || price < 0) {
+            log.debug("Attempt to edit ad unsuccessful due to invalid price");
             return false;
         }
         // Makes sure an advertisement with the designated id exits before attempting to edit it
@@ -85,6 +93,7 @@ public class AdServiceImpl implements AdService {
             log.debug("Unsuccessful attempt to edit ad due to invalid ID");
             return false;
         }
+        User user = userService.getReferenceById(user_id);
         // Make sure the ad data was changed somehow
         Ad selectedAd = adRepo.getReferenceById(id);
         if (Objects.equals(selectedAd.getName(), name) && Objects.equals(selectedAd.getPrice(), price) && Objects.equals(selectedAd.getDescription(), description)) {
@@ -126,7 +135,7 @@ public class AdServiceImpl implements AdService {
             return false;
         }
         adRepo.deleteById(id);
-        log.info("Advertisement #{id} deleted");
+        log.info("Advertisement #{} deleted", id);
         return true;
     }
 

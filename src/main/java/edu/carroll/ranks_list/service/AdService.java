@@ -1,7 +1,6 @@
 package edu.carroll.ranks_list.service;
 
 import edu.carroll.ranks_list.model.Ad;
-import edu.carroll.ranks_list.model.User;
 
 import java.util.List;
 
@@ -18,10 +17,10 @@ public interface AdService {
      * @param name        String containing the name of new ad
      * @param description String containing the description of new ad
      * @param price       float containing the price of new ad
-     * @param user        User object creating the advertisement
+     * @param user_id     user_id object creating the advertisement
      * @return true if ad successfully added to the database; false otherwise
      */
-    boolean createAd(String name, String description, float price, User user);
+    boolean createAd(String name, String description, Float price, int user_id);
 
     /**
      * Changes the data for the specified advertisement
@@ -30,10 +29,11 @@ public interface AdService {
      * @param description String representing the desired description of the advertisement
      * @param price       float representing the desired price for the advertisement
      * @param id          int representing the ID of the advertisement to be changed
-     * @param user        User object creating the advertisement
+     * @param user_id     user_id object creating the advertisement
      * @return true if the designated advertisement is edited successfully; false otherwise
      */
-    boolean editAd(String name, String description, float price, int id, User user);
+    boolean editAd(String name, String description, Float price, Integer id, int user_id);
+
 
     /**
      * Removes a designated advertisement from the database.
