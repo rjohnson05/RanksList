@@ -53,5 +53,4 @@ public interface GoalService {
      * @return true if all goals are successfully deleted from the database; false otherwise
      */
     boolean deleteAllGoals();
-
 }
