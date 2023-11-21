@@ -30,6 +30,14 @@ public interface UserService {
     boolean createUser(String username, String password);
 
     /**
+     * Updates the password for the user
+     *
+     * @param newPassword the unhashed password to set
+     * @param username the username of the user to set
+     */
+    boolean updatePassword(String username, String newPassword);
+
+    /**
      * Returns a list of User object with the specified username.
      *
      * @param username String representing the desired username of the user

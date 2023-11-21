@@ -18,6 +18,9 @@ public class LoginForm {
     @Size(min = 8, max = 16)
     private String password;
 
+    @Size(min = 8, max = 16)
+    private String newPassword;
+
     /**
      * Returns the username supplied by the user.
      *
@@ -53,4 +56,6 @@ public class LoginForm {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getNewPassword() { return newPassword;}
 }

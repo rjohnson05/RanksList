@@ -127,7 +127,10 @@ public class User {
      * @param password String object containing the password for the user
      */
     public void setPassword(@NonNull String password) {
-        this.password = password;
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] salt = new byte[20];
+        secureRandom.nextBytes(salt);
+        setHashedPassword(password, salt);
     }
 
     /**

@@ -11,7 +11,7 @@ import CreateGoalForm from "./CreateGoalPage/CreateGoalForm";
 import StarredAds from "./StarredAdsPage/StarredAds";
 import MyCreatedAds from "./MyCreatedAdsPage/MyCreatedAds";
 import EditAd from "./MyCreatedAdsPage/EditAdForm";
-
+import EditPasswordForm from "./LoginPage/EditPasswordForm";
 
 export default function App() {
     return (
@@ -29,6 +29,7 @@ export default function App() {
                     <Route path={'my_ads'} element={<MyCreatedAds />} />
                     <Route path={'individual_goals/*'} element={<IndividualGoals />} />
                     <Route path={'individual_goals/create_goal/*'} element={<CreateGoalForm />} />
+                    <Route path={'edit_password'} element={<EditPasswordForm/>} />
                 </Routes>
             </HashRouter>
         </div>
