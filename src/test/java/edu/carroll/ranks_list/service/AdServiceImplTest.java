@@ -19,7 +19,6 @@ public class AdServiceImplTest {
     private final String name = "testname";
     private final Float price = 5.0F;
     private final String description = "testdescription";
-    private User user;
 
     @Autowired
     private AdService adService;
@@ -140,7 +139,6 @@ public class AdServiceImplTest {
         assertEquals("createAdNoDescriptionTest: user should be stored correctly without providing a description", user_id, createdAd.getUser().getId());
     }
 
-    ///XXXXXXXXXXXXXXX question on this
     // Tests to ensure that createAd() will fail if the provided user is not in the DB
     @Test
     public void createAdInvalidUserTest() {
