@@ -31,7 +31,7 @@ export default function EditPasswordForm() {
         <div>
         <NavBar />
         <form onSubmit={handleSubmit(onSubmit)}>
-            <h1>Edit Password</h1>
+            <h1>Change Password</h1>
             {errors.username?.type === "required" && <p className="errorMsg">Username is required</p>}
             {errors.username?.type === "checkLength" && <p className="errorMsg">Username must be between 6-32 characters</p>}
             <label>Username
@@ -43,10 +43,10 @@ export default function EditPasswordForm() {
                     })} />
             </label><br />
             {errors.password?.type === "required" && <p className="errorMsg">Password is required</p>}
-            {errors.password?.type === "checkLength" && <p className="errorMsg">Password must be between 8-16 characters</p>}
-            {errors.password?.type === "checkCapitalPresence" && <p className="errorMsg">Password must contain at least one capital letter</p>}
-            {errors.password?.type === "checkNumberPresence" && <p className="errorMsg">Password must contain at least one number</p>}
-            {errors.password?.type === "checkSpecialPresence" && <p className="errorMsg">Password must contain at least one special character</p>}
+            {errors.password?.type === "checkLength" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.password?.type === "checkCapitalPresence" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.password?.type === "checkNumberPresence" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.password?.type === "checkSpecialPresence" && <p className="errorMsg">Password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
             <label>Old Password
                 <input type="password" {...register("password",
                     {required: true,
@@ -68,10 +68,10 @@ export default function EditPasswordForm() {
                         }})} />
             </label><br />
             {errors.newPassword?.type === "required" && <p className="errorMsg">New password is required</p>}
-            {errors.newPassword?.type === "checkLength" && <p className="errorMsg">New password must be between 8-16 characters</p>}
-            {errors.newPassword?.type === "checkCapitalPresence" && <p className="errorMsg">New password must contain at least one capital letter</p>}
-            {errors.newPassword?.type === "checkNumberPresence" && <p className="errorMsg">New password must contain at least one number</p>}
-            {errors.newPassword?.type === "checkSpecialPresence" && <p className="errorMsg">New password must contain at least one special character</p>}
+            {errors.newPassword?.type === "checkLength" && <p className="errorMsg">New password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.newPassword?.type === "checkCapitalPresence" && <p className="errorMsg">New password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.newPassword?.type === "checkNumberPresence" && <p className="errorMsg">New password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
+            {errors.newPassword?.type === "checkSpecialPresence" && <p className="errorMsg">New password must be between 8-16 characters, and must contain at least one capital letter, a number, and a special character</p>}
             <input type="submit" name="submit"/>
         </form>
         </div>
