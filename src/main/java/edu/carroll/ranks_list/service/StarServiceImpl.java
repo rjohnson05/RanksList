@@ -121,7 +121,7 @@ public class StarServiceImpl implements StarService {
         // Checks the starred status if a user with the designated id exists
         if (!userRepo.existsById(userId)) {
             log.debug("Unsuccessful attempt to unstar ad due to invalid ID");
-            return null;
+            return new ArrayList<>();
         }
         List<Star> userStars = starRepo.getReferenceByUser(userRepo.getReferenceById(userId));
         log.debug("userStars: " + userStars);
