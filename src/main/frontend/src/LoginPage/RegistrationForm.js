@@ -9,7 +9,7 @@ export default function RegistrationForm() {
     const {register,
         handleSubmit,
         formState: { errors }
-    } = useForm({mode: "onBlur", reValidateMode: "onBlur"});
+    } = useForm({mode: "onSumbit", reValidateMode: "onBlur"});
 
     const onSubmit = async (formData) => {
         // Push the form data to the database, returning true if successful and false otherwise

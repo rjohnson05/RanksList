@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Poppins&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box
+}
+
+body {
+    height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    background: #eee linear-gradient(to top, #fff 10%, rgb(224, 237, 197) 90%) no-repeat;
+    overflow: hidden;
+}
+
+img {
+    margin: -20% auto 10px auto;
+}
+
+.wrapper {
+    max-width: 500px;
+    border-radius: 10px;
+    margin: 100px auto;
+    padding: 30px 40px;
+    box-shadow: 20px 20px 80px rgb(206, 206, 206)
+}
+
+.h2 {
+    font-family: 'Kaushan Script', cursive;
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #400485;
+    font-style: italic
+}
+
+.h3 {
+    font-family: 'Poppins', sans-serif;
+}
+
+.credentials-error {
+    color: red;
+    margin: 0;
+    padding: 0;
+}
+
+.input-field {
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #400485;
+    color: #400485
+}
+
+.input-field:hover {
+    color: #7b4ca0;
+    border: 1px solid #7b4ca0
+}
+
+input {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: 100%;
+    padding: 0 2px;
+    font-family: 'Poppins', sans-serif
+}
+
+.fa-eye-slash.btn {
+    border: none;
+    outline: none;
+    box-shadow: none
+}
+
+a {
+    text-decoration: none;
+    color: #400485;
+    font-weight: 700
+}
+
+a:hover {
+    text-decoration: none;
+    color: #7b4ca0
+}
+
+.option {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer
+}
+
+.option label.text-muted {
+    display: block;
+    cursor: pointer
+}
+
+.option input {
+    display: none
+}
+
+.btn.btn-block {
+    border-radius: 20px;
+    background-color: #400485;
+    color: #fff
+}
+
+.btn.btn-block:hover {
+    background-color: #55268be0
+}
+
+@media(max-width: 575px) {
+    .wrapper {
+        margin: 10px
+    }
+}
+
+@media(max-width:424px) {
+    .wrapper {
+        padding: 30px 10px;
+        margin: 5px
+    }
+
+    .option {
+        position: relative;
+        padding-left: 22px
+    }
+
+    .option label.text-muted {
+        font-size: 0.95rem
+    }
+
+    .checkmark {
+        position: absolute;
+        top: 2px
+    }
+
+    .option .checkmark:after {
+        top: 50%
+    }
+
+    #forgot {
+        font-size: 0.95rem
+    }
+}

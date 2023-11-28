@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import Home from './MainPage/Home';
-import RegistrationForm from './LoginPage/RegistrationForm'
-import LoginForm from './LoginPage/LoginForm';
-import Goals from './MainPage/Goals'
+import RegistrationForm from './LoginPage/RegistrationForm';
+import LoginPage from './LoginPage/LoginPage';
+import Goals from './MainPage/Goals';
 import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
 import CreateAdForm from "./CreateAdPage/CreateAdForm";
 import IndividualGoals from "./IndividualGoalsPage/IndividualGoals";
@@ -20,7 +20,7 @@ export default function App() {
                 <Routes>
                     <Route path='/' element={<Navigate to='login' />} />
                     <Route path='home' element={<Home />} />
-                    <Route path='login' element={<LoginForm />} />
+                    <Route path='login' element={<LoginPage />} />
                     <Route path='register' element={<RegistrationForm />} />
                     <Route path='create_ad' element={<CreateAdForm />} />
                     <Route path='goals' element={<Goals />} />
