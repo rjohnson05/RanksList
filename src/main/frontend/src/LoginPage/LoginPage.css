@@ -1,3 +1,5 @@
+/*Styling based off of the following source: https://gosnippets.com/snippets/bootstrap-5-fancy-user-login-form-snippets*/
+
 @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Poppins&display=swap');
 
 * {
@@ -9,7 +11,7 @@
 body {
     height: 100vh;
     font-family: 'Poppins', sans-serif;
-    background: #eee linear-gradient(to top, #fff 10%, rgb(224, 237, 197) 90%) no-repeat;
+    background-color: #eaf3ff !important;
     overflow: hidden;
 }
 

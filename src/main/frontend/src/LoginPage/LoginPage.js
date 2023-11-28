@@ -32,12 +32,9 @@ export default function LoginPage() {
 
         // Advances to the Home screen if the input credentials are valid
         if (response.data) {
+            console.log("Moving to home page");
             navigate('/home');
         }
-    }
-
-    const handleRegister = (e) => {
-        navigate('/register');
     }
 
     return (
