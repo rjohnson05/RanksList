@@ -1,11 +1,6 @@
 # Rank's List
 
 ## Overview
-Rank's List is a web application that helps users buy
-items that are advertised on the app. It allows users to 
-set specific goals that will help them buy whatever is being
-advertised. This will help the users with their financial struggles
-as well as hold them accountable for their purchases. 
 
 
 ## Installation

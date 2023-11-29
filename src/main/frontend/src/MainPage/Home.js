@@ -43,7 +43,7 @@ export default function Home() {
                         <div className="col border border-5" key={ad.id}>
                             <Link to={"/individual_goals/" + ad.id}>
                                 <p>Name: {ad.name}</p>
-                                <p>Price:${ad.price}</p>
+                                <p>Price: {ad.price}</p>
                                 <p>Description: {ad.description}</p>
                             </Link>
                             <IconButton value={ad.id} onClick={() => {changeStarStatus(ad.id)}}>

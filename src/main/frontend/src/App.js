@@ -23,6 +23,7 @@ export default function App() {
                     <Route path='login' element={<LoginPage />} />
                     <Route path='register' element={<RegistrationForm />} />
                     <Route path='create_ad' element={<CreateAdForm />} />
+                    <Route path='goals' element={<Goals />} />
                     <Route path='starred_ads' element={<StarredAds />} />
                     <Route path='edit_ad/*' element={<EditAd />} />
                     <Route path={'my_ads'} element={<MyCreatedAds />} />
