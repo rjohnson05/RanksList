@@ -1,6 +1,5 @@
 package edu.carroll.ranks_list.service;
 
-import edu.carroll.ranks_list.model.Ad;
 import edu.carroll.ranks_list.model.User;
 import edu.carroll.ranks_list.repository.UserRepository;
 import org.slf4j.Logger;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Service class for users. Contains all business logic relating to logins and users.
@@ -87,43 +85,14 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Updates the password for the user.
+     * Updates the password for the user
      *
-     * @param userId the ID of the user to set
-     * @param currentPassword the user's current unhashed password
      * @param newPassword the unhashed password to set
+     * @param username the username of the user to set
      */
-    public boolean updatePassword(int userId, String currentPassword, String newPassword){
-        // Makes sure the designated user exists
-        if (!userRepo.existsById(userId)) {
-            log.debug("Unsuccessful attempt to star ad due to invalid ID");
-            return false;
-        }
-
-        // Make sure the given current password is valid
-        User user = userRepo.getReferenceById(userId);
-        // Compare the current password and the attempted new one to determine if changes were made
-        byte[] hash = Base64.getDecoder().decode(user.getPassword());
-        byte[] salt = Arrays.copyOfRange(hash, 0, 20);
-
-        // Create a temporary user that stores the password with the same salted hash algorithm as the real user to
-        // compare the password hashes.
-        User tempUser = new User(user.getUsername(), currentPassword, salt);
-        if (!user.equals(tempUser)) {
-            log.debug("Attempt to edit ad unsuccessful due to incorrect password");
-            return false;
-        }
-
-        // Makes sure the new password is different from the current password
-        // Create a temporary user that stores the password with the same salted hash algorithm as the real user to
-        // compare the password hashes.
-        tempUser = new User(user.getUsername(), newPassword, salt);
-        if (user.equals(tempUser)) {
-            log.debug("Attempt to edit ad unsuccessful due to no changes being made");
-            return false;
-        }
-
-        log.info("Setting new password for user {}", user);
+    public boolean updatePassword(String username, String newPassword){
+        User user = userRepo.findByUsernameIgnoreCase(username).get(0);
+        log.info("Setting new password for user {}", username);
         user.setPassword(newPassword);
         userRepo.save(user);
         return true;

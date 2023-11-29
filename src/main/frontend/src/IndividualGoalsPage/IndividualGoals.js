@@ -34,7 +34,10 @@ export default function Home() {
 
     const deleteGoal = async (goalId) => {
         const response = await axios.delete("http://localhost:8080/individual_goals/" + goalId);
-         loadGoalsAds();
+
+        if (response.data) {
+            loadGoalsAds();
+        }
     }
 
     return (
@@ -46,7 +49,7 @@ export default function Home() {
                     {[allAdsData].map((ad, id) => (
                         <div className="col border border-5">
                             <p>Name: {ad.name} </p>
-                            <p>Price: ${ad.price}</p>
+                            <p>Price: {ad.price}</p>
                             <p>Description: {ad.description}</p>
                         </div>
                     ))}
@@ -65,7 +68,7 @@ export default function Home() {
                 </Row>
 
                 <Link to={'create_goal/' + ad_id}>
-                    <Button className="btn btn-block text-center my-3" value={ad_id} onClick={() => createGoal(ad_id)}>Add New Goal</Button>
+                    <Button className="add-goal-button" value={ad_id} onClick={() => createGoal(ad_id)}>Add New Goal</Button>
                 </Link>
             </div>
         </div>

@@ -32,11 +32,10 @@ public interface UserService {
     /**
      * Updates the password for the user
      *
-     * @param userId the ID of the user to set
-     * @param currentPassword the user's current unhashed password
      * @param newPassword the unhashed password to set
+     * @param username the username of the user to set
      */
-    boolean updatePassword(int userId, String currentPassword, String newPassword);
+    boolean updatePassword(String username, String newPassword);
 
     /**
      * Returns a list of User object with the specified username.

@@ -40,7 +40,7 @@ export default function RegistrationForm() {
     }
 
     return (
-        <div className="login-body">
+        <div>
             <div className="wrapper bg-white">
                 <img src="/logo.png" width="200" alt="Logo"/>
                 <div className="h3 text-muted text-center pt-2">Registration</div>
