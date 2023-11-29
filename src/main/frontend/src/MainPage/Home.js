@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Row } from 'react-bootstrap';
-import IconButton from '@mui/material/IconButton';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import NavBar from "./NavBar";
+import {Button, Col} from "rsuite";
+import './Home.css'
 
 export default function Home() {
     const [allAdsData, setAds] = useState([]);
@@ -34,25 +35,32 @@ export default function Home() {
     }
 
     return (
-        <div>
+        <div className="home">
             {/*Navbar code came from https://getbootstrap.com/docs/5.0/components/navbar/*/}
             <NavBar />
-            <div className="col py-3">
-                <Row xs={3}>
-                    {allAdsData.map((ad) => (
-                        <div className="col border border-5" key={ad.id}>
-                            <Link to={"/individual_goals/" + ad.id}>
-                                <p>Name: {ad.name}</p>
-                                <p>Price: {ad.price}</p>
-                                <p>Description: {ad.description}</p>
+
+            <Row sm={4}>
+                {allAdsData.map((ad) => (
+                    <Col sm={4}>
+                        <div className="card" key={ad.id}>
+                            <Link className="link" to={"/individual_goals/" + ad.id}>
+                                <img src='/blue.jpg' className="card-image" alt="blue"/>
                             </Link>
-                            <IconButton value={ad.id} onClick={() => {changeStarStatus(ad.id)}}>
-                                {starredStatus[ad.id] ? <StarOutlinedIcon /> : <StarBorderOutlinedIcon />}
-                            </IconButton>
+                            <Button className="star-button" value={ad.id} onClick={() => {changeStarStatus(ad.id)}}>
+                                {starredStatus[ad.id] ? <StarOutlinedIcon className="star" /> : <StarBorderOutlinedIcon className="star" />}
+                            </Button>
+                            <Link className="link" to={"/individual_goals/" + ad.id}>
+                                <div className="price-box">
+                                    <p className="price-text">${ad.price}</p>
+                                </div>
+                                <div className="card-bottom">
+                                    <h5 className="card-title">{ad.name}</h5>
+                                </div>
+                            </Link>
                         </div>
-                    ))}
-                </Row>
-            </div>
+                    </Col>
+                ))}
+            </Row>
         </div>
     );
 }
