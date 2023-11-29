@@ -3,16 +3,23 @@ import axios from 'axios';
 import {useLocation, useNavigate} from "react-router-dom";
 import NavBar from "../MainPage/NavBar";
 import {useForm} from "react-hook-form";
+import * as Yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
 
 // Form for creating a new goal that will be added to the specific goal
 export default function CreateGoalForm() {
     const navigate = useNavigate();
     // Initial data list for an empty form
     // This will update values of this list will change as the form is filled out.
+    const validationSchema = Yup.object().shape({
+        description: Yup.string()
+            .required("A description is required")
+    });
+
     const {register,
         handleSubmit,
         formState: { errors }
-    } = useForm({mode: "onBlur", reValidateMode: "onBlur"});
+    } = useForm({mode: "onSubmit", reValidateMode: "onBlur", resolver: yupResolver(validationSchema)});
     const adId = Number(useLocation().pathname.split('/').pop());
 
     // Posts the entered data onto the main page when the "Submit" button is clicked
@@ -28,20 +35,22 @@ export default function CreateGoalForm() {
     return (
         <div>
             <NavBar />
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <h1>Add New Goal</h1>
-                {errors.description?.type === "required" && <p className="errorMsg">A description is required</p>}
-                <label>Description:
-                    <input type="text" name="description" {...register("description", {
-                        required: true
-                    })} />
-                </label>
-                <input type="hidden" name="adId" {...register("adId", {
-                    value: adId
-                })} />
+            <div className="form-body">
+                <div className="h3 text-muted text-center pt-2">Create New Goal</div>
+                <form className="form-group" noValidate onSubmit={handleSubmit(onSubmit)}>
+                    <div className="form-group my-4">
+                        <textarea placeholder="Description" {...register("description")}
+                                  className={`form-control ${errors.description ? 'is-invalid' : ''}`}/>
+                        <div className="invalid-feedback">{errors.description?.message}</div>
+                    </div>
 
-                <input type="submit" value="Submit" />
-            </form>
+                    <input type="hidden" name="adId" {...register("adId", {
+                        value: adId
+                    })} />
+
+                    <input type="submit" className="btn btn-block text-center my-3" value="Create Goal" />
+                </form>
+            </div>
         </div>
     );
 }
