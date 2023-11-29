@@ -63,8 +63,8 @@ public class AdServiceImpl implements AdService {
         User user = userService.getReferenceById(user_id);
         Ad newAd = new Ad(name, price, description, user);
         adRepo.save(newAd);
-        log.info("Ad #" + newAd.getId() + " created");
-        log.debug("New Ad: " + newAd);
+        log.info("Ad #{} created", newAd.getId());
+        log.debug("New Ad: {}", newAd);
         return true;
     }
 

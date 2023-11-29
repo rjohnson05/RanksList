@@ -3,6 +3,8 @@ package edu.carroll.ranks_list.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.NonNull;
 
 import java.util.List;
@@ -36,9 +38,11 @@ public class Ad {
     private User user;
 
     @OneToMany(mappedBy = "ad")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Goal> goals;
 
     @OneToMany(mappedBy = "ad")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Star> stars;
 
     /**
