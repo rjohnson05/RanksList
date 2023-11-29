@@ -57,5 +57,19 @@ public class LoginForm {
         this.password = password;
     }
 
+    /**
+     * Returns the new password supplied by the user.
+     *
+     * @return String containing the new password supplied by the user
+     */
     public String getNewPassword() { return newPassword;}
+
+    /**
+     * Sets the new password to that supplied by the user.
+     *
+     * @param newPassword String containing the new password supplied by the user
+     */
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
 }

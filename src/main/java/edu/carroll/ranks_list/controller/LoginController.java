@@ -2,6 +2,7 @@ package edu.carroll.ranks_list.controller;
 
 import edu.carroll.ranks_list.form.LoginForm;
 import edu.carroll.ranks_list.form.RegistrationForm;
+import edu.carroll.ranks_list.repository.UserRepository;
 import edu.carroll.ranks_list.service.UserService;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,8 +27,9 @@ public class LoginController extends HttpServlet {
      * Constructor for the Login Controller. Creates a service for the login business logic.
      *
      * @param userService userService contains all logic related to login data
+     * @param userRepo
      */
-    public LoginController(UserService userService) {
+    public LoginController(UserService userService, UserRepository userRepo) {
         this.userService = userService;
     }
 
@@ -46,7 +48,7 @@ public class LoginController extends HttpServlet {
     /**
      * Determines if the login credential information matches a current user in the database.
      *
-     * @param loginForm Contains the data to used for login verification
+     * @param loginForm Contains the data used for login verification
      * @param request   HttpServletRequest object that allows access to parameters of an HTTP request
      * @return true if the credentials match a user in the database; false otherwise
      */
@@ -64,18 +66,20 @@ public class LoginController extends HttpServlet {
     }
 
     /**
-     * Determines if the login credential information matches a current user in the database.
+     * Updates a user's password to a given value.
      *
-     * @param loginForm Contains the data to used for login verification
+     * @param loginForm Contains the data used to edit the password
+     * @param request   HttpServletRequest object that allows access to parameters of an HTTP request
      * @return true if the credentials match a user in the database; false otherwise
      */
     @PutMapping("/edit_password")
-    public boolean updatePassword(@RequestBody LoginForm loginForm) {
-        if (!userService.validateUser(loginForm.getUsername(), loginForm.getPassword())) {
-            log.info("Unsuccessful attempt to sign in with {}", loginForm.getUsername());
+    public boolean updatePassword(@RequestBody LoginForm loginForm, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        int currentUserId = Integer.parseInt((String) session.getAttribute("userID"));
+        log.info("Current Password: {}, New Password: {}", loginForm.getPassword(), loginForm.getNewPassword());
+        if (!userService.updatePassword(currentUserId, loginForm.getPassword(), loginForm.getNewPassword())) {
             return false;
         }
-        userService.updatePassword(loginForm.getUsername(), loginForm.getNewPassword());
         log.info("Updated password for user:{}", loginForm.getUsername());
         return true;
     }

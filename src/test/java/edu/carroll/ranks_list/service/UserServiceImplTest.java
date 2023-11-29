@@ -151,8 +151,9 @@ public class UserServiceImplTest {
     // testing update password
     @Test
     public void updatePasswordTest(){
-        assertTrue("UpdatePasswordTest: Should pass with the password being updated", userService.updatePassword(username, password+"new"));
-        User user = userService.findByUsernameIgnoreCase(username).get(0);
+        int userId = userRepo.findByUsernameIgnoreCase(username).get(0).getId();
+        assertTrue("UpdatePasswordTest: Should pass with the password being updated", userService.updatePassword(userId, password, password+"new"));
+        User user = userService.getReferenceById(userId);
         byte[] hash = Base64.getDecoder().decode(user.getPassword());
         byte[] salt = Arrays.copyOfRange(hash, 0, 20);
         User tempUser = new User(username, password+"new", salt);

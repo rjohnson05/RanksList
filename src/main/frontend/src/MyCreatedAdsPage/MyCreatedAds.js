@@ -35,7 +35,7 @@ export default function CreatedAds() {
                 {createdAdsData.map((ad, id) => (
                     <div className="col border border-5" key={id}>
                         <p>Name: {ad.name}</p>
-                        <p>Price: {ad.price}</p>
+                        <p>Price: ${ad.price}</p>
                         <p>Description: {ad.description}</p>
                         <IconButton aria-label="delete" value={id} onClick={() => removeAd(ad.id)}>
                             <DeleteIcon />
