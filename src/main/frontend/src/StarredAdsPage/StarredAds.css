@@ -1,0 +1,52 @@
+.starred-ads {
+    overflow-x: hidden;
+}
+
+.card {
+    margin: 10px;
+    border: 1px solid black;
+    position: relative;
+}
+
+.card-image {
+    margin-top: 0;
+    max-width: 100%;
+    border-radius: 5px 5px 0 0;
+}
+
+.card-title {
+    text-align: left;
+    margin: 0 8px 8px 8px;
+}
+
+.link {
+    text-decoration: none;
+    color: black;
+}
+
+.star-button {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    background-color: transparent;
+    border: none;
+}
+
+.star {
+    color: yellow;
+}
+
+.price-box {
+    position: absolute;
+    padding: 5px;
+    right: 0;
+    max-width: 20%;
+    background-color: black;
+    bottom: 20%;
+}
+
+.price-text {
+    margin: 0;
+    color: white;
+    vertical-align: middle;
+}
