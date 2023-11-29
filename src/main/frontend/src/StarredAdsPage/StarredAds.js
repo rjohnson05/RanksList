@@ -28,14 +28,13 @@ export default function StarredAds() {
     return (
         <div>
             <NavBar />
-
             <Row xs={3}>
-                {starredAdsData.map((ad, id) => (
-                    <div className="col border border-5" key={id}>
+                {starredAdsData.map((ad) => (
+                    <div className="col border border-5" key={ad.id}>
                         <p>Name: {ad.name}</p>
                         <p>Price: {ad.price}</p>
                         <p>Description: {ad.description}</p>
-                        <IconButton aria-label="delete" value={id} onClick={() => removeAd(ad.id)}>
+                        <IconButton aria-label="delete" value={ad.id} onClick={() => removeAd(ad.id)}>
                             <DeleteIcon />
                         </IconButton>
                     </div>
