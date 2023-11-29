@@ -3,6 +3,7 @@ import './App.css';
 import Home from './MainPage/Home';
 import RegistrationForm from './LoginPage/RegistrationForm';
 import LoginPage from './LoginPage/LoginPage';
+import Goals from './MainPage/Goals';
 import {HashRouter, Navigate, Route, Routes} from "react-router-dom";
 import CreateAdForm from "./CreateAdPage/CreateAdForm";
 import IndividualGoals from "./IndividualGoalsPage/IndividualGoals";
